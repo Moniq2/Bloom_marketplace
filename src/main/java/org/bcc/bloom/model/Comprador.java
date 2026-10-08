@@ -1,7 +1,7 @@
 package org.bcc.bloom.model;
 
 public class Comprador extends Usuario {
-    String cpf;
+    private String cpf;
 
     public Comprador() {}
     public Comprador(String nome, String email, String senha, Long id, String cpf) {

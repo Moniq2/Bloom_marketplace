@@ -1,11 +1,11 @@
 package org.bcc.bloom.model;
 
 public abstract class Usuario {
-    String nome;
-    String email;
-    String senha;
-    Long id;
-    Long saldo = 0L;
+    private String nome;
+    private String email;
+    private String senha;
+    private Long id;
+    private Long saldo = 0L;
 
     public Usuario(){}
     public Usuario(String nome, String email, String senha, Long id) {
