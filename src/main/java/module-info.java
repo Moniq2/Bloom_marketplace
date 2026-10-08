@@ -12,4 +12,6 @@ module org.bcc.bloom {
 
     opens org.bcc.bloom to javafx.fxml;
     exports org.bcc.bloom;
+    opens org.bcc.bloom.controller to javafx.fxml;
+    opens images;
 }

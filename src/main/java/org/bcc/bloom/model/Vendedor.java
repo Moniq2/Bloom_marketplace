@@ -8,7 +8,7 @@ public class Vendedor extends Usuario {
     private byte[] perfil;
 
     public Vendedor() {}
-    public Vendedor(String nome, String email, String senha, Long id, String cnpj) {
+    public Vendedor(String nome, String email, String senha, Long id, String cnpj, byte[] imagem) {
         super(nome, email, senha, id);
         this.cnpj = cnpj;
     }

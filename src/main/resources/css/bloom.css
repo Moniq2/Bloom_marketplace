@@ -1,0 +1,108 @@
+/* ===== Paleta Bloom: Terra e campo =====
+   Oliva      #5B7B3A
+   Palha      #E3CF9F
+   Creme      #F7F1E3
+   Terracota  #C4573A
+   Marrom     #3B3024
+*/
+
+.raiz-login {
+    -fx-background-color: #F7F1E3;
+}
+
+/* ----- Painel esquerdo ----- */
+.painel-lateral {
+    -fx-background-color: #5B7B3A;
+}
+
+.titulo-marca {
+    -fx-font-family: "Lora Medium";
+    -fx-font-size: 40px;
+    -fx-text-fill: #F7F1E3;
+}
+
+.slogan {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 16px;
+    -fx-text-fill: #E3CF9F;
+}
+
+/* ----- Painel direito ----- */
+.painel-formulario {
+    -fx-background-color: #F7F1E3;
+    -fx-padding: 40 70 40 70;
+}
+
+.titulo-formulario {
+    -fx-font-family: "Lora Medium";
+    -fx-font-size: 30px;
+    -fx-text-fill: #3B3024;
+}
+
+.subtitulo {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-text-fill: #6B5E4C;
+}
+
+.rotulo {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3B3024;
+    -fx-padding: 8 0 0 0;
+}
+
+/* ----- Campos de texto e senha ----- */
+.campo {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-padding: 10 12 10 12;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-text-fill: #3B3024;
+}
+
+/* Quando o campo recebe o cursor, a borda fica verde */
+.campo:hover {
+    -fx-border-color: #5B7B3A;
+}
+
+/* ----- Botao principal ----- */
+.botao-primario {
+    -fx-background-color: #C4573A;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 0 12 0;
+    -fx-cursor: hand;
+}
+
+.botao-primario:hover {
+    -fx-background-color: #A94A31;
+}
+
+/* ----- Links ----- */
+.link-verde {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5B7B3A;
+    -fx-border-color: transparent;
+}
+
+.link-verde:visited {
+    -fx-text-fill: #5B7B3A;
+}
+
+/* ----- Mensagem de erro ----- */
+.mensagem-erro {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 13px;
+    -fx-text-fill: #C4573A;
+}
