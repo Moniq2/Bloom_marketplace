@@ -4,5 +4,6 @@ public enum Categoria {
     FRUTAS,
     VERDURAS,
     ERVAS,
-    LEGUMES
+    LEGUMES,
+    GRAO
 }
