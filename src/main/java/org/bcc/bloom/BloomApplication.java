@@ -11,7 +11,7 @@ import java.util.Objects;
 public class BloomApplication extends Application {
 
     @Override
-    public void start(Stage palco) throws Exception {
+    public void start(Stage stage) throws Exception {
         Font lora = Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Medium.ttf"), 14);
         Font nunitoRegular = Font.loadFont(getClass().getResourceAsStream("/fonts/Nunito-Regular.ttf"), 14);
         Font nunitoBold = Font.loadFont(getClass().getResourceAsStream("/fonts/Nunito-Bold.ttf"), 14);
@@ -25,9 +25,9 @@ public class BloomApplication extends Application {
         Scene cena = new Scene(raiz);
         cena.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/bloom.css")).toExternalForm());
 
-        palco.setTitle("Bloom");
-        palco.setScene(cena);
-        palco.show();
+        stage.setTitle("Bloom");
+        stage.setScene(cena);
+        stage.show();
     }
 
     public static void main(String[] args) {

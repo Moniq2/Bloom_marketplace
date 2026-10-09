@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="560" prefWidth="900" styleClass="raiz-login" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.LoginController">
+<HBox prefHeight="560" prefWidth="900" styleClass="raiz-login" stylesheets="@../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.LoginController">
 
     <!-- logo e slogan -->
     <VBox alignment="CENTER" maxWidth="500.0" minWidth="380" prefWidth="380.0" spacing="14" styleClass="painel-lateral">

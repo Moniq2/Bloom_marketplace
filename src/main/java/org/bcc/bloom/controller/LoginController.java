@@ -1,9 +1,12 @@
 package org.bcc.bloom.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class LoginController {
 
@@ -42,8 +45,17 @@ public class LoginController {
     }
 
     @FXML
-    private void aoClicarCriarConta() {
-        System.out.println("Criar conta");
+    private void aoClicarCriarConta(Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SignupView.fxml"));
+            Parent root = loader.load();
+            stage.setScene(root.getScene());
+            stage.show();
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private void mostrarErro(String mensagem) {
