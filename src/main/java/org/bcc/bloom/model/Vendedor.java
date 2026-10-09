@@ -7,30 +7,23 @@ public class Vendedor extends Usuario {
     private ArrayList<Loja> lojas;
     private byte[] perfil;
 
-    public Vendedor() {}
-    public Vendedor(String nome, String email, String senha, Long id, String cnpj, byte[] imagem) {
+    public Vendedor() {
+        super();
+        this.lojas = new ArrayList<>();
+    }
+
+    public Vendedor(String nome, String email, String senha, Long id, String cnpj) {
         super(nome, email, senha, id);
         this.cnpj = cnpj;
+        this.lojas = new ArrayList<>();
     }
 
-    String getCnpj() {
-        return cnpj;
-    }
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
+    public String getCnpj() { return cnpj; }
+    public void setCnpj(String cnpj) { this.cnpj = cnpj; }
 
-    public ArrayList<Loja> getLoja() {
-        return lojas;
-    }
-    public void addLoja(Loja loja) {
-        this.lojas.add(loja);
-    }
+    public ArrayList<Loja> getLojas() { return lojas; }
+    public void setLojas(ArrayList<Loja> lojas) { this.lojas = lojas; }
 
-    public void setPerfil(byte[] perfil) {
-        this.perfil = perfil;
-    }
-    public byte[] getPerfil() {
-        return perfil;
-    }
+    public byte[] getPerfil() { return perfil; }
+    public void setPerfil(byte[] perfil) { this.perfil = perfil; }
 }

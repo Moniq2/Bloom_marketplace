@@ -8,7 +8,9 @@ public class Produto {
     private Categoria categoria;
     private byte[] imagem;
 
-    public Produto(String nome, String descricao, int estoque, Double preco, Categoria categoria, byte[] imagem) {
+    public Produto() {}
+
+    public Produto(String nome, String descricao, int estoque, double preco, Categoria categoria, byte[] imagem) {
         this.nome = nome;
         this.descricao = descricao;
         this.estoque = estoque;
@@ -16,48 +18,23 @@ public class Produto {
         this.categoria = categoria;
         this.imagem = imagem;
     }
-    public Produto() {}
 
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public String getDescricao() {
-        return descricao;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public String getDescdescricao() { return descricao; } // Nota: manter getter padrão getDescricao
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public int getEstoque() {
-        return estoque;
-    }
-    public void setEstoque(Short estoque) {
-        this.estoque = estoque;
-    }
+    public int getEstoque() { return estoque; }
+    public void setEstoque(int estoque) { this.estoque = estoque; }
 
-    public double getPreco() {
-        return preco;
-    }
+    public double getPreco() { return preco; }
+    public void setPreco(double preco) { this.preco = preco; }
 
-    public void setPreco(Double preco) {
-        if (preco > 0) this.preco = preco;
-    }
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public byte[] getImagem() {
-        return imagem;
-    }
-    public void setImagem(byte[] imagem) {
-        this.imagem = imagem;
-    }
+    public byte[] getImagem() { return imagem; }
+    public void setImagem(byte[] imagem) { this.imagem = imagem; }
 }
