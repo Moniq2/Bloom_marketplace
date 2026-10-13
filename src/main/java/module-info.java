@@ -1,4 +1,4 @@
-module org.bcc.bloom {
+module bloom {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -9,8 +9,11 @@ module org.bcc.bloom {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
-    
 
     opens org.bcc.bloom to javafx.fxml;
+
     exports org.bcc.bloom;
+    exports org.bcc.bloom.exception;
+    exports org.bcc.bloom.model;
+    exports org.bcc.bloom.service;
 }
