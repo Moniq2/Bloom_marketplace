@@ -1,53 +1,104 @@
 package org.bcc.bloom.repository;
 
+import org.bcc.bloom.exception.RegraNegocioException;
 import org.bcc.bloom.model.Comprador;
-import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.model.Usuario;
-import java.util.ArrayList;
+import org.bcc.bloom.model.Vendedor;
+
+import java.sql.*;
 
 public class UsuarioRepository {
-    private static final ArrayList<Comprador> compradores = new ArrayList<>();
-    private static final ArrayList<Vendedor> vendedores = new ArrayList<>();
 
-    public static void salvarComprador(Comprador comprador) {
-        if (comprador != null) {
-            compradores.add(comprador);
+    public UsuarioRepository() {
+        criarTabelaSeNaoExistir();
+    }
+
+    private void criarTabelaSeNaoExistir() {
+        String sql = "CREATE TABLE IF NOT EXISTS usuarios (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "nome TEXT NOT NULL, " +
+                "email TEXT UNIQUE NOT NULL, " +
+                "senha TEXT NOT NULL, " +
+                "tipo TEXT NOT NULL, " +
+                "cpf TEXT, " +
+                "endereco TEXT, " +
+                "cnpj TEXT" +
+                ")";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao criar tabela de utilizadores: " + e.getMessage());
         }
     }
 
-    public static void salvarVendedor(Vendedor vendedor) {
-        if (vendedor != null) {
-            vendedores.add(vendedor);
+    public void salvarComprador(Comprador comprador) {
+        String sql = "INSERT INTO usuarios (nome, email, senha, tipo, cpf, endereco) VALUES (?, ?, ?, 'COMPRADOR', ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, comprador.getNome());
+            pstmt.setString(2, comprador.getEmail());
+            pstmt.setString(3, comprador.getSenha());
+            pstmt.setString(4, comprador.getCpf());
+            pstmt.setString(5, comprador.getEndereco());
+            
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao salvar comprador na base de dados: " + e.getMessage());
         }
     }
 
-    public static Usuario buscarPorEmail(String email) {
-        for (Comprador c : compradores) {
-            if (c.getEmail().equalsIgnoreCase(email)) {
-                return c;
-            }
+    public void salvarVendedor(Vendedor vendedor) {
+        String sql = "INSERT INTO usuarios (nome, email, senha, tipo, cnpj) VALUES (?, ?, ?, 'VENDEDOR', ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, vendedor.getNome());
+            pstmt.setString(2, vendedor.getEmail());
+            pstmt.setString(3, vendedor.getSenha());
+            pstmt.setString(4, vendedor.getCnpj());
+            
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao salvar vendedor na base de dados: " + e.getMessage());
         }
-        for (Vendedor v : vendedores) {
-            if (v.getEmail().equalsIgnoreCase(email)) {
-                return v;
+    }
+
+    public Usuario buscarPorEmail(String email) {
+        String sql = "SELECT * FROM usuarios WHERE email = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String tipo = rs.getString("tipo");
+                    String nome = rs.getString("nome");
+                    String senha = rs.getString("senha");
+                    long id = rs.getLong("id");
+
+                    if ("COMPRADOR".equals(tipo)) {
+                        String cpf = rs.getString("cpf");
+                        String endereco = rs.getString("endereco");
+                        return new Comprador(nome, email, senha, id, cpf, endereco);
+                    } else {
+                        String cnpj = rs.getString("cnpj");
+                        return new Vendedor(nome, email, senha, id, cnpj);
+                    }
+                }
             }
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao buscar utilizador por e-mail: " + e.getMessage());
         }
         return null;
     }
 
-    public static Usuario buscarUsuario(String email, String senha) {
+    public Usuario buscarUsuario(String email, String senha) {
         Usuario usuario = buscarPorEmail(email);
         if (usuario != null && usuario.getSenha().equals(senha)) {
             return usuario;
         }
         return null;
-    }
-
-    public static int getTotalCompradores() {
-        return compradores.size();
-    }
-
-    public static int getTotalVendedores() {
-        return vendedores.size();
     }
 }

@@ -1,14 +1,14 @@
-package org.bcc.bloom;
+package test;
 
-import org.bcc.bloom.model.Comprador;
-import org.bcc.bloom.model.Vendedor;
-import org.bcc.bloom.model.Loja;
-import org.bcc.bloom.model.Produto;
-import org.bcc.bloom.model.Categoria;
-import org.bcc.bloom.service.UsuarioService;
-import org.bcc.bloom.service.LojaService;
-import org.bcc.bloom.service.ProdutoService;
-import org.bcc.bloom.service.CompraService;
+import bloom.model.Categoria;
+import bloom.model.Comprador;
+import bloom.model.Loja;
+import bloom.model.Produto;
+import bloom.model.Vendedor;
+import bloom.service.CompraService;
+import bloom.service.LojaService;
+import bloom.service.ProdutoService;
+import bloom.service.UsuarioService;
 
 public class Launcher {
     public static void main(String[] args) {
