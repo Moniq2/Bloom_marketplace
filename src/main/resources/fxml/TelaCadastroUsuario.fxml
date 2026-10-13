@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox prefHeight="560" prefWidth="900" styleClass="raiz-login" stylesheets="@../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.LoginController">
+    <VBox alignment="CENTER" maxWidth="500.0" minWidth="380" prefWidth="380.0" spacing="14" styleClass="painel-lateral">
+        <padding>
+            <Insets bottom="40" left="40" right="40" top="40" />
+        </padding>
+
+        <ImageView fitHeight="150" fitWidth="150" preserveRatio="true">
+            <image>
+                <Image url="@../images/Logo2.png" />
+            </image>
+        </ImageView>
+
+        <Label styleClass="titulo-marca" text="Bloom" />
+        <Label styleClass="slogan" text="Do campo para a sua mesa" />
+    </VBox>
+
+    <VBox alignment="CENTER_LEFT" spacing="8" styleClass="painel-formulario" HBox.hgrow="ALWAYS">
+
+        <Label styleClass="titulo-formulario" text="Olá, vendedor!" />
+        <Label styleClass="subtitulo" text="preencha os dados para se cadastrar" />
+
+        <Label styleClass="rotulo" text="Nome" />
+        <TextField fx:id="campoEmail" promptText="fulano de tal" styleClass="campo" />
+
+        <Label styleClass="rotulo" text="Email" />
+        <PasswordField fx:id="campoSenha" promptText="nome@email.com" styleClass="campo" />
+
+        <Label fx:id="rotuloErro" managed="false" styleClass="mensagem-erro" visible="false" />
+      <Label styleClass="rotulo" text="CPF" />
+      <TextField fx:id="campoEmail1" promptText="123.456.789.00" styleClass="campo" />
+      <Label styleClass="rotulo" text="Senha" />
+      <TextField fx:id="campoEmail2" promptText="crie uma senha" styleClass="campo" />
+      <TextField fx:id="campoEmail3" promptText="confirme a senha" styleClass="campo" />
+
+        <Button fx:id="botaoEntrar" maxWidth="Infinity" onAction="#aoClicarEntrar" styleClass="botao-primario" text="Cadastrar-se" />
+
+        <Hyperlink onAction="#voltar" styleClass="link-verde" text="voltar" />
+
+        <HBox alignment="CENTER" spacing="4" />
+    </VBox>
+</HBox>

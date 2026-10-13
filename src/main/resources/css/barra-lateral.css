@@ -1,0 +1,59 @@
+/* Paleta de cores:
+   Oliva      #5B7B3A
+   Palha      #E3CF9F
+   Creme      #F7F1E3
+   Terracota  #C4573A
+   Marrom     #3B3024
+*/
+
+.raiz-principal {
+    -fx-background-color: #F7F1E3;
+}
+
+.barra-superior {
+    -fx-background-color: #F7F1E3;
+    -fx-border-color: transparent transparent #E3CF9F transparent;
+    -fx-border-width: 0 0 1.5 0;
+}
+
+.botao-menu {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-text-fill: #3B3024;
+    -fx-font-size: 22px;
+    -fx-cursor: hand;
+}
+
+.botao-menu:hover {
+    -fx-background-color: #E3CF9F;
+}
+
+.titulo-barra {
+    -fx-font-family: "Lora Medium";
+    -fx-font-size: 22px;
+    -fx-text-fill: #3B3024;
+}
+
+.barra-lateral {
+    -fx-background-color: #5B7B3A;
+}
+
+.item-menu {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-text-fill: #F7F1E3;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 14 10 14;
+    -fx-cursor: hand;
+}
+
+.item-menu:hover {
+    -fx-background-color: rgba(247, 241, 227, 0.18);
+}
+
+.area-conteudo {
+    -fx-padding: 24;
+}
