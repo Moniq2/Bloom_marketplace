@@ -20,7 +20,7 @@ public class BloomApplication extends Application {
         System.out.println("Nunito regular: " + nunitoRegular.getFamily());
         System.out.println("Nunito bold: " + nunitoBold.getFamily());
 
-        Parent raiz = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/LoginView.fxml")));
+        Parent raiz = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/LoginPage.fxml")));
 
         Scene cena = new Scene(raiz);
         cena.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/bloom.css")).toExternalForm());

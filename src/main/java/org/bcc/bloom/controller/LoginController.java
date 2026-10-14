@@ -1,14 +1,20 @@
 package org.bcc.bloom.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import org.bcc.bloom.service.UsuarioService;
+import org.bcc.bloom.util.Navegador;
 
 public class LoginController {
+    private UsuarioService usuarioService = new UsuarioService();
+
+    public LoginController() {};
+    public LoginController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @FXML
     private TextField campoEmail;
@@ -20,7 +26,7 @@ public class LoginController {
     private Label rotuloErro;
 
     @FXML
-    private void aoClicarEntrar() {
+    private void aoClicarEntrar(ActionEvent event) {
         String email = campoEmail.getText().trim();
         String senha = campoSenha.getText();
 
@@ -33,29 +39,24 @@ public class LoginController {
             mostrarErro("Digite um e-mail válido.");
             return;
         }
-
         esconderErro();
-
-        System.out.println("Tentando entrar com: " + email);
+        try {
+            usuarioService.login(email, senha);
+            Navegador.abrirPagina(event,"/fxml/Main.fxml");
+        }
+        catch (Exception e) {
+            mostrarErro(e.getMessage());
+        }
     }
 
     @FXML
-    private void aoClicarEsqueciSenha() {
+    private void aoClicarEsqueciSenha(ActionEvent event) {
         System.out.println("Esqueci minha senha");
     }
 
     @FXML
-    private void aoClicarCriarConta(Stage stage) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("SignupView.fxml"));
-            Parent root = loader.load();
-            stage.setScene(root.getScene());
-            stage.show();
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+    private void aoClicarCriarConta(ActionEvent event) {
+        Navegador.abrirPagina(event, "/fxml/SignupOptions.fxml");
     }
 
     private void mostrarErro(String mensagem) {
