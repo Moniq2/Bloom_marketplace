@@ -5,11 +5,15 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class MainController {
 
@@ -55,26 +59,38 @@ public class MainController {
 
     @FXML
     private void aoClicarInicio() {
-        System.out.println("Início");
+        trocarTela("/fxml/ListaLojas.fxml");
     }
 
     @FXML
     private void aoClicarCatalogo() {
-        System.out.println("Catálogo");
+        trocarTela("/fxml/catalogo.fxml");
     }
 
     @FXML
     private void aoClicarCarrinho() {
-        System.out.println("Carrinho");
+        trocarTela("/fxml/carrinho.fxml");
     }
 
     @FXML
     private void aoClicarPedidos() {
-        System.out.println("Meus pedidos");
+        trocarTela("/fxml/pedidos.fxml");
     }
 
     @FXML
     private void aoClicarSair() {
         System.out.println("Sair");
+    }
+
+    private void trocarTela(String url){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
+            Parent root = loader.load();
+            areaConteudo.getChildren().clear();
+            areaConteudo.getChildren().setAll(root);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

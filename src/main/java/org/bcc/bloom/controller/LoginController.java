@@ -45,7 +45,7 @@ public class LoginController {
             Navegador.abrirPagina(event,"/fxml/Main.fxml");
         }
         catch (Exception e) {
-            mostrarErro(e.getMessage());
+            mostrarErro(e.getCause().getMessage());
         }
     }
 

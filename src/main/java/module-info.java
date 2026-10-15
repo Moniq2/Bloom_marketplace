@@ -9,16 +9,14 @@ module bloom {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires mysql.connector.j;
 
     opens org.bcc.bloom to javafx.fxml;
 
     exports org.bcc.bloom;
-<<<<<<< HEAD
     exports org.bcc.bloom.exception;
     exports org.bcc.bloom.model;
     exports org.bcc.bloom.service;
-=======
     opens org.bcc.bloom.controller to javafx.fxml;
     opens images;
->>>>>>> d0c447a01ad759ef4c0eccb9b6701805140d102c
 }

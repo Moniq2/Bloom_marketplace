@@ -7,6 +7,7 @@ public class Loja {
     private String descricao;
     private ArrayList<Produto> produtos;
     private byte[] capa;
+    private long id;
 
     public Loja() {
         this.produtos = new ArrayList<>();
@@ -30,4 +31,7 @@ public class Loja {
 
     public byte[] getCapa() { return capa; }
     public void setCapa(byte[] capa) { this.capa = capa; }
+
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
 }
