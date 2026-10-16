@@ -15,10 +15,10 @@ public class LojaRepository {
 
     private void criarTabelaSeNaoExistir() {
         String sql = "CREATE TABLE IF NOT EXISTS lojas (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "nome TEXT NOT NULL, " +
-                "descricao TEXT, " +
-                "vendedor_email TEXT" +
+                "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                "nome VARCHAR(100) NOT NULL, " +
+                "descricao VARCHAR(255), " +
+                "vendedor_email VARCHAR(150)" +
                 ")";
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
@@ -32,14 +32,33 @@ public class LojaRepository {
         String sql = "INSERT INTO lojas (nome, descricao, vendedor_email) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setString(1, loja.getNome());
             pstmt.setString(2, loja.getDescricao());
             pstmt.setString(3, vendedorEmail);
-            
+
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RegraNegocioException("Erro ao salvar loja na base de dados: " + e.getMessage());
         }
+    }
+
+    public List<Loja> listarTodas() {
+        String sql = "SELECT * FROM lojas";
+        List<Loja> lojas = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String nome = rs.getString("nome");
+                String descricao = rs.getString("descricao");
+                lojas.add(new Loja(nome, descricao, null));
+            }
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao buscar lojas: " + e.getMessage());
+        }
+        return lojas;
     }
 }
