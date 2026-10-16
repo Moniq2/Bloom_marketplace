@@ -33,19 +33,20 @@
         <Label styleClass="subtitulo" text="preencha os dados para se cadastrar" />
 
         <Label styleClass="rotulo" text="Nome" />
-        <TextField fx:id="campoEmail" promptText="fulano de tal" styleClass="campo" />
+        <TextField fx:id="campoNome" promptText="fulano de tal" styleClass="campo" />
 
         <Label styleClass="rotulo" text="Email" />
-        <PasswordField fx:id="campoSenha" promptText="nome@email.com" styleClass="campo" />
+        <PasswordField fx:id="campoEmail" promptText="nome@email.com" styleClass="campo" />
 
         <Label fx:id="rotuloErro" managed="false" styleClass="mensagem-erro" visible="false" />
       <Label styleClass="rotulo" text="CPF" />
-      <TextField fx:id="campoEmail1" promptText="123.456.789.00" styleClass="campo" />
+      <TextField fx:id="campoCPF" promptText="123.456.789.00" styleClass="campo" />
       <Label styleClass="rotulo" text="Senha" />
-      <TextField fx:id="campoEmail2" promptText="crie uma senha" styleClass="campo" />
-      <TextField fx:id="campoEmail3" promptText="confirme a senha" styleClass="campo" />
+      <TextField fx:id="campoSenha1" promptText="crie uma senha" styleClass="campo" />
+      <TextField fx:id="campoSenha2" promptText="confirme a senha" styleClass="campo" />
+      <Label fx:id="erroLabel" styleClass="mensagem-erro" stylesheets="@../css/bloom.css" text="Erro" visible="false" />
 
-        <Button fx:id="botaoEntrar" maxWidth="Infinity" styleClass="botao-primario" text="Cadastrar-se" />
+        <Button maxWidth="Infinity" onAction="#cadastrar" styleClass="botao-primario" text="Cadastrar-se" />
 
         <Hyperlink onAction="#voltar" styleClass="link-verde" text="voltar" />
 
