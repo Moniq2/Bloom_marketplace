@@ -6,9 +6,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "${DB_BLOOM_URL}";
-    private static final String USER = "${DB_USER}";
-    private static final String PASSWORD = "${DB_PASSWORD}";
+    private static final String URL = System.getenv("DB_BLOOM_URL");
+    private static final String USER = System.getenv("DB_USER");
+    private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
     public static Connection getConnection() {
         try {

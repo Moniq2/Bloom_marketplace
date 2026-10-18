@@ -10,6 +10,7 @@ module bloom {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires mysql.connector.j;
+    requires jbcrypt;
 
     opens org.bcc.bloom to javafx.fxml;
 

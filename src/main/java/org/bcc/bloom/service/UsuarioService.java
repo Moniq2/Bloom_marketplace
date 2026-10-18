@@ -5,6 +5,7 @@ import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.repository.UsuarioRepository;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioService {
 
@@ -15,7 +16,8 @@ public class UsuarioService {
         if (usuarioRepository.buscarPorEmail(email) != null) {
             throw new RegraNegocioException("Erro: Já existe um utilizador registado com este e-mail.");
         }
-        Comprador comprador = new Comprador(nome, email, senha, null, cpf, null);
+        String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
+        Comprador comprador = new Comprador(nome, email, senhaCriptografada, null, cpf, null);
         usuarioRepository.salvarComprador(comprador);
         return comprador;
     }
@@ -24,14 +26,15 @@ public class UsuarioService {
         if (usuarioRepository.buscarPorEmail(email) != null) {
             throw new RegraNegocioException("Erro: Já existe um utilizador registado com este e-mail.");
         }
-        Vendedor vendedor = new Vendedor(nome, email, senha, id, cnpj);
+        String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
+        Vendedor vendedor = new Vendedor(nome, email, senhaCriptografada, id, cnpj);
         usuarioRepository.salvarVendedor(vendedor);
         return vendedor;
     }
 
     public Usuario login(String email, String senha) {
-        Usuario usuario = usuarioRepository.buscarUsuario(email, senha);
-        if (usuario == null) {
+        Usuario usuario = usuarioRepository.buscarPorEmail(email);
+        if (usuario == null || senha == null || !BCrypt.checkpw(senha, usuario.getSenha())) {
             throw new RegraNegocioException("Credenciais inválidas! Verifique o e-mail e a senha.");
         }
         return usuario;
@@ -83,7 +86,7 @@ public class UsuarioService {
             return false;
         }
         if (cpf.chars().distinct().count() == 1) {
-            return false; // 111.111.111-11 e parecidos
+            return false;
         }
         return cpf.charAt(9) - '0' == calcularDigito(cpf, 9)
                 && cpf.charAt(10) - '0' == calcularDigito(cpf, 10);
