@@ -29,6 +29,7 @@ public class UsuarioService {
         return vendedor;
     }
 
+    //USAR BCRYPT
     public Usuario login(String email, String senha) {
         Usuario usuario = usuarioRepository.buscarUsuario(email, senha);
         if (usuario == null) {
@@ -47,6 +48,7 @@ public class UsuarioService {
         usuario.setSaldo(usuario.getSaldo() + valor);
     }
 
+    //CRIAR EXCECOES PERSONALIZADAS
     public void validarDados(String nome, String email, String cpf, String senha) {
         if (nome == null || nome.isBlank()) {
             throw new RegraNegocioException("Erro: O nome é obrigatório.");

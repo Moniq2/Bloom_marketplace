@@ -9,33 +9,16 @@ import java.util.List;
 
 public class LojaRepository {
 
-    public LojaRepository() {
-        criarTabelaSeNaoExistir();
-    }
+    public LojaRepository() {}
 
-    private void criarTabelaSeNaoExistir() {
-        String sql = "CREATE TABLE IF NOT EXISTS lojas (" +
-                "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
-                "nome VARCHAR(100) NOT NULL, " +
-                "descricao VARCHAR(255), " +
-                "vendedor_email VARCHAR(150)" +
-                ")";
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao criar tabela de lojas: " + e.getMessage());
-        }
-    }
-
-    public void salvar(Loja loja, String vendedorEmail) {
+    public void salvar(Loja loja, long vendedor_id) {
         String sql = "INSERT INTO lojas (nome, descricao, vendedor_email) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, loja.getNome());
             pstmt.setString(2, loja.getDescricao());
-            pstmt.setString(3, vendedorEmail);
+            pstmt.setLong(3, vendedor_id);
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -45,7 +28,7 @@ public class LojaRepository {
 
     public List<Loja> listarTodas() {
         String sql = "SELECT * FROM lojas";
-        List<Loja> lojas = new ArrayList<>();
+        List<Loja> lojas = new ArrayList<>(); //FAZER USANDO PAGINAÇÃO!!!
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -54,7 +37,8 @@ public class LojaRepository {
             while (rs.next()) {
                 String nome = rs.getString("nome");
                 String descricao = rs.getString("descricao");
-                lojas.add(new Loja(nome, descricao, null));
+                byte[] capa = rs.getBytes("capa");
+                lojas.add(new Loja(nome, descricao, capa));
             }
         } catch (SQLException e) {
             throw new RegraNegocioException("Erro ao buscar lojas: " + e.getMessage());

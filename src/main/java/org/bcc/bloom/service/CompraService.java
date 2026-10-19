@@ -5,9 +5,10 @@ import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.model.Produto;
 
 public class CompraService {
-
     public void realizarCompra(Comprador comprador, Produto produto, Vendedor vendedorDono, int quantidade) {
         if (comprador == null) {
+
+            //NAO É PRA MUDAR O TEXTO DO ERRO CONFORME O TIPO DE ERRO, VC MUDA O TIPO DE EXCEÇÃO LANÇADA!!! CRIE EXCEÇÕES PERSONALIZADAS.
             throw new IllegalArgumentException("Erro: Comprador inválido.");
         }
         if (produto == null) {

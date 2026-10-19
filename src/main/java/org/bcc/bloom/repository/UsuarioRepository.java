@@ -9,29 +9,6 @@ import java.sql.*;
 
 public class UsuarioRepository {
 
-//    public UsuarioRepository() {
-//        criarTabelaSeNaoExistir();
-//    }
-
-//    private void criarTabelaSeNaoExistir() {
-//        String sql = "CREATE TABLE IF NOT EXISTS usuarios (" +
-//                "id INTEGER PRIMARY KEY AUTO_INCREMENT, " +
-//                "nome TEXT NOT NULL, " +
-//                "email TEXT UNIQUE NOT NULL, " +
-//                "senha TEXT NOT NULL, " +
-//                "tipo TEXT NOT NULL, " +
-//                "cpf TEXT, " +
-//                "endereco TEXT, " +
-//                "cnpj TEXT" +
-//                ")";
-//        try (Connection conn = DatabaseConnection.getConnection();
-//             Statement stmt = conn.createStatement()) {
-//            stmt.execute(sql);
-//        } catch (SQLException e) {
-//            throw new RegraNegocioException("Erro ao criar tabela de utilizadores: " + e.getMessage());
-//        }
-//    }
-
     public void salvarComprador(Comprador comprador) {
         String sql = "INSERT INTO usuarios (nome, email, senha, tipo, cpf, endereco) VALUES (?, ?, ?, 'COMPRADOR', ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -65,6 +42,7 @@ public class UsuarioRepository {
         }
     }
 
+    // A BUSCA DEVE SER POR EMAIL E SENHA JUNTOS!! NÃO ESQUEÇA DE VERIFICAR O HASH DA SENHA COM O METODO DO BCRYPT
     public Usuario buscarPorEmail(String email) {
         String sql = "SELECT * FROM usuarios WHERE email = ?";
         try (Connection conn = DatabaseConnection.getConnection();

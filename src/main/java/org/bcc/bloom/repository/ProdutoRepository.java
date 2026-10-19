@@ -45,6 +45,7 @@ public class ProdutoRepository {
         }
     }
 
+    //USAR PAGINAÇÃO SE FOR LISTAR TODOS DE TODAS AS LOJAS
     public List<Produto> listarTodos() {
         List<Produto> produtos = new ArrayList<>();
         String sql = "SELECT nome, descricao, estoque, preco FROM produtos";
