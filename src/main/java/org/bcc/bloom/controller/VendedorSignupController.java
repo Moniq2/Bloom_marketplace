@@ -3,14 +3,18 @@ package org.bcc.bloom.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+
+import org.bcc.bloom.exception.RegraNegocioException;
 import org.bcc.bloom.service.UsuarioService;
 import org.bcc.bloom.util.Navegador;
 
 public class VendedorSignupController {
     private final UsuarioService usuarioService;
+
     VendedorSignupController() {
         this.usuarioService = new UsuarioService();
     }
+
     VendedorSignupController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
@@ -39,7 +43,10 @@ public class VendedorSignupController {
         String senha1 = campoSenha1.getText();
         String senha2 = campoSenha2.getText();
 
-        usuarioService.validarDados(nome, email, cpf, senha);
-        usuarioService.cadastrarComprador(nome, email, senha, cpf);
+        if (!senha1.equals(senha2)) {
+            throw new RegraNegocioException("Erro: As senhas não conferem.");
+        }
+
+        usuarioService.cadastrarComprador(nome, email, senha1, cpf);
     }
 }
