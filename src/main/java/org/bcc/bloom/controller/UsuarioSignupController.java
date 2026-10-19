@@ -5,12 +5,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import org.bcc.bloom.service.UsuarioService;
 import org.bcc.bloom.util.Navegador;
+import org.bcc.bloom.exception.RegraNegocioException;
 
 public class UsuarioSignupController {
     private final UsuarioService usuarioService;
+
     UsuarioSignupController() {
         this.usuarioService = new UsuarioService();
     }
+
     UsuarioSignupController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
@@ -39,8 +42,11 @@ public class UsuarioSignupController {
         String senha1 = campoSenha1.getText();
         String senha2 = campoSenha2.getText();
 
-        usuarioService.validarDados(nome, email, cpf, senha);
-        usuarioService.cadastrarComprador(nome, email, senha, cpf);
+        if (!senha1.equals(senha2)) {
+            throw new RegraNegocioException("Erro: As senhas não conferem.");
+        }
+
+        usuarioService.cadastrarComprador(nome, email, senha1, cpf);
     }
 
 }

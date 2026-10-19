@@ -6,6 +6,8 @@ import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.model.Produto;
 import org.bcc.bloom.repository.ProdutoRepository;
 
+import java.util.List;
+
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository = new ProdutoRepository();
@@ -28,5 +30,41 @@ public class ProdutoService {
         loja.getProdutos().add(produto);
         produtoRepository.salvar(produto);
         return produto;
+    }
+
+    public List<Produto> listarProdutos(int pagina, int tamanho) {
+        return produtoRepository.listarPaginado(pagina, tamanho);
+    }
+
+    public List<Produto> listarProdutosDaLoja(Long lojaId, int pagina, int tamanho) {
+        if (lojaId == null) {
+            throw new RegraNegocioException("Erro: O id da loja é obrigatório.");
+        }
+        return produtoRepository.listarPorLoja(lojaId, pagina, tamanho);
+    }
+
+    public int contarProdutos() {
+        return produtoRepository.contarTotal();
+    }
+
+    public int contarProdutosDaLoja(Long lojaId) {
+        if (lojaId == null) {
+            throw new RegraNegocioException("Erro: O id da loja é obrigatório.");
+        }
+        return produtoRepository.contarPorLoja(lojaId);
+    }
+
+    public int totalDePaginas(int tamanho) {
+        if (tamanho <= 0) {
+            throw new RegraNegocioException("Erro: O tamanho da página deve ser maior que zero.");
+        }
+        return (contarProdutos() + tamanho - 1) / tamanho;
+    }
+
+    public int totalDePaginasDaLoja(Long lojaId, int tamanho) {
+        if (tamanho <= 0) {
+            throw new RegraNegocioException("Erro: O tamanho da página deve ser maior que zero.");
+        }
+        return (contarProdutosDaLoja(lojaId) + tamanho - 1) / tamanho;
     }
 }

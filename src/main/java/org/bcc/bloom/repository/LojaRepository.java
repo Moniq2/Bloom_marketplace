@@ -45,4 +45,47 @@ public class LojaRepository {
         }
         return lojas;
     }
+
+    public List<Loja> listarPaginado(int pagina, int tamanho) {
+        if (pagina < 0 || tamanho <= 0) {
+            throw new RegraNegocioException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
+        }
+
+        String sql = "SELECT * FROM lojas ORDER BY id LIMIT ? OFFSET ?";
+        List<Loja> lojas = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, tamanho);
+            pstmt.setInt(2, pagina * tamanho);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String nome = rs.getString("nome");
+                    String descricao = rs.getString("descricao");
+                    lojas.add(new Loja(nome, descricao, null));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao buscar lojas paginadas: " + e.getMessage());
+        }
+        return lojas;
+    }
+
+    public int contarTotalLojas() {
+        String sql = "SELECT COUNT(*) AS total FROM lojas";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao contar lojas: " + e.getMessage());
+        }
+    }
 }

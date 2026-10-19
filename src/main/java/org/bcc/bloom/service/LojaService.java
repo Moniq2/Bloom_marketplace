@@ -25,4 +25,19 @@ public class LojaService {
         lojaRepository.salvar(novaLoja, vendedor.getId());
         return novaLoja;
     }
+
+    public List<Loja> listarLojas(int pagina, int tamanho) {
+        return lojaRepository.listarPaginado(pagina, tamanho);
+    }
+
+    public int contarLojas() {
+        return lojaRepository.contarTotalLojas();
+    }
+
+    public int totalDePaginas(int tamanho) {
+        if (tamanho <= 0) {
+            throw new RegraNegocioException("Erro: O tamanho da página deve ser maior que zero.");
+        }
+        return (contarLojas() + tamanho - 1) / tamanho;
+    }
 }
