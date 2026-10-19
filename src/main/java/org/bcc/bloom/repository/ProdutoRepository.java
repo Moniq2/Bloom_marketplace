@@ -1,6 +1,7 @@
 package org.bcc.bloom.repository;
 
 import org.bcc.bloom.exception.RegraNegocioException;
+import org.bcc.bloom.model.Categoria;
 import org.bcc.bloom.model.Produto;
 
 import java.sql.*;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoRepository {
+
+    private static final String COLUNAS = "nome, descricao, estoque, preco, categoria";
 
     public ProdutoRepository() {
         criarTabelaSeNaoExistir();
@@ -20,6 +23,7 @@ public class ProdutoRepository {
                 "descricao VARCHAR(255), " +
                 "estoque INT, " +
                 "preco DECIMAL(10,2), " +
+                "categoria VARCHAR(20), " +
                 "loja_id BIGINT" +
                 ")";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -31,23 +35,12 @@ public class ProdutoRepository {
     }
 
     public void salvar(Produto produto) {
-        String sql = "INSERT INTO produtos (nome, descricao, estoque, preco) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, produto.getNome());
-            pstmt.setString(2, produto.getDescricao());
-            pstmt.setInt(3, produto.getEstoque());
-            pstmt.setDouble(4, produto.getPreco());
-
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao salvar o produto na base de dados: " + e.getMessage());
-        }
+        salvar(produto, null);
     }
 
     public void salvar(Produto produto, Long lojaId) {
-        String sql = "INSERT INTO produtos (nome, descricao, estoque, preco, loja_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO produtos (nome, descricao, estoque, preco, categoria, loja_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -55,7 +48,12 @@ public class ProdutoRepository {
             pstmt.setString(2, produto.getDescricao());
             pstmt.setInt(3, produto.getEstoque());
             pstmt.setDouble(4, produto.getPreco());
-            pstmt.setLong(5, lojaId);
+            pstmt.setString(5, produto.getCategoria() == null ? null : produto.getCategoria().name());
+            if (lojaId == null) {
+                pstmt.setNull(6, Types.BIGINT);
+            } else {
+                pstmt.setLong(6, lojaId);
+            }
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -65,19 +63,14 @@ public class ProdutoRepository {
 
     public List<Produto> listarTodos() {
         List<Produto> produtos = new ArrayList<>();
-        String sql = "SELECT nome, descricao, estoque, preco FROM produtos";
+        String sql = "SELECT " + COLUNAS + " FROM produtos";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Produto p = new Produto();
-                p.setNome(rs.getString("nome"));
-                p.setDescricao(rs.getString("descricao"));
-                p.setEstoque(rs.getInt("estoque"));
-                p.setPreco(rs.getDouble("preco"));
-                produtos.add(p);
+                produtos.add(converter(rs));
             }
         } catch (SQLException e) {
             throw new RegraNegocioException("Erro ao listar os produtos da base de dados: " + e.getMessage());
@@ -89,7 +82,7 @@ public class ProdutoRepository {
     public List<Produto> listarPaginado(int pagina, int tamanho) {
         validarPagina(pagina, tamanho);
 
-        String sql = "SELECT nome, descricao, estoque, preco FROM produtos ORDER BY id LIMIT ? OFFSET ?";
+        String sql = "SELECT " + COLUNAS + " FROM produtos ORDER BY id LIMIT ? OFFSET ?";
         List<Produto> produtos = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -112,7 +105,7 @@ public class ProdutoRepository {
     public List<Produto> listarPorLoja(Long lojaId, int pagina, int tamanho) {
         validarPagina(pagina, tamanho);
 
-        String sql = "SELECT nome, descricao, estoque, preco FROM produtos "
+        String sql = "SELECT " + COLUNAS + " FROM produtos "
                 + "WHERE loja_id = ? ORDER BY id LIMIT ? OFFSET ?";
         List<Produto> produtos = new ArrayList<>();
 
@@ -174,6 +167,11 @@ public class ProdutoRepository {
         p.setDescricao(rs.getString("descricao"));
         p.setEstoque(rs.getInt("estoque"));
         p.setPreco(rs.getDouble("preco"));
+
+        String categoria = rs.getString("categoria");
+        if (categoria != null) {
+            p.setCategoria(Categoria.valueOf(categoria));
+        }
         return p;
     }
 }
