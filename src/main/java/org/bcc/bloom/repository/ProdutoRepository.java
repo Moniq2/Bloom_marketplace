@@ -15,11 +15,12 @@ public class ProdutoRepository {
 
     private void criarTabelaSeNaoExistir() {
         String sql = "CREATE TABLE IF NOT EXISTS produtos (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "nome TEXT NOT NULL, " +
-                "descricao TEXT, " +
-                "estoque INTEGER, " +
-                "preco REAL" +
+                "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                "nome VARCHAR(100) NOT NULL, " +
+                "descricao VARCHAR(255), " +
+                "estoque INT, " +
+                "preco DECIMAL(10,2), " +
+                "loja_id BIGINT" +
                 ")";
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
@@ -33,12 +34,29 @@ public class ProdutoRepository {
         String sql = "INSERT INTO produtos (nome, descricao, estoque, preco) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setString(1, produto.getNome());
             pstmt.setString(2, produto.getDescricao());
             pstmt.setInt(3, produto.getEstoque());
             pstmt.setDouble(4, produto.getPreco());
-            
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao salvar o produto na base de dados: " + e.getMessage());
+        }
+    }
+
+    public void salvar(Produto produto, Long lojaId) {
+        String sql = "INSERT INTO produtos (nome, descricao, estoque, preco, loja_id) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, produto.getNome());
+            pstmt.setString(2, produto.getDescricao());
+            pstmt.setInt(3, produto.getEstoque());
+            pstmt.setDouble(4, produto.getPreco());
+            pstmt.setLong(5, lojaId);
+
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RegraNegocioException("Erro ao salvar o produto na base de dados: " + e.getMessage());
@@ -48,11 +66,11 @@ public class ProdutoRepository {
     public List<Produto> listarTodos() {
         List<Produto> produtos = new ArrayList<>();
         String sql = "SELECT nome, descricao, estoque, preco FROM produtos";
-        
+
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            
+
             while (rs.next()) {
                 Produto p = new Produto();
                 p.setNome(rs.getString("nome"));
@@ -64,7 +82,98 @@ public class ProdutoRepository {
         } catch (SQLException e) {
             throw new RegraNegocioException("Erro ao listar os produtos da base de dados: " + e.getMessage());
         }
-        
+
         return produtos;
+    }
+
+    public List<Produto> listarPaginado(int pagina, int tamanho) {
+        validarPagina(pagina, tamanho);
+
+        String sql = "SELECT nome, descricao, estoque, preco FROM produtos ORDER BY id LIMIT ? OFFSET ?";
+        List<Produto> produtos = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, tamanho);
+            pstmt.setInt(2, pagina * tamanho);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    produtos.add(converter(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao listar os produtos paginados: " + e.getMessage());
+        }
+        return produtos;
+    }
+
+    public List<Produto> listarPorLoja(Long lojaId, int pagina, int tamanho) {
+        validarPagina(pagina, tamanho);
+
+        String sql = "SELECT nome, descricao, estoque, preco FROM produtos "
+                + "WHERE loja_id = ? ORDER BY id LIMIT ? OFFSET ?";
+        List<Produto> produtos = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, lojaId);
+            pstmt.setInt(2, tamanho);
+            pstmt.setInt(3, pagina * tamanho);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    produtos.add(converter(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao listar os produtos da loja: " + e.getMessage());
+        }
+        return produtos;
+    }
+
+    public int contarTotal() {
+        String sql = "SELECT COUNT(*) AS total FROM produtos";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            return rs.next() ? rs.getInt("total") : 0;
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao contar os produtos: " + e.getMessage());
+        }
+    }
+
+    public int contarPorLoja(Long lojaId) {
+        String sql = "SELECT COUNT(*) AS total FROM produtos WHERE loja_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, lojaId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? rs.getInt("total") : 0;
+            }
+        } catch (SQLException e) {
+            throw new RegraNegocioException("Erro ao contar os produtos da loja: " + e.getMessage());
+        }
+    }
+
+    private void validarPagina(int pagina, int tamanho) {
+        if (pagina < 0 || tamanho <= 0) {
+            throw new RegraNegocioException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
+        }
+    }
+
+    private Produto converter(ResultSet rs) throws SQLException {
+        Produto p = new Produto();
+        p.setNome(rs.getString("nome"));
+        p.setDescricao(rs.getString("descricao"));
+        p.setEstoque(rs.getInt("estoque"));
+        p.setPreco(rs.getDouble("preco"));
+        return p;
     }
 }
