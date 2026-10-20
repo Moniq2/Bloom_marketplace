@@ -2,6 +2,7 @@ package org.bcc.bloom.model;
 
 public abstract class Usuario {
     private String nome;
+    private String cpf;
     private String email;
     private String senha;
     private Long id;
@@ -9,12 +10,13 @@ public abstract class Usuario {
 
     public Usuario() {}
 
-    public Usuario(String nome, String email, String senha, Long id) {
+    public Usuario(String nome, String email, String senha, Long id, String cpf) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.id = id;
         this.saldo = 0L;
+        this.cpf = cpf;
     }
 
     public String getNome() { return nome; }
@@ -31,4 +33,7 @@ public abstract class Usuario {
 
     public Long getSaldo() { return saldo; }
     public void setSaldo(Long saldo) { this.saldo = saldo; }
+
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
 }
