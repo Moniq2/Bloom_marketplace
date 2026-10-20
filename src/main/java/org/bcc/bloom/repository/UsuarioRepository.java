@@ -1,6 +1,6 @@
 package org.bcc.bloom.repository;
 
-import org.bcc.bloom.exception.RegraNegocioException;
+import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.model.Vendedor;
@@ -22,7 +22,7 @@ public class UsuarioRepository {
             
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao salvar comprador na base de dados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao salvar comprador na base de dados: " + e.getMessage());
         }
     }
 
@@ -38,11 +38,10 @@ public class UsuarioRepository {
             
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao salvar vendedor na base de dados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao salvar vendedor na base de dados: " + e.getMessage());
         }
     }
 
-    // A BUSCA DEVE SER POR EMAIL E SENHA JUNTOS!! NÃO ESQUEÇA DE VERIFICAR O HASH DA SENHA COM O METODO DO BCRYPT
     public Usuario buscarPorEmail(String email) {
         String sql = "SELECT * FROM usuarios WHERE email = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -67,7 +66,7 @@ public class UsuarioRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao buscar utilizador por e-mail: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao buscar utilizador por e-mail: " + e.getMessage());
         }
         return null;
     }

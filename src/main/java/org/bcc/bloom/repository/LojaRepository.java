@@ -1,6 +1,7 @@
 package org.bcc.bloom.repository;
 
-import org.bcc.bloom.exception.RegraNegocioException;
+import org.bcc.bloom.exception.ErroBancoDadosException;
+import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Loja;
 
 import java.sql.*;
@@ -12,17 +13,39 @@ public class LojaRepository {
     public LojaRepository() {}
 
     public void salvar(Loja loja, long vendedor_id) {
+    private void criarTabelaSeNaoExistir() {
+        String sql = "CREATE TABLE IF NOT EXISTS lojas (" +
+                "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                "nome VARCHAR(100) NOT NULL, " +
+                "descricao VARCHAR(255), " +
+                "vendedor_email VARCHAR(150)" +
+                ")";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao criar tabela de lojas: " + e.getMessage());
+        }
+    }
+
+    public void salvar(Loja loja, String vendedorEmail) {
         String sql = "INSERT INTO lojas (nome, descricao, vendedor_email) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, loja.getNome());
             pstmt.setString(2, loja.getDescricao());
             pstmt.setLong(3, vendedor_id);
 
             pstmt.executeUpdate();
+
+            try (ResultSet chaves = pstmt.getGeneratedKeys()) {
+                if (chaves.next()) {
+                    loja.setId(chaves.getLong(1));
+                }
+            }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao salvar loja na base de dados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao salvar loja na base de dados: " + e.getMessage());
         }
     }
 
@@ -35,20 +58,21 @@ public class LojaRepository {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
+                lojas.add(converter(rs));
                 String nome = rs.getString("nome");
                 String descricao = rs.getString("descricao");
                 byte[] capa = rs.getBytes("capa");
                 lojas.add(new Loja(nome, descricao, capa));
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao buscar lojas: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao buscar lojas: " + e.getMessage());
         }
         return lojas;
     }
 
     public List<Loja> listarPaginado(int pagina, int tamanho) {
         if (pagina < 0 || tamanho <= 0) {
-            throw new RegraNegocioException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
+            throw new ValorInvalidoException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
         }
 
         String sql = "SELECT * FROM lojas ORDER BY id LIMIT ? OFFSET ?";
@@ -62,13 +86,11 @@ public class LojaRepository {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    String nome = rs.getString("nome");
-                    String descricao = rs.getString("descricao");
-                    lojas.add(new Loja(nome, descricao, null));
+                    lojas.add(converter(rs));
                 }
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao buscar lojas paginadas: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao buscar lojas paginadas: " + e.getMessage());
         }
         return lojas;
     }
@@ -80,12 +102,15 @@ public class LojaRepository {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            if (rs.next()) {
-                return rs.getInt("total");
-            }
-            return 0;
+            return rs.next() ? rs.getInt("total") : 0;
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao contar lojas: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao contar lojas: " + e.getMessage());
         }
+    }
+
+    private Loja converter(ResultSet rs) throws SQLException {
+        Loja loja = new Loja(rs.getString("nome"), rs.getString("descricao"), null);
+        loja.setId(rs.getLong("id"));
+        return loja;
     }
 }
