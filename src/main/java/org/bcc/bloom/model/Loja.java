@@ -1,3 +1,4 @@
+
 package org.bcc.bloom.model;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ public class Loja {
     private String descricao;
     private ArrayList<Produto> produtos;
     private byte[] capa;
-    private long id;
+    private Long id;
 
     public Loja() {
         this.produtos = new ArrayList<>();
@@ -20,18 +21,43 @@ public class Loja {
         this.capa = capa;
     }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public String getNome() {
+        return nome;
+    }
 
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-    public ArrayList<Produto> getProdutos() { return produtos; }
-    public void setProdutos(ArrayList<Produto> produtos) { this.produtos = produtos; }
+    public String getDescricao() {
+        return descricao;
+    }
 
-    public byte[] getCapa() { return capa; }
-    public void setCapa(byte[] capa) { this.capa = capa; }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
+    public ArrayList<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(ArrayList<Produto> produtos) {
+        this.produtos = produtos;
+    }
+
+    public byte[] getCapa() {
+        return capa;
+    }
+
+    public void setCapa(byte[] capa) {
+        this.capa = capa;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

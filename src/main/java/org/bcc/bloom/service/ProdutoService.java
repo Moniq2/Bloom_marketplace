@@ -12,7 +12,8 @@ public class ProdutoService {
 
     private final ProdutoRepository produtoRepository = new ProdutoRepository();
 
-    public Produto cadastrarProduto(Loja loja, String nome, String descricao, int estoque, double preco, Categoria categoria, byte[] imagem) {
+    public Produto cadastrarProduto(Loja loja, String nome, String descricao, int estoque, double preco,
+            Categoria categoria, byte[] imagem) {
         if (loja == null) {
             throw new RegraNegocioException("Erro: A loja de destino não pode ser nula.");
         }
@@ -28,7 +29,10 @@ public class ProdutoService {
 
         Produto produto = new Produto(nome, descricao, estoque, preco, categoria, imagem);
         loja.getProdutos().add(produto);
-        produtoRepository.salvar(produto);
+        if (loja.getId() == 0) {
+            throw new RegraNegocioException("Erro: A loja precisa estar cadastrada antes de receber produtos.");
+        }
+        produtoRepository.salvar(produto, loja.getId());
         return produto;
     }
 

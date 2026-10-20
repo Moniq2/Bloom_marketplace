@@ -31,13 +31,19 @@ public class LojaRepository {
     public void salvar(Loja loja, String vendedorEmail) {
         String sql = "INSERT INTO lojas (nome, descricao, vendedor_email) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, loja.getNome());
             pstmt.setString(2, loja.getDescricao());
             pstmt.setString(3, vendedorEmail);
 
             pstmt.executeUpdate();
+
+            try (ResultSet chaves = pstmt.getGeneratedKeys()) {
+                if (chaves.next()) {
+                    loja.setId(chaves.getLong(1));
+                }
+            }
         } catch (SQLException e) {
             throw new RegraNegocioException("Erro ao salvar loja na base de dados: " + e.getMessage());
         }
@@ -52,9 +58,7 @@ public class LojaRepository {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                String nome = rs.getString("nome");
-                String descricao = rs.getString("descricao");
-                lojas.add(new Loja(nome, descricao, null));
+                lojas.add(converter(rs));
             }
         } catch (SQLException e) {
             throw new RegraNegocioException("Erro ao buscar lojas: " + e.getMessage());
@@ -78,9 +82,7 @@ public class LojaRepository {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    String nome = rs.getString("nome");
-                    String descricao = rs.getString("descricao");
-                    lojas.add(new Loja(nome, descricao, null));
+                    lojas.add(converter(rs));
                 }
             }
         } catch (SQLException e) {
@@ -96,12 +98,15 @@ public class LojaRepository {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            if (rs.next()) {
-                return rs.getInt("total");
-            }
-            return 0;
+            return rs.next() ? rs.getInt("total") : 0;
         } catch (SQLException e) {
             throw new RegraNegocioException("Erro ao contar lojas: " + e.getMessage());
         }
+    }
+
+    private Loja converter(ResultSet rs) throws SQLException {
+        Loja loja = new Loja(rs.getString("nome"), rs.getString("descricao"), null);
+        loja.setId(rs.getLong("id"));
+        return loja;
     }
 }
