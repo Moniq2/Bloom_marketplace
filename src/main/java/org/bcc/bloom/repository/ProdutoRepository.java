@@ -1,6 +1,7 @@
 package org.bcc.bloom.repository;
 
-import org.bcc.bloom.exception.RegraNegocioException;
+import org.bcc.bloom.exception.ErroBancoDadosException;
+import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Categoria;
 import org.bcc.bloom.model.Produto;
 
@@ -30,7 +31,7 @@ public class ProdutoRepository {
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao criar tabela de produtos: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao criar tabela de produtos: " + e.getMessage());
         }
     }
 
@@ -57,7 +58,7 @@ public class ProdutoRepository {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao salvar o produto na base de dados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao salvar o produto na base de dados: " + e.getMessage());
         }
     }
 
@@ -73,7 +74,7 @@ public class ProdutoRepository {
                 produtos.add(converter(rs));
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao listar os produtos da base de dados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao listar os produtos da base de dados: " + e.getMessage());
         }
 
         return produtos;
@@ -97,7 +98,7 @@ public class ProdutoRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao listar os produtos paginados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao listar os produtos paginados: " + e.getMessage());
         }
         return produtos;
     }
@@ -122,7 +123,7 @@ public class ProdutoRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao listar os produtos da loja: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao listar os produtos da loja: " + e.getMessage());
         }
         return produtos;
     }
@@ -136,7 +137,7 @@ public class ProdutoRepository {
 
             return rs.next() ? rs.getInt("total") : 0;
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao contar os produtos: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao contar os produtos: " + e.getMessage());
         }
     }
 
@@ -151,13 +152,13 @@ public class ProdutoRepository {
                 return rs.next() ? rs.getInt("total") : 0;
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao contar os produtos da loja: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao contar os produtos da loja: " + e.getMessage());
         }
     }
 
     private void validarPagina(int pagina, int tamanho) {
         if (pagina < 0 || tamanho <= 0) {
-            throw new RegraNegocioException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
+            throw new ValorInvalidoException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
         }
     }
 

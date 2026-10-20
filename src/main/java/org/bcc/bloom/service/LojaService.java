@@ -1,6 +1,8 @@
 package org.bcc.bloom.service;
 
-import org.bcc.bloom.exception.RegraNegocioException;
+import org.bcc.bloom.exception.CampoObrigatorioException;
+import org.bcc.bloom.exception.RecursoNaoEncontradoException;
+import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.repository.LojaRepository;
@@ -13,15 +15,15 @@ public class LojaService {
 
     public Loja cadastrarLoja(Vendedor vendedor, String nome, String descricao, byte[] capa) {
         if (vendedor == null) {
-            throw new RegraNegocioException("Erro: Vendedor não pode ser nulo.");
+            throw new RecursoNaoEncontradoException("Erro: Vendedor não encontrado.");
         }
         if (nome == null || nome.trim().isEmpty()) {
-            throw new RegraNegocioException("Erro: O nome da loja é obrigatório.");
+            throw new CampoObrigatorioException("Erro: O nome da loja é obrigatório.");
         }
 
         Loja novaLoja = new Loja(nome, descricao, capa);
-        vendedor.getLojas().add(novaLoja);
         lojaRepository.salvar(novaLoja, vendedor.getEmail());
+        vendedor.getLojas().add(novaLoja);
         return novaLoja;
     }
 
@@ -35,7 +37,7 @@ public class LojaService {
 
     public int totalDePaginas(int tamanho) {
         if (tamanho <= 0) {
-            throw new RegraNegocioException("Erro: O tamanho da página deve ser maior que zero.");
+            throw new ValorInvalidoException("Erro: O tamanho da página deve ser maior que zero.");
         }
         return (contarLojas() + tamanho - 1) / tamanho;
     }

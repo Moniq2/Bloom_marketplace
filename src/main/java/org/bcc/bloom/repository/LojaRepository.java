@@ -1,6 +1,7 @@
 package org.bcc.bloom.repository;
 
-import org.bcc.bloom.exception.RegraNegocioException;
+import org.bcc.bloom.exception.ErroBancoDadosException;
+import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Loja;
 
 import java.sql.*;
@@ -24,7 +25,7 @@ public class LojaRepository {
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao criar tabela de lojas: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao criar tabela de lojas: " + e.getMessage());
         }
     }
 
@@ -45,7 +46,7 @@ public class LojaRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao salvar loja na base de dados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao salvar loja na base de dados: " + e.getMessage());
         }
     }
 
@@ -61,14 +62,14 @@ public class LojaRepository {
                 lojas.add(converter(rs));
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao buscar lojas: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao buscar lojas: " + e.getMessage());
         }
         return lojas;
     }
 
     public List<Loja> listarPaginado(int pagina, int tamanho) {
         if (pagina < 0 || tamanho <= 0) {
-            throw new RegraNegocioException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
+            throw new ValorInvalidoException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
         }
 
         String sql = "SELECT * FROM lojas ORDER BY id LIMIT ? OFFSET ?";
@@ -86,7 +87,7 @@ public class LojaRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao buscar lojas paginadas: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao buscar lojas paginadas: " + e.getMessage());
         }
         return lojas;
     }
@@ -100,7 +101,7 @@ public class LojaRepository {
 
             return rs.next() ? rs.getInt("total") : 0;
         } catch (SQLException e) {
-            throw new RegraNegocioException("Erro ao contar lojas: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao contar lojas: " + e.getMessage());
         }
     }
 
