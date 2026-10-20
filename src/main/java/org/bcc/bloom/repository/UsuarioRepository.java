@@ -27,14 +27,14 @@ public class UsuarioRepository {
     }
 
     public void salvarVendedor(Vendedor vendedor) {
-        String sql = "INSERT INTO usuarios (nome, email, senha, tipo, cnpj) VALUES (?, ?, ?, 'VENDEDOR', ?)";
+        String sql = "INSERT INTO usuarios (nome, email, senha, tipo, cpf) VALUES (?, ?, ?, 'VENDEDOR', ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, vendedor.getNome());
             pstmt.setString(2, vendedor.getEmail());
             pstmt.setString(3, vendedor.getSenha());
-            pstmt.setString(4, vendedor.getCnpj());
+            pstmt.setString(4, vendedor.getCpf());
             
             pstmt.executeUpdate();
         } catch (SQLException e) {

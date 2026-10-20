@@ -13,22 +13,6 @@ public class LojaRepository {
     public LojaRepository() {}
 
     public void salvar(Loja loja, long vendedor_id) {
-    private void criarTabelaSeNaoExistir() {
-        String sql = "CREATE TABLE IF NOT EXISTS lojas (" +
-                "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
-                "nome VARCHAR(100) NOT NULL, " +
-                "descricao VARCHAR(255), " +
-                "vendedor_email VARCHAR(150)" +
-                ")";
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            throw new ErroBancoDadosException("Erro ao criar tabela de lojas: " + e.getMessage());
-        }
-    }
-
-    public void salvar(Loja loja, String vendedorEmail) {
         String sql = "INSERT INTO lojas (nome, descricao, vendedor_email) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

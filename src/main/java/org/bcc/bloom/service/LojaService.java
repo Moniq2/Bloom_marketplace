@@ -6,7 +6,6 @@ import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.repository.LojaRepository;
-
 import java.util.List;
 
 public class LojaService {
@@ -22,9 +21,8 @@ public class LojaService {
         }
 
         Loja novaLoja = new Loja(nome, descricao, capa);
-        lojaRepository.salvar(novaLoja, vendedor.getEmail());
-        vendedor.getLojas().add(novaLoja);
         lojaRepository.salvar(novaLoja, vendedor.getId());
+        vendedor.getLojas().add(novaLoja);
         return novaLoja;
     }
 
