@@ -29,7 +29,7 @@
 
     <VBox alignment="CENTER_LEFT" spacing="8" styleClass="painel-formulario" HBox.hgrow="ALWAYS">
 
-        <Label styleClass="titulo-formulario" text="Olá, vendedor!" />
+        <Label styleClass="titulo-formulario" text="Olá, usuário!" />
         <Label styleClass="subtitulo" text="preencha os dados para se cadastrar" />
 
         <Label styleClass="rotulo" text="Nome" />
@@ -38,13 +38,12 @@
         <Label styleClass="rotulo" text="Email" />
         <PasswordField fx:id="campoEmail" promptText="nome@email.com" styleClass="campo" />
 
-        <Label fx:id="rotuloErro" managed="false" styleClass="mensagem-erro" visible="false" />
       <Label styleClass="rotulo" text="CPF" />
       <TextField fx:id="campoCPF" promptText="123.456.789.00" styleClass="campo" />
       <Label styleClass="rotulo" text="Senha" />
-      <TextField fx:id="campoSenha1" promptText="crie uma senha" styleClass="campo" />
-      <TextField fx:id="campoSenha2" promptText="confirme a senha" styleClass="campo" />
-      <Label fx:id="erroLabel" styleClass="mensagem-erro" stylesheets="@../css/bloom.css" text="Erro" visible="false" />
+      <PasswordField fx:id="campoSenha1" promptText="crie uma senha" styleClass="campo" />
+      <PasswordField fx:id="campoSenha2" promptText="confirme a senha" styleClass="campo" />
+      <Label fx:id="rotuloErro" styleClass="mensagem-erro" stylesheets="@../css/bloom.css" text="Erro" visible="false" />
 
         <Button maxWidth="Infinity" onAction="#cadastrar" styleClass="botao-primario" text="Cadastrar-se" />
 

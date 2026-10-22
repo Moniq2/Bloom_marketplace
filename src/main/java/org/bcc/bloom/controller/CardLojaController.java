@@ -9,6 +9,7 @@ import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.util.Navegador;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 
 public class CardLojaController {
     private long id;
@@ -25,7 +26,7 @@ public class CardLojaController {
         Navegador.abrirPagina(event, "/fxml/Loja.fxml");
     }
 
-    private void setupCard(Loja loja){
+    public void setupCard(Loja loja){
         nomeLojaLabel.setText(loja.getNome());
         descricaoLabel.setText(loja.getDescricao());
 

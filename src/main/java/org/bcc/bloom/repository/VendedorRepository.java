@@ -7,10 +7,10 @@ import org.bcc.bloom.model.Vendedor;
 
 import java.sql.*;
 
-public class UsuarioRepository {
+public class VendedorRepository {
 
     public void salvarComprador(Comprador comprador) {
-        String sql = "INSERT INTO usuarios (nome, email, senha, tipo, cpf, endereco) VALUES (?, ?, ?, 'COMPRADOR', ?, ?)";
+        String sql = "INSERT INTO vendedor (nome, email, senha, cnpj) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
@@ -27,14 +27,14 @@ public class UsuarioRepository {
     }
 
     public void salvarVendedor(Vendedor vendedor) {
-        String sql = "INSERT INTO usuarios (nome, email, senha, tipo, cpf) VALUES (?, ?, ?, 'VENDEDOR', ?)";
+        String sql = "INSERT INTO vendedor (nome, email, senha, cnpj) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, vendedor.getNome());
             pstmt.setString(2, vendedor.getEmail());
             pstmt.setString(3, vendedor.getSenha());
-            pstmt.setString(4, vendedor.getCpf());
+            pstmt.setString(4, vendedor.getCnpj());
             
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -43,26 +43,21 @@ public class UsuarioRepository {
     }
 
     public Usuario buscarPorEmail(String email) {
-        String sql = "SELECT * FROM usuarios WHERE email = ?";
+        String sql = "SELECT * FROM vendedor WHERE email = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    String tipo = rs.getString("tipo");
                     String nome = rs.getString("nome");
                     String senha = rs.getString("senha");
                     long id = rs.getLong("id");
+                    String cnpj = rs.getString("cnpj");
 
-                    if ("COMPRADOR".equals(tipo)) {
-                        String cpf = rs.getString("cpf");
-                        String endereco = rs.getString("endereco");
-                        return new Comprador(nome, email, senha, id, cpf, endereco);
-                    } else {
-                        String cnpj = rs.getString("cnpj");
-                        return new Vendedor(nome, email, senha, id, cnpj);
-                    }
+                    Vendedor vendedor = new Vendedor(nome, email, senha, cnpj);
+                    vendedor.setId(id);
+                    return vendedor;
                 }
             }
         } catch (SQLException e) {

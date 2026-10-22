@@ -12,9 +12,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.bcc.bloom.model.Vendedor;
+
 import java.io.IOException;
 
-public class MainController {
+public class MainVendedorController {
 
     @FXML
     private VBox barraLateral;
@@ -25,6 +27,7 @@ public class MainController {
     @FXML
     private StackPane areaConteudo;
 
+    private Vendedor vendedor;
     private static final double LARGURA_ABERTA = 220;
 
     private boolean barraAberta = true;
@@ -36,6 +39,10 @@ public class MainController {
         recorte.heightProperty().bind(barraLateral.heightProperty());
 
         barraLateral.setClip(recorte);
+    }
+
+    public void setup (Vendedor vendedor) {
+        this.vendedor = vendedor;
     }
 
     @FXML
@@ -58,22 +65,17 @@ public class MainController {
 
     @FXML
     private void aoClicarInicio() {
-        trocarTela("/fxml/ListaLojas.fxml");
+        trocarTela("/fxml/Lojas.fxml");
     }
 
     @FXML
-    private void aoClicarCatalogo() {
-        trocarTela("/fxml/catalogo.fxml");
-    }
-
-    @FXML
-    private void aoClicarCarrinho() {
-        trocarTela("/fxml/carrinho.fxml");
+    private void aoClicarConta() {
+        trocarTela("/fxml/ContaVendedor.fxml");
     }
 
     @FXML
     private void aoClicarPedidos() {
-        trocarTela("/fxml/pedidos.fxml");
+        trocarTela("/fxml/PedidosVendedor.fxml");
     }
 
     @FXML

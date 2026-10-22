@@ -3,7 +3,6 @@ package org.bcc.bloom.repository;
 import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Loja;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +11,14 @@ public class LojaRepository {
 
     public LojaRepository() {}
 
+    // MELHORE ESSE MÉTODO. ADICIONAR ID DA LOJA CRIADA PELO BD NA COLUNA loja_id DO VENDEDOR, USAR TRANSAÇÃO!!
     public void salvar(Loja loja, long vendedor_id) {
-        String sql = "INSERT INTO lojas (nome, descricao, vendedor_email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO loja (nome, descricao) VALUES (?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, loja.getNome());
             pstmt.setString(2, loja.getDescricao());
-            pstmt.setLong(3, vendedor_id);
 
             pstmt.executeUpdate();
 
@@ -34,7 +33,7 @@ public class LojaRepository {
     }
 
     public List<Loja> listarTodas() {
-        String sql = "SELECT * FROM lojas";
+        String sql = "SELECT * FROM loja";
         List<Loja> lojas = new ArrayList<>(); //FAZER USANDO PAGINAÇÃO!!!
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -59,7 +58,7 @@ public class LojaRepository {
             throw new ValorInvalidoException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
         }
 
-        String sql = "SELECT * FROM lojas ORDER BY id LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM loja ORDER BY id LIMIT ? OFFSET ?";
         List<Loja> lojas = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -80,7 +79,7 @@ public class LojaRepository {
     }
 
     public int contarTotalLojas() {
-        String sql = "SELECT COUNT(*) AS total FROM lojas";
+        String sql = "SELECT COUNT(*) AS total FROM loja";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();

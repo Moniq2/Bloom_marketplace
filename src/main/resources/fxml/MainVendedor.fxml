@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="640" prefWidth="1000" styleClass="raiz-principal" stylesheets="@../css/barra-lateral.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.MainController">
+<BorderPane prefHeight="640" prefWidth="1000" styleClass="raiz-principal" stylesheets="@../css/barra-lateral.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.MainVendedorController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="14" styleClass="barra-superior" stylesheets="@../css/barra-lateral.css">
@@ -29,10 +29,10 @@
             </padding>
 
             <Button maxWidth="Infinity" onAction="#aoClicarInicio" styleClass="item-menu" text="Início" />
-            <Button maxWidth="Infinity" onAction="#aoClicarCarrinho" styleClass="item-menu" text="Carrinho" />
-            <Button maxWidth="Infinity" onAction="#aoClicarPedidos" styleClass="item-menu" text="Meus pedidos" />
-         <Button maxWidth="Infinity" onAction="#aoClicarCatalogo" styleClass="item-menu" text="Meus dados" />
-            <Button maxWidth="Infinity" onAction="#aoClicarCatalogo" styleClass="item-menu" text="Quero ser um vendedor" />
+            <Button maxWidth="Infinity" onAction="#aoClicarPedidos" styleClass="item-menu" text="Pedidos" />
+            <Button maxWidth="Infinity" onAction="#aoClicarMinhaLoja" styleClass="item-menu" text="Minha Loja" />
+         <Button maxWidth="Infinity" onAction="#aoClicarConta" styleClass="item-menu" text="Conta" />
+            <Button maxWidth="Infinity" onAction="#aoClicarSuporte" styleClass="item-menu" text="Suporte" />
 
             <Region VBox.vgrow="ALWAYS" />
 

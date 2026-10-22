@@ -5,43 +5,38 @@ import org.bcc.bloom.exception.CpfInvalidoException;
 import org.bcc.bloom.exception.CredenciaisInvalidasException;
 import org.bcc.bloom.exception.EmailInvalidoException;
 import org.bcc.bloom.exception.EmailJaCadastradoException;
-import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.exception.SenhaInvalidaException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.model.Vendedor;
-import org.bcc.bloom.repository.UsuarioRepository;
+import org.bcc.bloom.repository.VendedorRepository;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository = new UsuarioRepository();
+    private final VendedorRepository vendedorRepository = new VendedorRepository();
 
-    public Comprador cadastrarComprador(String nome, String email, String senha, String cpf ){
-        validarDados(nome, email, cpf, senha);
-        if (usuarioRepository.buscarPorEmail(email) != null) {
+    //O parâmetro cadastro refere-se a de pessoa física(CPF) ou pessoa jurídica(CNPJ)
+    public void cadastrar(String nome, String email, String senha, String cadastro, String tipo){
+        if (vendedorRepository.buscarPorEmail(email) != null) {
             throw new EmailJaCadastradoException("Erro: Já existe um utilizador registado com este e-mail.");
         }
-        String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
-        Comprador comprador = new Comprador(nome, email, senhaCriptografada, null, cpf, null);
-        usuarioRepository.salvarComprador(comprador);
-        return comprador;
-    }
-
-    public Vendedor cadastrarVendedor(String nome, String email, String senha, Long id, String cnpj) {
-        if (usuarioRepository.buscarPorEmail(email) != null) {
-            throw new EmailJaCadastradoException("Erro: Já existe um utilizador registado com este e-mail.");
+        if (tipo.equalsIgnoreCase("Vendedor")) {
+            String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
+            Vendedor vendedor = new Vendedor(nome, email, senhaCriptografada, cadastro);
+            vendedorRepository.salvarVendedor(vendedor);
         }
-        String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
-        Vendedor vendedor = new Vendedor(nome, email, senhaCriptografada, id, cnpj);
-        usuarioRepository.salvarVendedor(vendedor);
-        return vendedor;
+        else if (tipo.equalsIgnoreCase("Comprador")) {
+            validarDados(nome, email, cadastro, senha);
+            String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
+            Comprador comprador = new Comprador(nome, email, senhaCriptografada, cadastro);
+            vendedorRepository.salvarComprador(comprador);
+        }
     }
 
-    //USAR BCRYPT
     public Usuario login(String email, String senha) {
-        Usuario usuario = usuarioRepository.buscarPorEmail(email);
+        Usuario usuario = vendedorRepository.buscarPorEmail(email);
         if (usuario == null || senha == null || !BCrypt.checkpw(senha, usuario.getSenha())) {
             throw new CredenciaisInvalidasException("Credenciais inválidas! Verifique o e-mail e a senha.");
         }
@@ -50,7 +45,7 @@ public class UsuarioService {
 
     public void depositar(Usuario usuario, Long valor) {
         if (usuario == null) {
-            throw new RecursoNaoEncontradoException("Erro: Utilizador não encontrado.");
+            throw new NullPointerException("Usuario não pode ser nulo.");
         }
         if (valor == null || valor <= 0) {
             throw new ValorInvalidoException("Erro: O valor do depósito deve ser maior que zero.");
@@ -58,7 +53,6 @@ public class UsuarioService {
         usuario.setSaldo(usuario.getSaldo() + valor);
     }
 
-    //CRIAR EXCECOES PERSONALIZADAS
     public void validarDados(String nome, String email, String cpf, String senha) {
         if (nome == null || nome.isBlank()) {
             throw new CampoObrigatorioException("Erro: O nome é obrigatório.");

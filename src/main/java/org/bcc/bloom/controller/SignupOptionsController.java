@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import org.bcc.bloom.util.Navegador;
 
 public class SignupOptionsController {
+    public SignupOptionsController() {}
+
     @FXML
     private void abrirTelaCadastroVendedor(ActionEvent event) {
         Navegador.abrirPagina(event, "/fxml/VendedorSignup.fxml");

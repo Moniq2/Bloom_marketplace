@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Navegador {
-    public static void abrirPagina(ActionEvent event, String url) {
+    public static <T> T abrirPagina(ActionEvent event, String url) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -20,8 +20,10 @@ public class Navegador {
             stage.setTitle("Login");
             stage.setScene(scene);
             stage.show();
+            return loader.getController();
         }
         catch (IOException e) {
+            System.out.println("Erro aqui");
             throw new RuntimeException(e);
         }
     }

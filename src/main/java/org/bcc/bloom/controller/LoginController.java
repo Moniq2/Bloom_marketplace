@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.service.UsuarioService;
 import org.bcc.bloom.util.Navegador;
 
@@ -41,11 +42,12 @@ public class LoginController {
         }
         esconderErro();
         try {
-            usuarioService.login(email, senha);
-            Navegador.abrirPagina(event,"/fxml/Main.fxml");
+            Usuario usuario = usuarioService.login(email, senha);
+            MainCompradorController controller = Navegador.abrirPagina(event, "/fxml/MainComprador.fxml");
+            controller.setup(usuario);
         }
         catch (Exception e) {
-            mostrarErro(e.getCause().getMessage());
+            mostrarErro(e.getMessage());
         }
     }
 

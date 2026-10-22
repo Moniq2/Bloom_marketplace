@@ -22,7 +22,7 @@ public class LojaService {
 
         Loja novaLoja = new Loja(nome, descricao, capa);
         lojaRepository.salvar(novaLoja, vendedor.getId());
-        vendedor.getLojas().add(novaLoja);
+        vendedor.setLoja(novaLoja);
         return novaLoja;
     }
 

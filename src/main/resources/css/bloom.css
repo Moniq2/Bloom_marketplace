@@ -129,3 +129,64 @@
     -fx-font-size: 13px;
     -fx-text-fill: #C4573A;
 }
+
+.tela-lojas {
+    -fx-background-color: transparent;
+}
+
+/*Botao Buscar*/
+.botao-buscar {
+    -fx-background-color: #5B7B3A;
+    -fx-background-radius: 8;
+    -fx-text-fill: #F7F1E3;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 11 22 11 22;
+    -fx-cursor: hand;
+}
+
+.botao-buscar:hover {
+    -fx-background-color: #4A6630;
+}
+
+/*  Area de rolagem transparente (tira o fundo e a borda cinza padrao)  */
+.rolagem {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.rolagem > .viewport {
+    -fx-background-color: transparent;
+}
+
+/*  Paginacao  */
+.botao-paginacao {
+    -fx-background-color: transparent;
+    -fx-border-color: #5B7B3A;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #5B7B3A;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+
+.botao-paginacao:hover {
+    -fx-background-color: #E3CF9F;
+}
+
+/* Botao desativado (primeira/ultima pagina) fica apagado */
+.botao-paginacao:disabled {
+    -fx-opacity: 0.4;
+}
+
+.rotulo-pagina {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-text-fill: #3B3024;
+}
