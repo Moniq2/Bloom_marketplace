@@ -31,7 +31,8 @@ CREATE TABLE carrinho (
 CREATE TABLE pedido (
                         comprador_id BIGINT,
                         FOREIGN KEY (comprador_id) REFERENCES comprador(id),
-                        id BIGINT PRIMARY KEY AUTO_INCREMENT
+                        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                        valor_total DOUBLE
 );
 
 CREATE TABLE loja (
@@ -53,17 +54,11 @@ CREATE TABLE produto (
                          categoria ENUM("frutas", "verduras", "ervas", "grãos", "legumes")
 );
 
-CREATE TABLE pedido_produto (
-                                pedido_id BIGINT,
-                                FOREIGN KEY (pedido_id) REFERENCES pedido(id),
-                                produto_id BIGINT,
-                                FOREIGN KEY (produto_id) REFERENCES produto(id),
-                                valor_total FLOAT
-);
-
-CREATE TABLE carrinho_produto (
-                                  carrinho_id BIGINT,
-                                  FOREIGN KEY (carrinho_id) REFERENCES carrinho(id),
-                                  produto_id BIGINT,
-                                  FOREIGN KEY (produto_id) REFERENCES produto(id)
+CREATE TABLE item (
+                      produto_id BIGINT,
+                      FOREIGN KEY (produto_id) REFERENCES produto(id),
+                      quantidade int NOT NULL DEFAULT 1,
+                      id BIGINT PRIMARY KEY,
+                      container_id BIGINT, # O container pode ser um carrinho ou um pedido
+                      valor_unitario DOUBLE NOT NULL
 );

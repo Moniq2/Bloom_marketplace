@@ -25,9 +25,9 @@ public class LojasController {
 
         List<Loja> lojas = lojaService.listarLojas(paginaAtual, 10);
 
-        if (lojas.isEmpty()){
+        if (lojas.isEmpty()) {
             rotuloVazio.setOpacity(1);
-            rotuloVazio.setManaged(false);
+            rotuloVazio.setManaged(true);
         }
 
         for  (Loja loja : lojas) {

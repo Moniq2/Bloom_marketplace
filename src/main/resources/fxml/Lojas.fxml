@@ -15,20 +15,17 @@
         <Insets bottom="8" left="8" right="8" top="8" />
     </padding>
 
-    <!-- Titulo da tela -->
     <Label styleClass="titulo-formulario" text="Lojas para você" />
 
-    <!-- Barra de pesquisa: Enter no campo ou clique no botao fazem a busca -->
     <HBox alignment="CENTER_LEFT" spacing="10">
         <TextField fx:id="campoBusca" onAction="#aoBuscar" promptText="Buscar loja pelo nome..." styleClass="campo" HBox.hgrow="ALWAYS" />
         <Button onAction="#aoBuscar" styleClass="botao-buscar" text="Buscar" />
     </HBox>
 
-    <!-- Area rolavel onde os cards das lojas serao adicionados pelo codigo -->
     <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem" VBox.vgrow="ALWAYS">
         <content>
             <VBox spacing="12">
-                <!-- FlowPane coloca os cards lado a lado e quebra a linha sozinho -->
+
                 <FlowPane fx:id="painelLojas" hgap="20" vgap="20" />
 
                 <!-- Mensagem para quando nenhuma loja for encontrada -->
