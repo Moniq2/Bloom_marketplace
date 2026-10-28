@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- StackPane empilha dois estados: carrinho com itens e carrinho vazio -->
+
+<StackPane stylesheets="@../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.CarrinhoController">
+
+    <!-- ===== Estado 1: carrinho com itens ===== -->
+    <VBox fx:id="conteudoCarrinho" spacing="6">
+        <padding>
+            <Insets bottom="8" left="8" right="8" top="8" />
+        </padding>
+
+        <Label styleClass="titulo-formulario" text="Meu carrinho" />
+        <Label fx:id="rotuloQuantidade" styleClass="subtitulo" text="0 itens" />
+
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets bottom="0" left="0" right="0" top="10" />
+            </padding>
+
+            <!-- Lado esquerdo: grupos de lojas com os itens (adicionados pelo codigo) -->
+            <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem" HBox.hgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="listaLojas" spacing="14" />
+                </content>
+            </ScrollPane>
+
+            <!-- Lado direito: resumo do pedido (maxHeight evita esticar ate o rodape) -->
+            <VBox maxHeight="-Infinity" maxWidth="280" minWidth="280" prefWidth="280" spacing="10" styleClass="resumo">
+
+                <Label styleClass="titulo-formulario, titulo-resumo" text="Resumo do pedido" />
+
+                <!-- Cupom de desconto -->
+                <HBox spacing="8">
+                    <TextField fx:id="campoCupom" promptText="Cupom de desconto" styleClass="campo" HBox.hgrow="ALWAYS" />
+                    <Button onAction="#aoClicarAplicarCupom" styleClass="botao-cupom" text="Aplicar" />
+                </HBox>
+                <Label fx:id="rotuloMensagemCupom" managed="false" styleClass="subtitulo" visible="false" />
+
+                <!-- Linhas de valores: Region com hgrow empurra o valor para a direita -->
+                <HBox>
+                    <Label styleClass="linha-resumo" text="Subtotal" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label fx:id="rotuloSubtotal" styleClass="valor-resumo" text="R$ 0,00" />
+                </HBox>
+
+                <HBox>
+                    <Label styleClass="linha-resumo" text="Entrega" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label fx:id="rotuloEntrega" styleClass="valor-resumo" text="R$ 0,00" />
+                </HBox>
+
+                <HBox styleClass="linha-total">
+                    <Label styleClass="rotulo-total" text="Total" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label fx:id="rotuloTotal" styleClass="valor-total" text="R$ 0,00" />
+                </HBox>
+
+                <Button fx:id="botaoFinalizar" maxWidth="Infinity" onAction="#aoClicarFinalizar" styleClass="botao-primario" text="Finalizar pedido" />
+
+                <Hyperlink alignment="CENTER" maxWidth="Infinity" onAction="#aoClicarContinuarComprando" styleClass="link-verde" text="‹ Continuar comprando" />
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- ===== Estado 2: carrinho vazio (comeca escondido) ===== -->
+    <VBox fx:id="estadoVazio" alignment="CENTER" managed="false" spacing="12" visible="false">
+        <Label styleClass="titulo-formulario" text="Seu carrinho está vazio" />
+        <Label styleClass="subtitulo" text="Que tal ver as colheitas de hoje?" />
+        <Button onAction="#aoClicarContinuarComprando" styleClass="botao-buscar" text="Ver lojas" />
+    </VBox>
+</StackPane>

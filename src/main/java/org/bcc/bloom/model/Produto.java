@@ -1,5 +1,9 @@
 package org.bcc.bloom.model;
 
+import javafx.scene.image.Image;
+
+import java.io.ByteArrayInputStream;
+
 public class Produto {
     private String nome;
     private String descricao;
@@ -35,6 +39,6 @@ public class Produto {
     public Categoria getCategoria() { return categoria; }
     public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 
-    public byte[] getImagem() { return imagem; }
+    public Image getImagem() { return new Image(new ByteArrayInputStream(imagem)); }
     public void setImagem(byte[] imagem) { this.imagem = imagem; }
 }

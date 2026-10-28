@@ -190,3 +190,157 @@
     -fx-font-size: 14px;
     -fx-text-fill: #3B3024;
 }
+
+/* ===== Cole este bloco no FINAL do seu bloom.css =====
+   Reaproveita classes que voce ja tem: titulo-formulario, subtitulo, campo,
+   botao-primario, botao-buscar, link-verde, rolagem */
+
+/* ----- Titulo menor do resumo (soma com titulo-formulario) ----- */
+.titulo-resumo {
+    -fx-font-size: 19px;
+}
+
+/* ----- Grupo de uma loja ----- */
+.loja-grupo {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 14;
+}
+
+.loja-cabecalho {
+    -fx-background-color: #5B7B3A;
+    -fx-background-radius: 12 12 0 0;
+    -fx-text-fill: #F7F1E3;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 9 16 9 16;
+    -fx-max-width: infinity;
+}
+
+/* ----- Linha de item ----- */
+.item-carrinho {
+    -fx-border-color: #EFE6D0 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.item-nome {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3B3024;
+}
+
+.item-detalhe {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B5E4C;
+}
+
+.item-subtotal {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3B3024;
+}
+
+/* ----- Seletor de quantidade ----- */
+.seletor-quantidade {
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+}
+
+.botao-qtd {
+    -fx-background-color: #F7F1E3;
+    -fx-background-radius: 0;
+    -fx-text-fill: #5B7B3A;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 9 3 9;
+    -fx-cursor: hand;
+}
+
+.botao-qtd:hover {
+    -fx-background-color: #E3CF9F;
+}
+
+.rotulo-qtd {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3B3024;
+}
+
+.botao-remover {
+    -fx-background-color: transparent;
+    -fx-text-fill: #C4573A;
+    -fx-font-size: 15px;
+    -fx-cursor: hand;
+}
+
+.botao-remover:hover {
+    -fx-background-color: rgba(196, 87, 58, 0.12);
+    -fx-background-radius: 8;
+}
+
+/* ----- Resumo do pedido ----- */
+.resumo {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 14;
+    -fx-padding: 18;
+}
+
+.botao-cupom {
+    -fx-background-color: transparent;
+    -fx-border-color: #5B7B3A;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #5B7B3A;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.botao-cupom:hover {
+    -fx-background-color: #E3CF9F;
+}
+
+.linha-resumo {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-text-fill: #6B5E4C;
+}
+
+.valor-resumo {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-text-fill: #3B3024;
+}
+
+.linha-total {
+    -fx-border-color: #E3CF9F transparent transparent transparent;
+    -fx-border-width: 1.5 0 0 0;
+    -fx-padding: 10 0 0 0;
+}
+
+.rotulo-total {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3B3024;
+}
+
+.valor-total {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5B7B3A;
+}

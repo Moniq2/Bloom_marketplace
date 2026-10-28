@@ -47,6 +47,7 @@ public class MainCompradorController {
 
     public void setup (Usuario usuario) {
         this.usuario = usuario;
+        mostrarLojas();
     }
 
     public void mostrarLojas(){

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Uma linha de item do carrinho. Sera adicionada dentro do grupo de cada loja -->
+
+<HBox alignment="CENTER_LEFT" spacing="14" styleClass="item-carrinho" stylesheets="@../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.ItemCarrinhoController">
+
+    <padding>
+        <Insets bottom="12" left="16" right="16" top="12" />
+    </padding>
+
+    <!-- Foto do produto -->
+    <ImageView fx:id="imagemProduto" fitHeight="56" fitWidth="56" preserveRatio="false" />
+
+    <!-- Nome e preco unitario -->
+    <VBox spacing="2" HBox.hgrow="ALWAYS">
+        <Label fx:id="rotuloNome" styleClass="item-nome" text="Produto" />
+        <Label fx:id="rotuloPrecoUnitario" styleClass="item-detalhe" text="R$ 0,00 / un" />
+    </VBox>
+
+    <!-- Seletor de quantidade: - 1 + -->
+    <HBox alignment="CENTER" styleClass="seletor-quantidade">
+        <Button fx:id="botaoDiminuir" onAction="#aoClicarDiminuir" styleClass="botao-qtd" text="−" />
+        <Label fx:id="rotuloQuantidade" alignment="CENTER" minWidth="30" styleClass="rotulo-qtd" text="1" />
+        <Button fx:id="botaoAumentar" onAction="#aoClicarAumentar" styleClass="botao-qtd" text="+" />
+    </HBox>
+
+    <!-- Subtotal do item -->
+    <Label fx:id="rotuloSubtotal" alignment="CENTER_RIGHT" minWidth="80" styleClass="item-subtotal" text="R$ 0,00" />
+
+    <!-- Remover item -->
+    <Button fx:id="botaoRemover" onAction="#aoClicarRemover" styleClass="botao-remover" text="✕" />
+</HBox>
