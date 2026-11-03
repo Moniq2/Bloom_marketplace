@@ -1,7 +1,8 @@
 package org.bcc.bloom.service;
 
 import org.bcc.bloom.exception.CampoObrigatorioException;
-import org.bcc.bloom.exception.RecursoNaoEncontradoException;
+import org.bcc.bloom.exception.VendedorNaoCadastradoException;
+import org.bcc.bloom.exception.VendedorNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.model.Vendedor;
@@ -14,13 +15,16 @@ public class LojaService {
 
     public Loja cadastrarLoja(Vendedor vendedor, String nome, String descricao, byte[] capa) {
         if (vendedor == null) {
-            throw new RecursoNaoEncontradoException("Erro: Vendedor não encontrado.");
+            throw new VendedorNaoEncontradoException("Não há vendedor informado para cadastrar a loja.");
+        }
+        if (vendedor.getId() == null) {
+            throw new VendedorNaoCadastradoException("O vendedor precisa estar cadastrado antes de criar uma loja.");
         }
         if (nome == null || nome.trim().isEmpty()) {
-            throw new CampoObrigatorioException("Erro: O nome da loja é obrigatório.");
+            throw new CampoObrigatorioException("O nome da loja é obrigatório.");
         }
 
-        Loja novaLoja = new Loja(nome, descricao, capa);
+        Loja novaLoja = new Loja(nome.trim(), descricao, capa);
         lojaRepository.salvar(novaLoja, vendedor.getId());
         vendedor.setLoja(novaLoja);
         return novaLoja;

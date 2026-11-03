@@ -1,4 +1,4 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.loja;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +32,7 @@ public class LojasController {
 
         for  (Loja loja : lojas) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LojaCard.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loja/LojaCard.fxml"));
                 Parent root = loader.load();
                 CardLojaController controller = loader.getController();
                 controller.setupCard(loja);

@@ -9,12 +9,12 @@ public class SignupOptionsController {
 
     @FXML
     private void abrirTelaCadastroVendedor(ActionEvent event) {
-        Navegador.abrirPagina(event, "/fxml/VendedorSignup.fxml");
+        Navegador.abrirPagina(event, "/fxml/vendedor/VendedorSignup.fxml");
     }
 
     @FXML
     private void abrirTelaCadastroUsuario(ActionEvent event) {
-        Navegador.abrirPagina(event, "/fxml/UsuarioSignup.fxml");
+        Navegador.abrirPagina(event, "/fxml/comprador/UsuarioSignup.fxml");
     }
 
     @FXML

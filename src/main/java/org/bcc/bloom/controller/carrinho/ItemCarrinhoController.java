@@ -1,10 +1,9 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.carrinho;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import org.bcc.bloom.CarrinhoController;
 import org.bcc.bloom.model.Produto;
 
 public class ItemCarrinhoController {

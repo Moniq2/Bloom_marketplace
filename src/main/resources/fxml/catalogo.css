@@ -1,0 +1,53 @@
+/* ===== Cole este bloco no FINAL do seu bloom.css =====
+   Reaproveita classes que voce ja tem: titulo-formulario, subtitulo,
+   rolagem, botao-paginacao e rotulo-pagina (do lista-lojas.css) */
+
+/* ----- Card de produto do catalogo ----- */
+.card-catalogo {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 14;
+}
+
+.catalogo-nome {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3B3024;
+}
+
+.catalogo-preco {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5B7B3A;
+}
+
+.catalogo-loja {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B5E4C;
+}
+
+/* ----- Botao Adicionar (terracota) ----- */
+.botao-adicionar {
+    -fx-background-color: #C4573A;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 0 8 0;
+    -fx-cursor: hand;
+}
+
+.botao-adicionar:hover {
+    -fx-background-color: #A94A31;
+}
+
+/* Produto sem estoque: botao apagado */
+.botao-adicionar:disabled {
+    -fx-opacity: 0.45;
+}

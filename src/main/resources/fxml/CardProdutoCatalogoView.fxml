@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Card de produto do catalogo (versao do comprador). Sera adicionado ao FlowPane -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.bcc.bloom.CardProdutoCatalogoController"
+      styleClass="card-catalogo" prefWidth="190" minWidth="190" maxWidth="190">
+
+    <ImageView fx:id="imagemProduto" fitWidth="190" fitHeight="92" preserveRatio="false"/>
+
+    <VBox spacing="3">
+        <padding>
+            <Insets top="10" right="12" bottom="12" left="12"/>
+        </padding>
+
+        <Label fx:id="rotuloNome" text="Produto" styleClass="catalogo-nome"/>
+        <Label fx:id="rotuloPreco" text="R$ 0,00 / un" styleClass="catalogo-preco"/>
+        <Label fx:id="rotuloLoja" text="Nome da loja" styleClass="catalogo-loja"/>
+
+        <Button fx:id="botaoAdicionar" text="Adicionar" onAction="#aoClicarAdicionar"
+                styleClass="botao-adicionar" maxWidth="Infinity"/>
+    </VBox>
+</VBox>

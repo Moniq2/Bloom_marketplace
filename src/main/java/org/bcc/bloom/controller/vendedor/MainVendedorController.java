@@ -1,4 +1,4 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.vendedor;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -66,7 +66,7 @@ public class MainVendedorController {
 
     @FXML
     private void aoClicarInicio() {
-        trocarTela("/fxml/Lojas.fxml");
+        trocarTela("/fxml/MinhaLoja.fxml");
     }
 
     @FXML
@@ -79,6 +79,10 @@ public class MainVendedorController {
         trocarTela("/fxml/PedidosVendedor.fxml");
     }
 
+    @FXML
+    private void aoClicarMinhaLoja(){
+        trocarTela("/fxml/MinhaLoja.fxml");
+    }
     @FXML
     private void aoClicarSair() {
         System.out.println("Sair");

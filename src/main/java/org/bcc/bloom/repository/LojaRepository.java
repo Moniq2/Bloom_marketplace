@@ -11,27 +11,49 @@ public class LojaRepository {
 
     public LojaRepository() {}
 
-    // MELHORE ESSE MÉTODO. ADICIONAR ID DA LOJA CRIADA PELO BD NA COLUNA loja_id DO VENDEDOR, USAR TRANSAÇÃO!!
-    public void salvar(Loja loja, long vendedor_id) {
-        String sql = "INSERT INTO loja (nome, descricao) VALUES (?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    public void salvar(Loja loja, long vendedorId) {
+        String inserirLoja = "INSERT INTO loja (nome, descricao, capa) VALUES (?, ?, ?)";
+        String vincularVendedor = "UPDATE vendedor SET loja_id = ? WHERE id = ?";
 
-            pstmt.setString(1, loja.getNome());
-            pstmt.setString(2, loja.getDescricao());
-
-            pstmt.executeUpdate();
-
-            try (ResultSet chaves = pstmt.getGeneratedKeys()) {
-                if (chaves.next()) {
-                    loja.setId(chaves.getLong(1));
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                long lojaId;
+                try (PreparedStatement pstmt = conn.prepareStatement(inserirLoja, Statement.RETURN_GENERATED_KEYS)) {
+                    pstmt.setString(1, loja.getNome());
+                    pstmt.setString(2, loja.getDescricao());
+                    pstmt.setBytes(3, loja.getCapa());
+                    pstmt.executeUpdate();
+                    try (ResultSet chaves = pstmt.getGeneratedKeys()) {
+                        if (!chaves.next()) {
+                            throw new SQLException("O banco não retornou o ID da loja criada.");
+                        }
+                        lojaId = chaves.getLong(1);
+                    }
                 }
+
+                try (PreparedStatement pstmt = conn.prepareStatement(vincularVendedor)) {
+                    pstmt.setLong(1, lojaId);
+                    pstmt.setLong(2, vendedorId);
+                    if (pstmt.executeUpdate() != 1) {
+                        throw new SQLException("O vendedor não foi encontrado para vincular à loja.");
+                    }
+                }
+
+                conn.commit();
+                loja.setId(lojaId);
+            } catch (SQLException e) {
+                try {
+                    conn.rollback();
+                } catch (SQLException erroRollback) {
+                    e.addSuppressed(erroRollback);
+                }
+                throw e;
             }
         } catch (SQLException e) {
-            throw new ErroBancoDadosException("Erro ao salvar loja na base de dados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao salvar loja e vinculá-la ao vendedor: " + e.getMessage());
         }
     }
-
     public List<Loja> listarTodas() {
         String sql = "SELECT * FROM loja";
         List<Loja> lojas = new ArrayList<>(); //FAZER USANDO PAGINAÇÃO!!!

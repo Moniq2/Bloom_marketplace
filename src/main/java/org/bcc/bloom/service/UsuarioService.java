@@ -10,29 +10,34 @@ import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.model.Vendedor;
+import org.bcc.bloom.repository.CompradorRepository;
 import org.bcc.bloom.repository.VendedorRepository;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioService {
 
     private final VendedorRepository vendedorRepository = new VendedorRepository();
+    private final CompradorRepository compradorRepository = new CompradorRepository();
 
     //O parâmetro cadastro refere-se a de pessoa física(CPF) ou pessoa jurídica(CNPJ)
-    public void cadastrar(String nome, String email, String senha, String cadastro, String tipo){
+    public Vendedor cadastrar(String nome, String email, String senha, String cadastro, String tipo){
         if (vendedorRepository.buscarPorEmail(email) != null) {
             throw new EmailJaCadastradoException("Erro: Já existe um utilizador registado com este e-mail.");
         }
         if (tipo.equalsIgnoreCase("Vendedor")) {
             String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
             Vendedor vendedor = new Vendedor(nome, email, senhaCriptografada, cadastro);
-            vendedorRepository.salvarVendedor(vendedor);
+            Long id = vendedorRepository.salvar(vendedor);
+            vendedor.setId(id);
+            return vendedor;
         }
         else if (tipo.equalsIgnoreCase("Comprador")) {
             validarDados(nome, email, cadastro, senha);
             String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
             Comprador comprador = new Comprador(nome, email, senhaCriptografada, cadastro);
-            vendedorRepository.salvarComprador(comprador);
+            compradorRepository.salvar(comprador);
         }
+        return null;
     }
 
     public Usuario login(String email, String senha) {

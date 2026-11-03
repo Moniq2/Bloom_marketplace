@@ -1,4 +1,4 @@
-package org.bcc.bloom;
+package org.bcc.bloom.controller.carrinho;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

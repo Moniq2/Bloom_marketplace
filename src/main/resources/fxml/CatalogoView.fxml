@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.bcc.bloom.CatalogoController"
+      spacing="6">
+
+    <padding>
+        <Insets top="8" right="8" bottom="8" left="8"/>
+    </padding>
+
+    <Label text="Catálogo" styleClass="titulo-formulario"/>
+    <Label text="Todos os produtos de todas as lojas" styleClass="subtitulo"/>
+
+    <!-- Area rolavel: os cards de produto e a paginacao ficam dentro dela -->
+    <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem"
+                VBox.vgrow="ALWAYS">
+        <content>
+            <VBox spacing="22">
+                <padding>
+                    <Insets top="10" right="0" bottom="0" left="0"/>
+                </padding>
+
+                <!-- Os cards de produto sao adicionados aqui pelo codigo -->
+                <FlowPane fx:id="painelProdutos" hgap="16" vgap="16"/>
+
+                <!-- Mensagem para quando nao ha produtos -->
+                <Label fx:id="rotuloSemProdutos" text="Nenhum produto disponível."
+                       styleClass="subtitulo" visible="false" managed="false"/>
+
+                <!-- Paginacao no final da lista -->
+                <HBox fx:id="barraPaginacao" alignment="CENTER" spacing="16">
+                    <padding>
+                        <Insets top="0" right="0" bottom="12" left="0"/>
+                    </padding>
+
+                    <Button fx:id="botaoAnterior" text="‹ Anterior"
+                            onAction="#aoClicarAnterior" styleClass="botao-paginacao"/>
+                    <Label fx:id="rotuloPagina" text="Página 1 de 1" styleClass="rotulo-pagina"/>
+                    <Button fx:id="botaoProxima" text="Próxima ›"
+                            onAction="#aoClicarProxima" styleClass="botao-paginacao"/>
+                </HBox>
+            </VBox>
+        </content>
+    </ScrollPane>
+</VBox>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Card de um produto. Sera adicionado ao FlowPane da tela Minha loja -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.bcc.bloom.CardProdutoController"
+      styleClass="card-produto" prefWidth="190" minWidth="190" maxWidth="190">
+
+    <!-- Foto do produto com o botao de lapis no canto superior direito -->
+    <StackPane>
+        <ImageView fx:id="imagemProduto" fitWidth="190" fitHeight="92" preserveRatio="false"/>
+
+        <Button fx:id="botaoEditar" text="✎" onAction="#aoClicarEditar"
+                styleClass="botao-lapis" StackPane.alignment="TOP_RIGHT">
+            <StackPane.margin>
+                <Insets top="8" right="8"/>
+            </StackPane.margin>
+        </Button>
+    </StackPane>
+
+    <!-- Informacoes do produto -->
+    <VBox spacing="3">
+        <padding>
+            <Insets top="10" right="12" bottom="12" left="12"/>
+        </padding>
+
+        <Label fx:id="rotuloNome" text="Produto" styleClass="produto-nome"/>
+        <Label fx:id="rotuloPreco" text="R$ 0,00 / un" styleClass="produto-preco"/>
+        <Label fx:id="rotuloEstoque" text="Estoque: 0" styleClass="produto-estoque"/>
+        <Label fx:id="rotuloStatus" text="Ativo" styleClass="etiqueta-ativo"/>
+    </VBox>
+</VBox>

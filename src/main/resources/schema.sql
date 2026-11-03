@@ -7,7 +7,7 @@ CREATE TABLE comprador (
                            cpf VARCHAR(11) NOT NULL UNIQUE,
                            senha VARCHAR(60) NOT NULL,
                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                           saldo DOUBLE NOT NULL,
+                           saldo DECIMAL(10,2) NOT NULL,
                            endereco VARCHAR(200)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE pedido (
                         comprador_id BIGINT,
                         FOREIGN KEY (comprador_id) REFERENCES comprador(id),
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                        valor_total DOUBLE
+                        valor_total DECIMAL(10,2)
 );
 
 CREATE TABLE loja (
@@ -49,7 +49,7 @@ CREATE TABLE produto (
                          loja_id BIGINT,
                          FOREIGN KEY (loja_id) REFERENCES loja(id),
                          imagem BLOB,
-                         preco FLOAT NOT NULL,
+                         preco DECIMAL(10,2) NOT NULL,
                          estoque INT DEFAULT 0,
                          categoria ENUM("frutas", "verduras", "ervas", "grãos", "legumes")
 );
@@ -60,5 +60,5 @@ CREATE TABLE item (
                       quantidade int NOT NULL DEFAULT 1,
                       id BIGINT PRIMARY KEY,
                       container_id BIGINT, # O container pode ser um carrinho ou um pedido
-                      valor_unitario DOUBLE NOT NULL
+                      valor_unitario DECIMAL(10,2) NOT NULL
 );

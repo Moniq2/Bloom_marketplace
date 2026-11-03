@@ -1,4 +1,4 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.comprador;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -12,11 +12,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import org.bcc.bloom.model.Loja;
+import org.bcc.bloom.controller.loja.LojasController;
 import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.service.LojaService;
 import java.io.IOException;
-import java.util.List;
 
 public class MainCompradorController {
 
@@ -51,7 +50,7 @@ public class MainCompradorController {
     }
 
     public void mostrarLojas(){
-        LojasController controller = trocarTela("/fxml/Lojas.fxml");
+        LojasController controller = trocarTela("/fxml/loja/Lojas.fxml");
         controller.setupCards();
     }
 
@@ -75,7 +74,7 @@ public class MainCompradorController {
 
     @FXML
     private void aoClicarInicio() {
-        trocarTela("/fxml/Lojas.fxml");
+        trocarTela("/fxml/loja/Lojas.fxml");
     }
 
     @FXML

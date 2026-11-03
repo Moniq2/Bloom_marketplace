@@ -9,27 +9,10 @@ import java.sql.*;
 
 public class VendedorRepository {
 
-    public void salvarComprador(Comprador comprador) {
+    public Long salvar(Vendedor vendedor) {
         String sql = "INSERT INTO vendedor (nome, email, senha, cnpj) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, comprador.getNome());
-            pstmt.setString(2, comprador.getEmail());
-            pstmt.setString(3, comprador.getSenha());
-            pstmt.setString(4, comprador.getCpf());
-            pstmt.setString(5, comprador.getEndereco());
-            
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new ErroBancoDadosException("Erro ao salvar comprador na base de dados: " + e.getMessage());
-        }
-    }
-
-    public void salvarVendedor(Vendedor vendedor) {
-        String sql = "INSERT INTO vendedor (nome, email, senha, cnpj) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             pstmt.setString(1, vendedor.getNome());
             pstmt.setString(2, vendedor.getEmail());
@@ -37,9 +20,15 @@ public class VendedorRepository {
             pstmt.setString(4, vendedor.getCnpj());
             
             pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+
+            if (rs.next()) {
+               return rs.getLong(1);
+            }
         } catch (SQLException e) {
             throw new ErroBancoDadosException("Erro ao salvar vendedor na base de dados: " + e.getMessage());
         }
+        return null;
     }
 
     public Usuario buscarPorEmail(String email) {

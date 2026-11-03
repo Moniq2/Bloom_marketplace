@@ -13,7 +13,7 @@
 
 <!-- StackPane empilha dois estados: carrinho com itens e carrinho vazio -->
 
-<StackPane stylesheets="@../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.CarrinhoController">
+<StackPane stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.carrinho.CarrinhoController">
 
     <!-- ===== Estado 1: carrinho com itens ===== -->
     <VBox fx:id="conteudoCarrinho" spacing="6">

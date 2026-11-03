@@ -1,4 +1,4 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.comprador;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

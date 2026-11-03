@@ -1,12 +1,14 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.loja;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import org.bcc.bloom.controller.vendedor.MainVendedorController;
 import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.service.LojaService;
 import org.bcc.bloom.util.Navegador;
@@ -25,11 +27,11 @@ public class LojaSignupController {
     @FXML
     private TextField campoNome;
     @FXML
-    private TextField campoDescricao;
+    private TextArea campoDescricao;
     @FXML
     private ImageView capaPrevia;
 
-    private void setVendedor(Vendedor vendedor) {
+    public void setVendedor(Vendedor vendedor) {
         this.vendedor = vendedor;
     }
 
@@ -67,7 +69,7 @@ public class LojaSignupController {
 
         if (campoNome != null && campoDescricao != null) {
             lojaService.cadastrarLoja(vendedor, campoNome.getText(), campoDescricao.getText(), capa);
-            MainVendedorController controller = (MainVendedorController) Navegador.abrirPagina(event, "/fxml/MainVendedor.fxml");
+            MainVendedorController controller = Navegador.abrirPagina(event, "/fxml/vendedor/MainVendedor.fxml");
             controller.setVendedor(vendedor);
         }
         else  {
