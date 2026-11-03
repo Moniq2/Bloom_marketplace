@@ -1,15 +1,24 @@
 package org.bcc.bloom;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+import org.bcc.bloom.controller.ItemCarrinhoController;
+import org.bcc.bloom.model.ItemCarrinho;
+import org.bcc.bloom.model.Loja;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class CarrinhoController {
 
@@ -53,6 +62,8 @@ public class CarrinhoController {
     // Itens que estao no carrinho (voce precisa criar a classe ItemCarrinho)
     private List<ItemCarrinho> itensDoCarrinho = new ArrayList<>();
 
+    private double desconto = 0.0;
+
     // O JavaFX chama este metodo sozinho depois de carregar o FXML
     @FXML
     public void initialize() {
@@ -60,62 +71,188 @@ public class CarrinhoController {
         atualizarTela();
     }
 
-    // TODO: buscar os itens do carrinho (banco, API ou classe de sessao)
+    
     private void carregarItensDoCarrinho() {
+        
     }
 
-    // Redesenha a tela inteira. Public porque cada linha de item chama
-    // este metodo quando a quantidade muda ou o item e removido
+    
     public void atualizarTela() {
-        // TODO Passo 1: se itensDoCarrinho estiver vazio, chamar mostrarEstadoVazio(true) e parar
-        // TODO Passo 2: chamar mostrarEstadoVazio(false)
-        // TODO Passo 3: listaLojas.getChildren().clear()
-        // TODO Passo 4: agrupar os itens por loja; para cada loja:
-        //               VBox grupo = criarGrupoLoja(nomeDaLoja);
-        //               para cada item da loja: adicionarLinhaItem(grupo, item);
-        //               listaLojas.getChildren().add(grupo);
-        // TODO Passo 5: atualizar rotuloQuantidade (ex.: "3 itens de 2 lojas")
+
+        
+        if (itensDoCarrinho == null || itensDoCarrinho.isEmpty()) {
+            mostrarEstadoVazio(true);
+
+            listaLojas.getChildren().clear();
+            rotuloQuantidade.setText("0 itens");
+            atualizarResumo();
+
+            return;
+        }
+
+        mostrarEstadoVazio(false);
+
+        listaLojas.getChildren().clear();
+
+      
+
+        Map<String, List<ItemCarrinho>> itensPorLoja = new LinkedHashMap<>();
+
+        for (ItemCarrinho item : itensDoCarrinho) {
+            String nomeLoja = item.getLoja().getName();
+
+            itensPorLoja
+                    .computeIfAbsent(nomeLoja, chave -> new ArrayList<>())
+                    .add(item);
+        }
+
+        for (Map.Entry<String, List<ItemCarrinho>> entrada : itensPorLoja.entrySet()) {
+
+            VBox grupo = criarGrupoLoja(entrada.getKey());
+
+            for (ItemCarrinho item : entrada.getValue()) {
+                adicionarLinhaItem(grupo, item);
+            }
+
+            listaLojas.getChildren().add(grupo);
+        }
+
+        
+        int quantidadeTotal = 0;
+
+        for (ItemCarrinho item : itensDoCarrinho) {
+            quantidadeTotal += item.getQuantidade();
+        }
+
+        int quantidadeLojas = itensPorLoja.size();
+
+        String textoItens = quantidadeTotal == 1 ? "item" : "itens";
+        String textoLojas = quantidadeLojas == 1 ? "loja" : "lojas";
+
+        rotuloQuantidade.setText(
+                quantidadeTotal + " " + textoItens + " de " +
+                quantidadeLojas + " " + textoLojas
+        );
+
         // TODO Passo 6: chamar atualizarResumo()
+        atualizarResumo();
     }
 
-    // TODO: criar um VBox com styleClass "loja-grupo" contendo um Label
-    //       com styleClass "loja-cabecalho" e o nome da loja
+    
     private VBox criarGrupoLoja(String nomeLoja) {
-        return null;
+
+        VBox grupo = new VBox();
+        grupo.getStyleClass().add("loja-grupo");
+
+        Label cabecalho = new Label(nomeLoja);
+        cabecalho.getStyleClass().add("loja-cabecalho");
+
+        grupo.getChildren().add(cabecalho);
+
+        return grupo;
     }
 
-    // TODO: carregar /fxml/ItemCarrinhoView.fxml com FXMLLoader, pegar o
-    //       ItemCarrinhoController, chamar definirDados(item) e
-    //       definirControladorCarrinho(this), e adicionar a linha no grupo
+    
     private void adicionarLinhaItem(VBox grupo, ItemCarrinho item) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/ItemCarrinhoView.fxml")
+            );
+
+            Parent linha = loader.load();
+
+            ItemCarrinhoController controller = loader.getController();
+
+            controller.definirDados(item);
+            controller.definirControladorCarrinho(this);
+
+            grupo.getChildren().add(linha);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    // TODO: calcular subtotal, entrega e total, e preencher os 3 rotulos
-    //       usando formatarPreco()
     private void atualizarResumo() {
+
+        double subtotal = 0.0;
+
+        for (ItemCarrinho item : itensDoCarrinho) {
+            subtotal += item.getSubtotal();
+        }
+
+      
+        double entrega = 0.0;
+
+        double total = subtotal + entrega - desconto;
+
+        if (total < 0) {
+            total = 0;
+        }
+
+        rotuloSubtotal.setText(formatarPreco(subtotal));
+        rotuloEntrega.setText(formatarPreco(entrega));
+        rotuloTotal.setText(formatarPreco(total));
     }
 
-    // ----- Acoes dos botoes -----
-
+  
     @FXML
     private void aoClicarAplicarCupom() {
-        // TODO: validar o texto de campoCupom, aplicar o desconto
-        //       e mostrar o resultado em rotuloMensagemCupom
+
+        String cupom = campoCupom.getText();
+
+        if (cupom == null || cupom.trim().isEmpty()) {
+            desconto = 0.0;
+
+            rotuloMensagemCupom.setText("Digite um cupom.");
+            atualizarResumo();
+
+            return;
+        }
+
+        cupom = cupom.trim().toUpperCase(Locale.ROOT);
+
+       
+
+        if (cupom.equals("BLOOM10")) {
+
+            double subtotal = 0.0;
+
+            for (ItemCarrinho item : itensDoCarrinho) {
+                subtotal += item.getSubtotal();
+            }
+
+            desconto = subtotal * 0.10;
+
+            rotuloMensagemCupom.setText("Cupom aplicado! 10% de desconto.");
+
+        } else {
+
+            desconto = 0.0;
+
+            rotuloMensagemCupom.setText("Cupom inválido.");
+        }
+
+        atualizarResumo();
     }
 
     @FXML
     private void aoClicarFinalizar() {
-        // TODO: criar o pedido e abrir a tela de pagamento ou confirmacao
-    }
+       
 
     @FXML
     private void aoClicarContinuarComprando() {
-        // TODO: voltar para a tela da lista de lojas
+       
     }
 
-    // ----- Auxiliares -----
+    
+    public void removerItem(ItemCarrinho item) {
+        itensDoCarrinho.remove(item);
+        atualizarTela();
+    }
 
-    // Alterna entre carrinho vazio e carrinho com itens
+    
     private void mostrarEstadoVazio(boolean vazio) {
         estadoVazio.setVisible(vazio);
         estadoVazio.setManaged(vazio);
@@ -123,7 +260,6 @@ public class CarrinhoController {
         conteudoCarrinho.setManaged(!vazio);
     }
 
-    // Formata um numero como preco. Ex.: 41.2 vira "R$ 41,20"
     private String formatarPreco(double valor) {
         return String.format(Locale.of("pt", "BR"), "R$ %.2f", valor);
     }
