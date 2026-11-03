@@ -28,21 +28,22 @@ public class MainVendedorController {
     private StackPane areaConteudo;
 
     private Vendedor vendedor;
+
     private static final double LARGURA_ABERTA = 220;
 
     private boolean barraAberta = true;
 
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+    }
+
     @FXML
-    public void initialize() {
+    private void initialize() {
         Rectangle recorte = new Rectangle();
         recorte.widthProperty().bind(barraLateral.widthProperty());
         recorte.heightProperty().bind(barraLateral.heightProperty());
 
         barraLateral.setClip(recorte);
-    }
-
-    public void setup (Vendedor vendedor) {
-        this.vendedor = vendedor;
     }
 
     @FXML

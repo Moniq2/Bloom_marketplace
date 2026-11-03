@@ -47,7 +47,7 @@
       <PasswordField fx:id="campoSenha2" promptText="confirme a senha" styleClass="campo" />
       <Label fx:id="rotuloErro" styleClass="mensagem-erro" stylesheets="@../css/bloom.css" text="Erro" visible="false" />
 
-        <Button maxWidth="Infinity" styleClass="botao-primario" text="Cadastrar-se" onAction="#cadastrar" />
+        <Button maxWidth="Infinity" onAction="#cadastrar" styleClass="botao-primario" text="Continuar" />
 
         <Hyperlink onAction="#voltar" styleClass="link-verde" text="voltar" />
 

@@ -44,12 +44,12 @@ public class ItemCarrinhoController {
         this.nome.setText(produto.getNome());
         this.imagemproduto.setImage(produto.getImagem());
         this.precoUnitario.setText(String.valueOf(produto.getPreco()));
-        this.quantidade.setText(String.valueOf());
+        this.quantidade.setText(String.valueOf(produto.getEstoque()));
         // TODO: preencher imagemprodutoo, Nome, PrecoUnitario,
         //       Quantidade e Subtotal com os dados do produto
     }
 
-    // Guarda a referencia do carrinho para avisar quando algo mudar
+    // Guarda a referência do carrinho para avisar quando algo mudar
     public void definirControladorCarrinho(CarrinhoController controladorCarrinho) {
         this.controladorCarrinho = controladorCarrinho;
     }

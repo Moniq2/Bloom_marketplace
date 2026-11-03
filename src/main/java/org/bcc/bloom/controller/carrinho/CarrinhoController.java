@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.bcc.bloom.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,8 @@ public class CarrinhoController {
 
     // ----- Dados -----
 
-    // Itens que estao no carrinho (voce precisa criar a classe ItemCarrinho)
-    private List<ItemCarrinho> itensDoCarrinho = new ArrayList<>();
+    // Itens que estao no carrinho (voce precisa criar a classe Item)
+    private List<Item> itensDoCarrinho = new ArrayList<>();
 
     // O JavaFX chama este metodo sozinho depois de carregar o FXML
     @FXML
@@ -84,10 +85,10 @@ public class CarrinhoController {
         return null;
     }
 
-    // TODO: carregar /fxml/ItemCarrinhoView.fxml com FXMLLoader, pegar o
-    //       ItemCarrinhoController, chamar definirDados(item) e
+    // TODO: carregar /fxml/ItemView.fxml com FXMLLoader, pegar o
+    //       ItemController, chamar definirDados(item) e
     //       definirControladorCarrinho(this), e adicionar a linha no grupo
-    private void adicionarLinhaItem(VBox grupo, ItemCarrinho item) {
+    private void adicionarLinhaItem(VBox grupo, Item item) {
     }
 
     // TODO: calcular subtotal, entrega e total, e preencher os 3 rotulos
