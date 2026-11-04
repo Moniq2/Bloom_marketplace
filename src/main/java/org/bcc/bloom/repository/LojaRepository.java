@@ -1,8 +1,10 @@
 package org.bcc.bloom.repository;
 
 import org.bcc.bloom.exception.ErroBancoDadosException;
+import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Loja;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,46 +13,78 @@ public class LojaRepository {
 
     public LojaRepository() {}
 
-    // MELHORE ESSE MÉTODO. ADICIONAR ID DA LOJA CRIADA PELO BD NA COLUNA loja_id DO VENDEDOR, USAR TRANSAÇÃO!!
-    public void salvar(Loja loja, long vendedor_id) {
-        String sql = "INSERT INTO loja (nome, descricao) VALUES (?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+   
 
-            pstmt.setString(1, loja.getNome());
-            pstmt.setString(2, loja.getDescricao());
+    public void salvar(Loja loja, long vendedorId) {
+        String sqlLoja = "INSERT INTO loja (nome, descricao, capa) VALUES (?, ?, ?)";
+        String sqlVendedor = "UPDATE vendedor SET loja_id = ? WHERE id = ?";
 
-            pstmt.executeUpdate();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                long idGerado;
 
-            try (ResultSet chaves = pstmt.getGeneratedKeys()) {
-                if (chaves.next()) {
-                    loja.setId(chaves.getLong(1));
+                try (PreparedStatement pstmt = conn.prepareStatement(sqlLoja, Statement.RETURN_GENERATED_KEYS)) {
+                    pstmt.setString(1, loja.getNome());
+                    pstmt.setString(2, loja.getDescricao());
+                    pstmt.setBytes(3, loja.getCapa());
+                    pstmt.executeUpdate();
+
+                    try (ResultSet chaves = pstmt.getGeneratedKeys()) {
+                        if (!chaves.next()) {
+                            throw new SQLException("O banco não devolveu o id da loja.");
+                        }
+                        idGerado = chaves.getLong(1);
+                    }
                 }
+
+                try (PreparedStatement pstmt = conn.prepareStatement(sqlVendedor)) {
+                    pstmt.setLong(1, idGerado);
+                    pstmt.setLong(2, vendedorId);
+                    if (pstmt.executeUpdate() == 0) {
+                        throw new RecursoNaoEncontradoException("Erro: Vendedor não encontrado (id " + vendedorId + ").");
+                    }
+                }
+
+                conn.commit();
+                loja.setId(idGerado);
+            } catch (SQLException | RuntimeException e) {
+                conn.rollback();
+                throw e;
             }
         } catch (SQLException e) {
             throw new ErroBancoDadosException("Erro ao salvar loja na base de dados: " + e.getMessage());
         }
     }
 
-    public List<Loja> listarTodas() {
-        String sql = "SELECT * FROM loja";
-        List<Loja> lojas = new ArrayList<>(); //FAZER USANDO PAGINAÇÃO!!!
+    // ---------- READ ----------
 
+    public Loja buscarPorId(long id) {
+        String sql = "SELECT * FROM loja WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                lojas.add(converter(rs));
-                String nome = rs.getString("nome");
-                String descricao = rs.getString("descricao");
-                byte[] capa = rs.getBytes("capa");
-                lojas.add(new Loja(nome, descricao, capa));
+            pstmt.setLong(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? converter(rs) : null;
             }
         } catch (SQLException e) {
-            throw new ErroBancoDadosException("Erro ao buscar lojas: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao buscar loja por id: " + e.getMessage());
         }
-        return lojas;
+    }
+
+    public Loja buscarPorVendedor(long vendedorId) {
+        String sql = "SELECT l.* FROM loja l JOIN vendedor v ON v.loja_id = l.id WHERE v.id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, vendedorId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? converter(rs) : null;
+            }
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao buscar a loja do vendedor: " + e.getMessage());
+        }
     }
 
     public List<Loja> listarPaginado(int pagina, int tamanho) {
@@ -91,8 +125,63 @@ public class LojaRepository {
         }
     }
 
+    // ---------- UPDATE ----------
+
+    public void atualizar(Loja loja) {
+        String sql = "UPDATE loja SET nome = ?, descricao = ?, capa = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, loja.getNome());
+            pstmt.setString(2, loja.getDescricao());
+            pstmt.setBytes(3, loja.getCapa());
+            pstmt.setLong(4, loja.getId());
+
+            if (pstmt.executeUpdate() == 0) {
+                throw new RecursoNaoEncontradoException("Erro: Loja não encontrada (id " + loja.getId() + ").");
+            }
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao atualizar loja: " + e.getMessage());
+        }
+    }
+
+    // ---------- DELETE (com transacao) ----------
+
+    public void remover(long id) {
+        String sqlVendedor = "UPDATE vendedor SET loja_id = NULL WHERE loja_id = ?";
+        String sqlProdutos = "DELETE FROM produto WHERE loja_id = ?";
+        String sqlLoja = "DELETE FROM loja WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                executarComId(conn, sqlVendedor, id);
+                executarComId(conn, sqlProdutos, id);
+
+                if (executarComId(conn, sqlLoja, id) == 0) {
+                    throw new RecursoNaoEncontradoException("Erro: Loja não encontrada (id " + id + ").");
+                }
+
+                conn.commit();
+            } catch (SQLException | RuntimeException e) {
+                conn.rollback();
+                throw e;
+            }
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao remover loja: " + e.getMessage());
+        }
+    }
+
+    
+    private int executarComId(Connection conn, String sql, long id) throws SQLException {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, id);
+            return pstmt.executeUpdate();
+        }
+    }
+
     private Loja converter(ResultSet rs) throws SQLException {
-        Loja loja = new Loja(rs.getString("nome"), rs.getString("descricao"), null);
+        Loja loja = new Loja(rs.getString("nome"), rs.getString("descricao"), rs.getBytes("capa"));
         loja.setId(rs.getLong("id"));
         return loja;
     }
