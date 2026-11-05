@@ -19,6 +19,6 @@ public class SignupOptionsController {
 
     @FXML
     private void voltar(ActionEvent event) {
-        Navegador.abrirPagina(event, "/fxml/LoginPage.fxml");
+        Navegador.abrirPagina(event, "/fxml/login/LoginPage.fxml");
     }
 }

@@ -6,9 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import org.bcc.bloom.controller.loja.LojaSignupController;
-import org.bcc.bloom.exception.EmailJaCadastradoException;
 import org.bcc.bloom.exception.SenhaInvalidaException;
-import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.service.UsuarioService;
 import org.bcc.bloom.util.Navegador;
@@ -38,7 +36,7 @@ public class VendedorSignupController {
 
     @FXML
     private void voltar(ActionEvent event) {
-        Navegador.abrirPagina(event, "/fxml/LoginPage.fxml");
+        Navegador.abrirPagina(event, "/fxml/login/LoginPage.fxml");
     }
 
     @FXML

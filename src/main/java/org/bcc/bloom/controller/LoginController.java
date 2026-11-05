@@ -59,7 +59,7 @@ public class LoginController {
 
     @FXML
     private void aoClicarCriarConta(ActionEvent event) {
-        Navegador.abrirPagina(event, "/fxml/SignupOptions.fxml");
+        Navegador.abrirPagina(event, "/fxml/login/SignupOptions.fxml");
     }
 
     private void mostrarErro(String mensagem) {

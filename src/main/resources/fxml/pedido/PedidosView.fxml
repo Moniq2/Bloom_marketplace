@@ -12,7 +12,7 @@
 
 <!-- StackPane empilha dois estados: usuario com pedidos e usuario sem pedidos -->
 <StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.bcc.bloom.PedidosController">
+           fx:controller="org.bcc.bloom.controller.PedidosController">
 
     <!-- ===== Estado 1: usuario com pedidos ===== -->
     <VBox fx:id="conteudoPedidos" spacing="6">

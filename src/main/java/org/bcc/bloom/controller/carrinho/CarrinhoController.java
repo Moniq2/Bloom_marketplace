@@ -10,8 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.bcc.bloom.model.Item;
 
-import org.bcc.bloom.controller.ItemCarrinhoController;
-import org.bcc.bloom.model.ItemCarrinho;
+import org.bcc.bloom.controller.ItemController;
+import org.bcc.bloom.model.Item;
 import org.bcc.bloom.model.Loja;
 
 import java.io.IOException;
@@ -60,8 +60,8 @@ public class CarrinhoController {
 
     // ----- Dados -----
 
-    // Itens que estao no carrinho (voce precisa criar a classe ItemCarrinho)
-    private List<ItemCarrinho> itensDoCarrinho = new ArrayList<>();
+    // Itens que estao no carrinho (voce precisa criar a classe Item)
+    private List<Item> itensDoCarrinho = new ArrayList<>();
 
     private double desconto = 0.0;
 
@@ -79,8 +79,6 @@ public class CarrinhoController {
 
 
     public void atualizarTela() {
-
-
         if (itensDoCarrinho == null || itensDoCarrinho.isEmpty()) {
             mostrarEstadoVazio(true);
 
@@ -97,9 +95,9 @@ public class CarrinhoController {
 
 
 
-        Map<String, List<ItemCarrinho>> itensPorLoja = new LinkedHashMap<>();
+        Map<String, List<Item>> itensPorLoja = new LinkedHashMap<>();
 
-        for (ItemCarrinho item : itensDoCarrinho) {
+        for (Item item : itensDoCarrinho) {
             String nomeLoja = item.getLoja().getName();
 
             itensPorLoja
@@ -107,11 +105,11 @@ public class CarrinhoController {
                     .add(item);
         }
 
-        for (Map.Entry<String, List<ItemCarrinho>> entrada : itensPorLoja.entrySet()) {
+        for (Map.Entry<String, List<Item>> entrada : itensPorLoja.entrySet()) {
 
             VBox grupo = criarGrupoLoja(entrada.getKey());
 
-            for (ItemCarrinho item : entrada.getValue()) {
+            for (Item item : entrada.getValue()) {
                 adicionarLinhaItem(grupo, item);
             }
 
@@ -121,7 +119,7 @@ public class CarrinhoController {
 
         int quantidadeTotal = 0;
 
-        for (ItemCarrinho item : itensDoCarrinho) {
+        for (Item item : itensDoCarrinho) {
             quantidadeTotal += item.getQuantidade();
         }
 
@@ -154,16 +152,16 @@ public class CarrinhoController {
     }
 
 
-    private void adicionarLinhaItem(VBox grupo, ItemCarrinho item) {
+    private void adicionarLinhaItem(VBox grupo, Item item) {
 
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/ItemCarrinhoView.fxml")
+                    getClass().getResource("/fxml/ItemView.fxml")
             );
 
             Parent linha = loader.load();
 
-            ItemCarrinhoController controller = loader.getController();
+            ItemController controller = loader.getController();
 
             controller.definirDados(item);
             controller.definirControladorCarrinho(this);
@@ -181,7 +179,7 @@ public class CarrinhoController {
 
         double subtotal = 0.0;
 
-        for (ItemCarrinho item : itensDoCarrinho) {
+        for (Item item : itensDoCarrinho) {
             subtotal += item.getSubtotal();
         }
 
@@ -222,7 +220,7 @@ public class CarrinhoController {
 
             double subtotal = 0.0;
 
-            for (ItemCarrinho item : itensDoCarrinho) {
+            for (Item item : itensDoCarrinho) {
                 subtotal += item.getSubtotal();
             }
 
@@ -250,7 +248,7 @@ public class CarrinhoController {
     }
 
 
-    public void removerItem(ItemCarrinho item) {
+    public void removerItem(Item item) {
         itensDoCarrinho.remove(item);
         atualizarTela();
     }

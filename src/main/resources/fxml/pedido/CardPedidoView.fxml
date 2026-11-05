@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<!-- Card de um pedido. Sera adicionado ao VBox listaPedidos da tela Meus pedidos -->
+<!-- Card de um pedido. Será adicionado ao VBox listaPedidos da tela Meus pedidos -->
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.bcc.bloom.CardPedidoController"
       styleClass="card-pedido">
@@ -53,7 +53,7 @@
         </padding>
 
         <VBox alignment="TOP_CENTER" spacing="4" prefWidth="80" minWidth="80">
-            <Label fx:id="etapa1" text="" styleClass="etapa-circulo"/>
+            <Label fx:id="etapa1" styleClass="etapa-circulo"/>
             <Label text="Pedido feito" styleClass="nome-etapa"/>
         </VBox>
 
@@ -65,7 +65,7 @@
         </Region>
 
         <VBox alignment="TOP_CENTER" spacing="4" prefWidth="80" minWidth="80">
-            <Label fx:id="etapa2" text="" styleClass="etapa-circulo"/>
+            <Label fx:id="etapa2" styleClass="etapa-circulo"/>
             <Label text="Em preparo" styleClass="nome-etapa"/>
         </VBox>
 
@@ -77,7 +77,7 @@
         </Region>
 
         <VBox alignment="TOP_CENTER" spacing="4" prefWidth="80" minWidth="80">
-            <Label fx:id="etapa3" text="" styleClass="etapa-circulo"/>
+            <Label fx:id="etapa3" styleClass="etapa-circulo"/>
             <Label text="A caminho" styleClass="nome-etapa"/>
         </VBox>
 

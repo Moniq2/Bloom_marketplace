@@ -34,7 +34,7 @@ public class UsuarioSignupController {
 
     @FXML
     private void voltar(ActionEvent event) {
-        Navegador.abrirPagina(event, "/fxml/LoginPage.fxml");
+        Navegador.abrirPagina(event, "/fxml/login/LoginPage.fxml");
     }
 
     @FXML
@@ -57,7 +57,7 @@ public class UsuarioSignupController {
             mostrarErro(e.getMessage());
             return;
         }
-        Navegador.abrirPagina(event, "/fxml/LoginPage.fxml");
+        Navegador.abrirPagina(event, "/fxml/login/LoginPage.fxml");
     }
 
     private void mostrarErro(String mensagem) {

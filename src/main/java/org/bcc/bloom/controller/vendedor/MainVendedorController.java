@@ -66,7 +66,7 @@ public class MainVendedorController {
 
     @FXML
     private void aoClicarInicio() {
-        trocarTela("/fxml/MinhaLoja.fxml");
+        trocarTela("/fxml/loja/MinhaLoja.fxml");
     }
 
     @FXML
@@ -81,7 +81,7 @@ public class MainVendedorController {
 
     @FXML
     private void aoClicarMinhaLoja(){
-        trocarTela("/fxml/MinhaLoja.fxml");
+        trocarTela("/fxml/loja/MinhaLoja.fxml");
     }
     @FXML
     private void aoClicarSair() {
