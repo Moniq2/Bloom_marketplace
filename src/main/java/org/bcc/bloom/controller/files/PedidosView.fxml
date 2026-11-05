@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- StackPane empilha dois estados: usuario com pedidos e usuario sem pedidos -->
+<StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.bcc.bloom.PedidosController">
+
+    <!-- ===== Estado 1: usuario com pedidos ===== -->
+    <VBox fx:id="conteudoPedidos" spacing="6">
+        <padding>
+            <Insets top="8" right="8" bottom="8" left="8"/>
+        </padding>
+
+        <Label text="Meus pedidos" styleClass="titulo-formulario"/>
+        <Label text="Acompanhe suas compras" styleClass="subtitulo"/>
+
+        <!-- Grupo que garante que so um filtro fica selecionado por vez -->
+        <fx:define>
+            <ToggleGroup fx:id="grupoFiltro"/>
+        </fx:define>
+
+        <!-- Filtros por situacao. O userData identifica cada filtro no controller -->
+        <HBox spacing="8">
+            <padding>
+                <Insets top="10" right="0" bottom="8" left="0"/>
+            </padding>
+
+            <ToggleButton text="Todos" userData="TODOS" selected="true"
+                          toggleGroup="$grupoFiltro" onAction="#aoClicarFiltro"
+                          styleClass="filtro-pedido"/>
+            <ToggleButton text="Em andamento" userData="EM_ANDAMENTO"
+                          toggleGroup="$grupoFiltro" onAction="#aoClicarFiltro"
+                          styleClass="filtro-pedido"/>
+            <ToggleButton text="Entregues" userData="ENTREGUE"
+                          toggleGroup="$grupoFiltro" onAction="#aoClicarFiltro"
+                          styleClass="filtro-pedido"/>
+            <ToggleButton text="Cancelados" userData="CANCELADO"
+                          toggleGroup="$grupoFiltro" onAction="#aoClicarFiltro"
+                          styleClass="filtro-pedido"/>
+        </HBox>
+
+        <!-- Area rolavel onde os cards de pedido serao adicionados pelo codigo -->
+        <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem"
+                    VBox.vgrow="ALWAYS">
+            <content>
+                <VBox spacing="14">
+                    <VBox fx:id="listaPedidos" spacing="14"/>
+
+                    <!-- Mensagem para quando o filtro nao encontra pedidos -->
+                    <Label fx:id="rotuloSemResultado" text="Nenhum pedido nesta categoria."
+                           styleClass="subtitulo" visible="false" managed="false"/>
+
+                    <!-- Rodape da lista: botao Ver mais e contagem -->
+                    <VBox fx:id="rodapeLista" alignment="CENTER" spacing="6">
+                        <Button fx:id="botaoVerMais" text="Ver mais ▾"
+                                onAction="#aoClicarVerMais" styleClass="botao-paginacao"/>
+                        <Label fx:id="rotuloContagem" text="Mostrando 0 de 0 pedidos"
+                               styleClass="subtitulo"/>
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </VBox>
+
+    <!-- ===== Estado 2: usuario sem pedidos (comeca escondido) ===== -->
+    <VBox fx:id="estadoSemPedidos" alignment="CENTER" spacing="12"
+          visible="false" managed="false">
+        <Label text="Você ainda não fez pedidos" styleClass="titulo-formulario"/>
+        <Label text="Que tal ver as colheitas de hoje?" styleClass="subtitulo"/>
+        <Button text="Ver lojas" onAction="#aoClicarVerLojas" styleClass="botao-buscar"/>
+    </VBox>
+</StackPane>

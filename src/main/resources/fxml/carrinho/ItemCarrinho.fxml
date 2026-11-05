@@ -9,7 +9,7 @@
 
 <!-- Uma linha de item do carrinho. Sera adicionada dentro do grupo de cada loja -->
 
-<HBox alignment="CENTER_LEFT" spacing="14" styleClass="item-carrinho" stylesheets="@../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.ItemCarrinhoController">
+<HBox alignment="CENTER_LEFT" spacing="14" styleClass="item-carrinho" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.ItemCarrinhoController">
 
     <padding>
         <Insets bottom="12" left="16" right="16" top="12" />

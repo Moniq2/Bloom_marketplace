@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Card de um pedido. Sera adicionado ao VBox listaPedidos da tela Meus pedidos -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.bcc.bloom.CardPedidoController"
+      styleClass="card-pedido">
+
+    <!-- Cabecalho: logo da loja, nome, numero e data, status -->
+    <HBox styleClass="cabecalho-pedido" alignment="CENTER_LEFT" spacing="12">
+        <padding>
+            <Insets top="12" right="16" bottom="12" left="16"/>
+        </padding>
+
+        <ImageView fx:id="imagemLoja" fitWidth="38" fitHeight="38" preserveRatio="false"/>
+
+        <VBox spacing="2" HBox.hgrow="ALWAYS">
+            <Label fx:id="rotuloLoja" text="Nome da loja" styleClass="pedido-loja"/>
+            <Label fx:id="rotuloNumeroData" text="Pedido #0000 · data"
+                   styleClass="pedido-detalhe"/>
+        </VBox>
+
+        <Label fx:id="rotuloStatus" text="Em andamento"
+               styleClass="etiqueta-pedido, etiqueta-pedido-andamento"/>
+    </HBox>
+
+    <!-- Corpo: miniaturas dos produtos e resumo dos itens -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <padding>
+            <Insets top="12" right="16" bottom="12" left="16"/>
+        </padding>
+
+        <!-- Miniaturas sao adicionadas pelo codigo (spacing negativo sobrepoe) -->
+        <HBox fx:id="miniaturas" alignment="CENTER_LEFT" spacing="-8"/>
+
+        <VBox spacing="2" HBox.hgrow="ALWAYS">
+            <Label fx:id="rotuloResumoItens" text="1x Produto" styleClass="pedido-resumo"/>
+            <Label fx:id="rotuloQuantidadeItens" text="1 item" styleClass="pedido-detalhe"/>
+        </VBox>
+    </HBox>
+
+    <!-- Linha do tempo (so aparece para pedidos em andamento) -->
+    <HBox fx:id="linhaTempo" alignment="TOP_CENTER">
+        <padding>
+            <Insets top="2" right="16" bottom="14" left="16"/>
+        </padding>
+
+        <VBox alignment="TOP_CENTER" spacing="4" prefWidth="80" minWidth="80">
+            <Label fx:id="etapa1" text="" styleClass="etapa-circulo"/>
+            <Label text="Pedido feito" styleClass="nome-etapa"/>
+        </VBox>
+
+        <Region fx:id="conector1" styleClass="conector" prefHeight="3" minHeight="3"
+                maxHeight="3" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets top="11"/>
+            </HBox.margin>
+        </Region>
+
+        <VBox alignment="TOP_CENTER" spacing="4" prefWidth="80" minWidth="80">
+            <Label fx:id="etapa2" text="" styleClass="etapa-circulo"/>
+            <Label text="Em preparo" styleClass="nome-etapa"/>
+        </VBox>
+
+        <Region fx:id="conector2" styleClass="conector" prefHeight="3" minHeight="3"
+                maxHeight="3" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets top="11"/>
+            </HBox.margin>
+        </Region>
+
+        <VBox alignment="TOP_CENTER" spacing="4" prefWidth="80" minWidth="80">
+            <Label fx:id="etapa3" text="" styleClass="etapa-circulo"/>
+            <Label text="A caminho" styleClass="nome-etapa"/>
+        </VBox>
+
+        <Region fx:id="conector3" styleClass="conector" prefHeight="3" minHeight="3"
+                maxHeight="3" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets top="11"/>
+            </HBox.margin>
+        </Region>
+
+        <VBox alignment="TOP_CENTER" spacing="4" prefWidth="80" minWidth="80">
+            <Label fx:id="etapa4" text="" styleClass="etapa-circulo"/>
+            <Label text="Entregue" styleClass="nome-etapa"/>
+        </VBox>
+    </HBox>
+
+    <!-- Rodape: total e botoes -->
+    <HBox styleClass="rodape-pedido" alignment="CENTER_LEFT" spacing="10">
+        <padding>
+            <Insets top="12" right="16" bottom="12" left="16"/>
+        </padding>
+
+        <Label text="Total" styleClass="pedido-detalhe"/>
+        <Label fx:id="rotuloTotal" text="R$ 0,00" styleClass="pedido-total"/>
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button fx:id="botaoDetalhes" text="Ver detalhes"
+                onAction="#aoClicarDetalhes" styleClass="botao-paginacao"/>
+        <Button fx:id="botaoPedirNovamente" text="Pedir novamente"
+                onAction="#aoClicarPedirNovamente" styleClass="botao-pedir"/>
+    </HBox>
+</VBox>

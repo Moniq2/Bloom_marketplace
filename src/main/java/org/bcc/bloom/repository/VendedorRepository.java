@@ -3,7 +3,6 @@ package org.bcc.bloom.repository;
 import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
-import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.model.Vendedor;
 
 import java.sql.Connection;
@@ -16,7 +15,7 @@ import java.util.List;
 
 public class VendedorRepository {
 
-    // ---------- CREATE ----------
+    
 
     public void salvarVendedor(Vendedor vendedor) {
         String sql = "INSERT INTO vendedor (nome, email, senha, cnpj, perfil) VALUES (?, ?, ?, ?, ?)";
@@ -88,8 +87,7 @@ public class VendedorRepository {
         }
     }
 
-    // ---------- UPDATE ----------
-
+    
     public void atualizar(Vendedor vendedor) {
         String sql = "UPDATE vendedor SET nome = ?, email = ?, cnpj = ?, perfil = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -121,6 +119,20 @@ public class VendedorRepository {
         }
     }
 
+    public void atualizarSaldo(long id, long novoSaldo) {
+        String sql = "UPDATE vendedor SET saldo = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, novoSaldo);
+            pstmt.setLong(2, id);
+
+            exigirAlgumaLinha(pstmt.executeUpdate(), id);
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao atualizar o saldo do vendedor: " + e.getMessage());
+        }
+    }
+
     public void vincularLoja(long vendedorId, long lojaId) {
         String sql = "UPDATE vendedor SET loja_id = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -135,7 +147,7 @@ public class VendedorRepository {
         }
     }
 
-    // ---------- DELETE ----------
+  
 
     public void remover(long id) {
         String sql = "DELETE FROM vendedor WHERE id = ?";
@@ -148,16 +160,6 @@ public class VendedorRepository {
         } catch (SQLException e) {
             throw new ErroBancoDadosException("Erro ao remover vendedor: " + e.getMessage());
         }
-    }
-
-    // ---------- antigo (mantido para nao quebrar quem chama) ----------
-
-    public Usuario buscarUsuario(String email, String senha) {
-        Usuario usuario = buscarPorEmail(email);
-        if (usuario != null && usuario.getSenha().equals(senha)) {
-            return usuario;
-        }
-        return null;
     }
 
     // ---------- apoio ----------
@@ -189,6 +191,7 @@ public class VendedorRepository {
                 rs.getString("cnpj"));
         vendedor.setId(rs.getLong("id"));
         vendedor.setPerfil(rs.getBytes("perfil"));
+        vendedor.setSaldo(rs.getLong("saldo"));
         return vendedor;
     }
 }

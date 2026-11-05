@@ -1,14 +1,15 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.vendedor;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import org.bcc.bloom.exception.EmailInvalidoException;
+import org.bcc.bloom.controller.loja.LojaSignupController;
 import org.bcc.bloom.exception.EmailJaCadastradoException;
-import org.bcc.bloom.exception.RegraNegocioException;
 import org.bcc.bloom.exception.SenhaInvalidaException;
+import org.bcc.bloom.model.Usuario;
+import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.service.UsuarioService;
 import org.bcc.bloom.util.Navegador;
 
@@ -55,13 +56,13 @@ public class VendedorSignupController {
         }
 
         try {
-            usuarioService.cadastrar(nome, email, senha1, cnpj, "vendedor");
+            Vendedor vendedor = usuarioService.cadastrar(nome, email, senha1, cnpj, "vendedor");
+            LojaSignupController controller = Navegador.abrirPagina(event, "/fxml/loja/LojaSignup.fxml");
+            controller.setVendedor(vendedor);
         }
-        catch (EmailJaCadastradoException e) {
+        catch (Exception e) {
             mostrarErro(e.getMessage());
-            return;
         }
-        Navegador.abrirPagina(event, "/fxml/LoginPage.fxml");
     }
 
     private void mostrarErro(String mensagem) {

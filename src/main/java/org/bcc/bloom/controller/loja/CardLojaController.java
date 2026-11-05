@@ -1,4 +1,4 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.loja;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,7 +9,6 @@ import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.util.Navegador;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 
 public class CardLojaController {
     private long id;

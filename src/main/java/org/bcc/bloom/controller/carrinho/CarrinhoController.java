@@ -1,4 +1,5 @@
-package org.bcc.bloom;
+
+package org.bcc.bloom.controller.carrinho;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.bcc.bloom.model.Item;
 
 import org.bcc.bloom.controller.ItemCarrinhoController;
 import org.bcc.bloom.model.ItemCarrinho;
@@ -22,28 +24,26 @@ import java.util.Map;
 
 public class CarrinhoController {
 
-    // ----- Elementos do FXML (nomes iguais aos fx:id) -----
+    @FXML
+    private VBox conteudoCarrinho;
 
     @FXML
-    private VBox conteudoCarrinho;      // estado com itens
+    private VBox estadoVazio;
 
     @FXML
-    private VBox estadoVazio;           // estado de carrinho vazio
-
-    @FXML
-    private Label rotuloQuantidade;     // "3 itens de 2 lojas"
+    private Label rotuloQuantidade;
 
     @FXML
     private ScrollPane rolagem;
 
     @FXML
-    private VBox listaLojas;            // aqui entram os grupos de lojas
+    private VBox listaLojas;
 
     @FXML
     private TextField campoCupom;
 
     @FXML
-    private Label rotuloMensagemCupom;  // mensagem de cupom valido ou invalido
+    private Label rotuloMensagemCupom;
 
     @FXML
     private Label rotuloSubtotal;
@@ -57,29 +57,22 @@ public class CarrinhoController {
     @FXML
     private Button botaoFinalizar;
 
-    // ----- Dados -----
-
-    // Itens que estao no carrinho (voce precisa criar a classe ItemCarrinho)
     private List<ItemCarrinho> itensDoCarrinho = new ArrayList<>();
 
     private double desconto = 0.0;
 
-    // O JavaFX chama este metodo sozinho depois de carregar o FXML
     @FXML
     public void initialize() {
         carregarItensDoCarrinho();
         atualizarTela();
     }
 
-    
     private void carregarItensDoCarrinho() {
-        
+
     }
 
-    
     public void atualizarTela() {
 
-        
         if (itensDoCarrinho == null || itensDoCarrinho.isEmpty()) {
             mostrarEstadoVazio(true);
 
@@ -91,10 +84,7 @@ public class CarrinhoController {
         }
 
         mostrarEstadoVazio(false);
-
         listaLojas.getChildren().clear();
-
-      
 
         Map<String, List<ItemCarrinho>> itensPorLoja = new LinkedHashMap<>();
 
@@ -117,7 +107,6 @@ public class CarrinhoController {
             listaLojas.getChildren().add(grupo);
         }
 
-        
         int quantidadeTotal = 0;
 
         for (ItemCarrinho item : itensDoCarrinho) {
@@ -134,11 +123,9 @@ public class CarrinhoController {
                 quantidadeLojas + " " + textoLojas
         );
 
-        // TODO Passo 6: chamar atualizarResumo()
         atualizarResumo();
     }
 
-    
     private VBox criarGrupoLoja(String nomeLoja) {
 
         VBox grupo = new VBox();
@@ -152,7 +139,6 @@ public class CarrinhoController {
         return grupo;
     }
 
-    
     private void adicionarLinhaItem(VBox grupo, ItemCarrinho item) {
 
         try {
@@ -182,9 +168,7 @@ public class CarrinhoController {
             subtotal += item.getSubtotal();
         }
 
-      
         double entrega = 0.0;
-
         double total = subtotal + entrega - desconto;
 
         if (total < 0) {
@@ -196,7 +180,6 @@ public class CarrinhoController {
         rotuloTotal.setText(formatarPreco(total));
     }
 
-  
     @FXML
     private void aoClicarAplicarCupom() {
 
@@ -213,8 +196,6 @@ public class CarrinhoController {
 
         cupom = cupom.trim().toUpperCase(Locale.ROOT);
 
-       
-
         if (cupom.equals("BLOOM10")) {
 
             double subtotal = 0.0;
@@ -230,7 +211,6 @@ public class CarrinhoController {
         } else {
 
             desconto = 0.0;
-
             rotuloMensagemCupom.setText("Cupom inválido.");
         }
 
@@ -239,20 +219,19 @@ public class CarrinhoController {
 
     @FXML
     private void aoClicarFinalizar() {
-       
+
+    }
 
     @FXML
     private void aoClicarContinuarComprando() {
-       
+
     }
 
-    
     public void removerItem(ItemCarrinho item) {
         itensDoCarrinho.remove(item);
         atualizarTela();
     }
 
-    
     private void mostrarEstadoVazio(boolean vazio) {
         estadoVazio.setVisible(vazio);
         estadoVazio.setManaged(vazio);

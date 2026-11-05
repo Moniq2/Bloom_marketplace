@@ -1,0 +1,146 @@
+Listagem de caminhos de pasta
+O número de série do volume é 7E36-FADF
+C:\USERS\MARCO\BLOOM_MARKETPLACE\SRC
++---main
+¦   +---java
+¦   ¦   ¦   module-info.java
+¦   ¦   ¦   
+¦   ¦   +---org
+¦   ¦       +---bcc
+¦   ¦           +---bloom
+¦   ¦               ¦   BloomApplication.java
+¦   ¦               ¦   
+¦   ¦               +---controller
+¦   ¦               ¦   ¦   CardPedidoController.java
+¦   ¦               ¦   ¦   CatalogoController.java
+¦   ¦               ¦   ¦   LoginController.java
+¦   ¦               ¦   ¦   SignupOptionsController.java
+¦   ¦               ¦   ¦   
+¦   ¦               ¦   +---carrinho
+¦   ¦               ¦   ¦       CarrinhoController.java
+¦   ¦               ¦   ¦       ItemCarrinhoController.java
+¦   ¦               ¦   ¦       
+¦   ¦               ¦   +---comprador
+¦   ¦               ¦   ¦       MainCompradorController.java
+¦   ¦               ¦   ¦       UsuarioSignupController.java
+¦   ¦               ¦   ¦       
+¦   ¦               ¦   +---files
+¦   ¦               ¦   ¦       CardPedidoView.fxml
+¦   ¦               ¦   ¦       pedidos.css
+¦   ¦               ¦   ¦       PedidosController.java
+¦   ¦               ¦   ¦       PedidosView.fxml
+¦   ¦               ¦   ¦       
+¦   ¦               ¦   +---loja
+¦   ¦               ¦   ¦       CardLojaController.java
+¦   ¦               ¦   ¦       LojasController.java
+¦   ¦               ¦   ¦       LojaSignupController.java
+¦   ¦               ¦   ¦       MinhaLojaController.java
+¦   ¦               ¦   ¦       
+¦   ¦               ¦   +---produto
+¦   ¦               ¦   ¦       CardProdutoCatalogoController.java
+¦   ¦               ¦   ¦       CardProdutoController.java
+¦   ¦               ¦   ¦       
+¦   ¦               ¦   +---vendedor
+¦   ¦               ¦           MainVendedorController.java
+¦   ¦               ¦           VendedorSignupController.java
+¦   ¦               ¦           
+¦   ¦               +---exception
+¦   ¦               ¦       CampoObrigatorioException.java
+¦   ¦               ¦       CpfInvalidoException.java
+¦   ¦               ¦       CredenciaisInvalidasException.java
+¦   ¦               ¦       EmailInvalidoException.java
+¦   ¦               ¦       EmailJaCadastradoException.java
+¦   ¦               ¦       ErroBancoDadosException.java
+¦   ¦               ¦       EstoqueInsuficienteException.java
+¦   ¦               ¦       RecursoNaoEncontradoException.java
+¦   ¦               ¦       RegraNegocioException.java
+¦   ¦               ¦       SaldoInsuficienteException.java
+¦   ¦               ¦       SenhaInvalidaException.java
+¦   ¦               ¦       ValorInvalidoException.java
+¦   ¦               ¦       VendedorNaoCadastradoException.java
+¦   ¦               ¦       VendedorNaoEncontradoException.java
+¦   ¦               ¦       
+¦   ¦               +---model
+¦   ¦               ¦       Carrinho.java
+¦   ¦               ¦       Categoria.java
+¦   ¦               ¦       Comprador.java
+¦   ¦               ¦       Item.java
+¦   ¦               ¦       Loja.java
+¦   ¦               ¦       Pedido.java
+¦   ¦               ¦       Produto.java
+¦   ¦               ¦       Usuario.java
+¦   ¦               ¦       Vendedor.java
+¦   ¦               ¦       
+¦   ¦               +---repository
+¦   ¦               ¦       CarrinhoRepository.java
+¦   ¦               ¦       CompradorRepository.java
+¦   ¦               ¦       DatabaseConnection.java
+¦   ¦               ¦       ItemRepository.java
+¦   ¦               ¦       LojaRepository.java
+¦   ¦               ¦       ProdutoRepository.java
+¦   ¦               ¦       VendedorRepository.java
+¦   ¦               ¦       
+¦   ¦               +---service
+¦   ¦               ¦       CompraService.java
+¦   ¦               ¦       LojaService.java
+¦   ¦               ¦       ProdutoService.java
+¦   ¦               ¦       UsuarioService.java
+¦   ¦               ¦       
+¦   ¦               +---util
+¦   ¦                       Navegador.java
+¦   ¦                       
+¦   +---resources
+¦       ¦   Bloom App - Atalho.lnk
+¦       ¦   schema.sql
+¦       ¦   
+¦       +---css
+¦       ¦       barra-lateral.css
+¦       ¦       bloom.css
+¦       ¦       
+¦       +---fonts
+¦       ¦       Lora-Medium.ttf
+¦       ¦       Nunito-Bold.ttf
+¦       ¦       Nunito-Regular.ttf
+¦       ¦       
+¦       +---fxml
+¦       ¦   ¦   CardProduto.fxml
+¦       ¦   ¦   CardProdutoCatalogoView.fxml
+¦       ¦   ¦   catalogo.css
+¦       ¦   ¦   CatalogoView.fxml
+¦       ¦   ¦   LoginPage.fxml
+¦       ¦   ¦   MinhaLoja.fxml
+¦       ¦   ¦   SignupOptions.fxml
+¦       ¦   ¦   
+¦       ¦   +---carrinho
+¦       ¦   ¦       Carrinho.fxml
+¦       ¦   ¦       ItemCarrinho.fxml
+¦       ¦   ¦       
+¦       ¦   +---comprador
+¦       ¦   ¦       MainComprador.fxml
+¦       ¦   ¦       UsuarioSignup.fxml
+¦       ¦   ¦       
+¦       ¦   +---loja
+¦       ¦   ¦       LojaCard.fxml
+¦       ¦   ¦       Lojas.fxml
+¦       ¦   ¦       LojaSignup.fxml
+¦       ¦   ¦       
+¦       ¦   +---vendedor
+¦       ¦           MainVendedor.fxml
+¦       ¦           VendedorSignup.fxml
+¦       ¦           
+¦       +---images
+¦               capa_padrão.png
+¦               Logo.png
+¦               Logo2.png
+¦               loja_icon.png
+¦               
++---test
+    ¦   Launcher.java
+    ¦   
+    +---java
+        +---org
+            +---bcc
+                +---bloom
+                    +---service
+                            UsuarioServiceTest.java
+                            

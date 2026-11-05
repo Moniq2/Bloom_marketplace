@@ -19,5 +19,8 @@ module bloom {
     exports org.bcc.bloom.model;
     exports org.bcc.bloom.service;
     opens org.bcc.bloom.controller to javafx.fxml;
-    opens images;
+    opens org.bcc.bloom.controller.loja to javafx.fxml;
+    opens org.bcc.bloom.controller.comprador to javafx.fxml;
+    opens org.bcc.bloom.controller.vendedor to javafx.fxml;
+    opens org.bcc.bloom.controller.carrinho to javafx.fxml;
 }

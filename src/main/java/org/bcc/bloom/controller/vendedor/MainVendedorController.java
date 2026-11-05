@@ -1,4 +1,4 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.vendedor;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -12,15 +12,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import org.bcc.bloom.model.Loja;
-import org.bcc.bloom.model.Usuario;
-import org.bcc.bloom.service.LojaService;
+import org.bcc.bloom.model.Vendedor;
+
 import java.io.IOException;
-import java.util.List;
 
-public class MainCompradorController {
-
-    private LojaService lojaService = new LojaService();
+public class MainVendedorController {
 
     @FXML
     private VBox barraLateral;
@@ -31,28 +27,23 @@ public class MainCompradorController {
     @FXML
     private StackPane areaConteudo;
 
-    private Usuario usuario;
+    private Vendedor vendedor;
+
     private static final double LARGURA_ABERTA = 220;
 
     private boolean barraAberta = true;
 
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+    }
+
     @FXML
-    public void initialize() {
+    private void initialize() {
         Rectangle recorte = new Rectangle();
         recorte.widthProperty().bind(barraLateral.widthProperty());
         recorte.heightProperty().bind(barraLateral.heightProperty());
 
         barraLateral.setClip(recorte);
-    }
-
-    public void setup (Usuario usuario) {
-        this.usuario = usuario;
-        mostrarLojas();
-    }
-
-    public void mostrarLojas(){
-        LojasController controller = trocarTela("/fxml/Lojas.fxml");
-        controller.setupCards();
     }
 
     @FXML
@@ -75,36 +66,34 @@ public class MainCompradorController {
 
     @FXML
     private void aoClicarInicio() {
-        trocarTela("/fxml/Lojas.fxml");
+        trocarTela("/fxml/MinhaLoja.fxml");
     }
 
     @FXML
-    private void aoClicarCatalogo() {
-        trocarTela("/fxml/catalogo.fxml");
-    }
-
-    @FXML
-    private void aoClicarCarrinho() {
-        trocarTela("/fxml/carrinho.fxml");
+    private void aoClicarConta() {
+        trocarTela("/fxml/ContaVendedor.fxml");
     }
 
     @FXML
     private void aoClicarPedidos() {
-        trocarTela("/fxml/pedidos.fxml");
+        trocarTela("/fxml/PedidosVendedor.fxml");
     }
 
+    @FXML
+    private void aoClicarMinhaLoja(){
+        trocarTela("/fxml/MinhaLoja.fxml");
+    }
     @FXML
     private void aoClicarSair() {
         System.out.println("Sair");
     }
 
-    private <T> T trocarTela(String url){
+    private void trocarTela(String url){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
             Parent root = loader.load();
             areaConteudo.getChildren().clear();
             areaConteudo.getChildren().setAll(root);
-            return loader.getController();
         }
         catch (IOException e) {
             throw new RuntimeException(e);

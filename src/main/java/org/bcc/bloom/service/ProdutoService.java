@@ -19,7 +19,7 @@ public class ProdutoService {
         if (loja == null) {
             throw new RecursoNaoEncontradoException("Erro: A loja de destino não foi encontrada.");
         }
-        if (loja.getId() <= 0) {
+        if (loja.getId() == null || loja.getId() <= 0) {
             throw new RecursoNaoEncontradoException("Erro: A loja precisa estar cadastrada antes de receber produtos.");
         }
         if (nome == null || nome.trim().isEmpty()) {
@@ -30,6 +30,12 @@ public class ProdutoService {
         }
         if (categoria == null) {
             throw new CampoObrigatorioException("Erro: A categoria do produto é obrigatória.");
+        }
+        if (preco <= 0) {
+            throw new ValorInvalidoException("Erro: O preço do produto deve ser maior que zero.");
+        }
+        if (estoque < 0) {
+            throw new ValorInvalidoException("Erro: O estoque não pode ser negativo.");
         }
 
         Produto produto = new Produto(nome, descricao, estoque, preco, categoria, imagem);

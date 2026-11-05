@@ -1,90 +1,69 @@
 package org.bcc.bloom.repository;
 
 import org.bcc.bloom.exception.ErroBancoDadosException;
+import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Categoria;
 import org.bcc.bloom.model.Produto;
 
 import java.sql.*;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ProdutoRepository {
 
-    private static final String COLUNAS = "nome, descricao, estoque, preco, categoria";
+    private static final String COLUNAS = "id, nome, descricao, estoque, preco, categoria, imagem";
 
-    public ProdutoRepository() {
-        criarTabelaSeNaoExistir();
-    }
+    // ---------- CREATE ----------
 
-    private void criarTabelaSeNaoExistir() {
-        String sql = "CREATE TABLE IF NOT EXISTS produtos (" +
-                "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
-                "nome VARCHAR(100) NOT NULL, " +
-                "descricao VARCHAR(255), " +
-                "estoque INT, " +
-                "preco DECIMAL(10,2), " +
-                "categoria VARCHAR(20), " +
-                "loja_id BIGINT" +
-                ")";
+    public void salvar(Produto produto, long lojaId) {
+        String sql = "INSERT INTO produto (nome, descricao, estoque, preco, categoria, imagem, loja_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            throw new ErroBancoDadosException("Erro ao criar tabela de produtos: " + e.getMessage());
-        }
-    }
-
-    public void salvar(Produto produto) {
-        salvar(produto, null);
-    }
-
-    public void salvar(Produto produto, Long lojaId) {
-        String sql = "INSERT INTO produtos (nome, descricao, estoque, preco, categoria, loja_id) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, produto.getNome());
             pstmt.setString(2, produto.getDescricao());
             pstmt.setInt(3, produto.getEstoque());
             pstmt.setDouble(4, produto.getPreco());
-            pstmt.setString(5, produto.getCategoria() == null ? null : produto.getCategoria().name());
-            if (lojaId == null) {
-                pstmt.setNull(6, Types.BIGINT);
-            } else {
-                pstmt.setLong(6, lojaId);
-            }
+            pstmt.setString(5, categoriaParaBanco(produto.getCategoria()));
+            pstmt.setBytes(6, produto.getImagemBytes());
+            pstmt.setLong(7, lojaId);
 
             pstmt.executeUpdate();
+
+            try (ResultSet chaves = pstmt.getGeneratedKeys()) {
+                if (chaves.next()) {
+                    produto.setId(chaves.getLong(1));
+                }
+            }
         } catch (SQLException e) {
             throw new ErroBancoDadosException("Erro ao salvar o produto na base de dados: " + e.getMessage());
         }
     }
 
-    //USAR PAGINAÇÃO SE FOR LISTAR TODOS DE TODAS AS LOJAS
-    public List<Produto> listarTodos() {
-        List<Produto> produtos = new ArrayList<>();
-        String sql = "SELECT " + COLUNAS + " FROM produtos";
+    // ---------- READ ----------
 
+    public Produto buscarPorId(long id) {
+        String sql = "SELECT " + COLUNAS + " FROM produto WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                produtos.add(converter(rs));
+            pstmt.setLong(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? converter(rs) : null;
             }
         } catch (SQLException e) {
-            throw new ErroBancoDadosException("Erro ao listar os produtos da base de dados: " + e.getMessage());
+            throw new ErroBancoDadosException("Erro ao buscar produto por id: " + e.getMessage());
         }
-
-        return produtos;
     }
 
     public List<Produto> listarPaginado(int pagina, int tamanho) {
         validarPagina(pagina, tamanho);
 
-        String sql = "SELECT " + COLUNAS + " FROM produtos ORDER BY id LIMIT ? OFFSET ?";
+        String sql = "SELECT " + COLUNAS + " FROM produto ORDER BY id LIMIT ? OFFSET ?";
         List<Produto> produtos = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -107,8 +86,7 @@ public class ProdutoRepository {
     public List<Produto> listarPorLoja(Long lojaId, int pagina, int tamanho) {
         validarPagina(pagina, tamanho);
 
-        String sql = "SELECT " + COLUNAS + " FROM produtos "
-                + "WHERE loja_id = ? ORDER BY id LIMIT ? OFFSET ?";
+        String sql = "SELECT " + COLUNAS + " FROM produto WHERE loja_id = ? ORDER BY id LIMIT ? OFFSET ?";
         List<Produto> produtos = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -129,9 +107,32 @@ public class ProdutoRepository {
         return produtos;
     }
 
-    public int contarTotal() {
-        String sql = "SELECT COUNT(*) AS total FROM produtos";
+    public List<Produto> listarPorCategoria(Categoria categoria, int pagina, int tamanho) {
+        validarPagina(pagina, tamanho);
 
+        String sql = "SELECT " + COLUNAS + " FROM produto WHERE categoria = ? ORDER BY id LIMIT ? OFFSET ?";
+        List<Produto> produtos = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, categoriaParaBanco(categoria));
+            pstmt.setInt(2, tamanho);
+            pstmt.setInt(3, pagina * tamanho);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    produtos.add(converter(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao listar os produtos por categoria: " + e.getMessage());
+        }
+        return produtos;
+    }
+
+    public int contarTotal() {
+        String sql = "SELECT COUNT(*) AS total FROM produto";
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -143,8 +144,7 @@ public class ProdutoRepository {
     }
 
     public int contarPorLoja(Long lojaId) {
-        String sql = "SELECT COUNT(*) AS total FROM produtos WHERE loja_id = ?";
-
+        String sql = "SELECT COUNT(*) AS total FROM produto WHERE loja_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -157,23 +157,100 @@ public class ProdutoRepository {
         }
     }
 
+    // ---------- UPDATE ----------
+
+    public void atualizar(Produto produto) {
+        String sql = "UPDATE produto SET nome = ?, descricao = ?, estoque = ?, preco = ?, categoria = ?, imagem = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, produto.getNome());
+            pstmt.setString(2, produto.getDescricao());
+            pstmt.setInt(3, produto.getEstoque());
+            pstmt.setDouble(4, produto.getPreco());
+            pstmt.setString(5, categoriaParaBanco(produto.getCategoria()));
+            pstmt.setBytes(6, produto.getImagemBytes());
+            pstmt.setLong(7, produto.getId());
+
+            exigirAlgumaLinha(pstmt.executeUpdate(), produto.getId());
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao atualizar produto: " + e.getMessage());
+        }
+    }
+
+    public void atualizarEstoque(long id, int novoEstoque) {
+        if (novoEstoque < 0) {
+            throw new ValorInvalidoException("Erro: O estoque não pode ser negativo.");
+        }
+
+        String sql = "UPDATE produto SET estoque = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, novoEstoque);
+            pstmt.setLong(2, id);
+
+            exigirAlgumaLinha(pstmt.executeUpdate(), id);
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao atualizar o estoque do produto: " + e.getMessage());
+        }
+    }
+
+    
+
+    public void remover(long id) {
+        String sql = "DELETE FROM produto WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, id);
+
+            exigirAlgumaLinha(pstmt.executeUpdate(), id);
+        } catch (SQLException e) {
+            throw new ErroBancoDadosException("Erro ao remover produto: " + e.getMessage());
+        }
+    }
+
+
+
     private void validarPagina(int pagina, int tamanho) {
         if (pagina < 0 || tamanho <= 0) {
             throw new ValorInvalidoException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
         }
     }
 
-    private Produto converter(ResultSet rs) throws SQLException {
-        Produto p = new Produto();
-        p.setNome(rs.getString("nome"));
-        p.setDescricao(rs.getString("descricao"));
-        p.setEstoque(rs.getInt("estoque"));
-        p.setPreco(rs.getDouble("preco"));
-
-        String categoria = rs.getString("categoria");
-        if (categoria != null) {
-            p.setCategoria(Categoria.valueOf(categoria));
+    private void exigirAlgumaLinha(int linhasAfetadas, long id) {
+        if (linhasAfetadas == 0) {
+            throw new RecursoNaoEncontradoException("Erro: Produto não encontrado (id " + id + ").");
         }
-        return p;
+    }
+
+    // FRUTAS -> "frutas", GRAOS -> "grãos"
+    private String categoriaParaBanco(Categoria categoria) {
+        if (categoria == null) {
+            return null;
+        }
+        return categoria == Categoria.GRAOS ? "grãos" : categoria.name().toLowerCase(Locale.ROOT);
+    }
+
+    // "frutas" -> FRUTAS, "grãos" -> GRAOS (tira o acento e poe em maiusculo)
+    private Categoria categoriaDoBanco(String valor) {
+        if (valor == null) {
+            return null;
+        }
+        String semAcento = Normalizer.normalize(valor, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        return Categoria.valueOf(semAcento.toUpperCase(Locale.ROOT));
+    }
+
+    private Produto converter(ResultSet rs) throws SQLException {
+        Produto produto = new Produto(
+                rs.getString("nome"),
+                rs.getString("descricao"),
+                rs.getInt("estoque"),
+                rs.getDouble("preco"),
+                categoriaDoBanco(rs.getString("categoria")),
+                rs.getBytes("imagem"));
+        produto.setId(rs.getLong("id"));
+        return produto;
     }
 }

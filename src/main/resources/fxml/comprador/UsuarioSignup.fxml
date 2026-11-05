@@ -11,9 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="560" prefWidth="900" styleClass="raiz-login" stylesheets="@../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.VendedorSignupController">
-
-    <!-- logo e slogan -->
+<HBox prefHeight="560" prefWidth="900" styleClass="raiz-login" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.comprador.UsuarioSignupController">
     <VBox alignment="CENTER" maxWidth="500.0" minWidth="380" prefWidth="380.0" spacing="14" styleClass="painel-lateral">
         <padding>
             <Insets bottom="40" left="40" right="40" top="40" />
@@ -21,7 +19,7 @@
 
         <ImageView fitHeight="150" fitWidth="150" preserveRatio="true">
             <image>
-                <Image url="@../images/Logo2.png" />
+                <Image url="@../../images/Logo2.png" />
             </image>
         </ImageView>
 
@@ -29,25 +27,25 @@
         <Label styleClass="slogan" text="Do campo para a sua mesa" />
     </VBox>
 
-    <!-- formulario de login -->
     <VBox alignment="CENTER_LEFT" spacing="8" styleClass="painel-formulario" HBox.hgrow="ALWAYS">
 
-        <Label styleClass="titulo-formulario" text="Olá, vendedor!" />
+        <Label styleClass="titulo-formulario" text="Olá, usuário!" />
         <Label styleClass="subtitulo" text="preencha os dados para se cadastrar" />
 
         <Label styleClass="rotulo" text="Nome" />
         <TextField fx:id="campoNome" promptText="fulano de tal" styleClass="campo" />
 
         <Label styleClass="rotulo" text="Email" />
-        <TextField fx:id="campoEmail" promptText="nome@email.com" styleClass="campo" />
-      <Label styleClass="rotulo" text="CNPJ" />
-      <TextField fx:id="campoCNPJ" promptText="12.345.678/0001-95" styleClass="campo" />
-      <Label styleClass="rotulo" text="Senha" />
-      <PasswordField fx:id="campoSenha1" promptText="digite uma senha" styleClass="campo" />
-      <PasswordField fx:id="campoSenha2" promptText="confirme a senha" styleClass="campo" />
-      <Label fx:id="rotuloErro" styleClass="mensagem-erro" stylesheets="@../css/bloom.css" text="Erro" visible="false" />
+        <PasswordField fx:id="campoEmail" promptText="nome@email.com" styleClass="campo" />
 
-        <Button maxWidth="Infinity" styleClass="botao-primario" text="Cadastrar-se" onAction="#cadastrar" />
+      <Label styleClass="rotulo" text="CPF" />
+      <TextField fx:id="campoCPF" promptText="123.456.789.00" styleClass="campo" />
+      <Label styleClass="rotulo" text="Senha" />
+      <PasswordField fx:id="campoSenha1" promptText="crie uma senha" styleClass="campo" />
+      <PasswordField fx:id="campoSenha2" promptText="confirme a senha" styleClass="campo" />
+      <Label fx:id="rotuloErro" styleClass="mensagem-erro" stylesheets="@../../css/bloom.css" text="Erro" visible="false" />
+
+        <Button maxWidth="Infinity" onAction="#cadastrar" styleClass="botao-primario" text="Cadastrar-se" />
 
         <Hyperlink onAction="#voltar" styleClass="link-verde" text="voltar" />
 

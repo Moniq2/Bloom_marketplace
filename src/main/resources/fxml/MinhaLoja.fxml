@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- StackPane empilha dois estados: vendedor com loja e vendedor sem loja -->
+<StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.bcc.bloom.MinhaLojaController">
+
+    <!-- ===== Estado 1: vendedor com loja ===== -->
+    <VBox fx:id="conteudoLoja" spacing="20">
+        <padding>
+            <Insets top="8" right="8" bottom="8" left="8"/>
+        </padding>
+
+        <!-- Banner da loja: capa + logo + informacoes -->
+        <VBox fx:id="bannerLoja" styleClass="banner-loja">
+
+            <!-- Capa -->
+            <StackPane styleClass="capa-loja" prefHeight="90" minHeight="90" maxHeight="90">
+                <ImageView fx:id="imagemCapa" fitHeight="90" preserveRatio="false"/>
+            </StackPane>
+
+            <HBox alignment="BOTTOM_LEFT" spacing="16">
+                <padding>
+                    <Insets top="0" right="20" bottom="16" left="20"/>
+                </padding>
+
+                <!-- Logo redonda, subindo sobre a capa (margem negativa) -->
+                <StackPane styleClass="moldura-logo">
+                    <HBox.margin>
+                        <Insets top="-38"/>
+                    </HBox.margin>
+                    <ImageView fx:id="imagemLogo" fitWidth="68" fitHeight="68"
+                               preserveRatio="false"/>
+                </StackPane>
+
+                <!-- Nome, categoria, nota e status -->
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label fx:id="rotuloNomeLoja" text="Nome da loja"
+                           styleClass="titulo-formulario, nome-loja"/>
+                    <HBox spacing="14" alignment="CENTER_LEFT">
+                        <Label fx:id="rotuloCategoria" text="Categoria" styleClass="subtitulo"/>
+                        <Label fx:id="rotuloNota" text="★ 0,0 (0)" styleClass="subtitulo"/>
+                        <Label fx:id="rotuloStatus" text="Aberta" styleClass="etiqueta-status"/>
+                    </HBox>
+                </VBox>
+
+                <Button fx:id="botaoEditarLoja" text="✎ Editar loja"
+                        onAction="#aoClicarEditarLoja" styleClass="botao-paginacao"/>
+            </HBox>
+        </VBox>
+
+        <!-- Titulo da secao de produtos + botao Novo produto -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="Meus produtos" styleClass="titulo-formulario, titulo-secao"/>
+            <Label fx:id="rotuloTotalProdutos" text="0 produtos" styleClass="subtitulo"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="botaoNovoProduto" text="+ Novo produto"
+                    onAction="#aoClicarNovoProduto" styleClass="botao-novo"/>
+        </HBox>
+
+        <!-- Area rolavel onde os cards de produto serao adicionados pelo codigo -->
+        <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem"
+                    VBox.vgrow="ALWAYS">
+            <content>
+                <VBox spacing="12">
+                    <FlowPane fx:id="painelProdutos" hgap="16" vgap="16"/>
+
+                    <!-- Mensagem para quando a loja nao tem produtos -->
+                    <Label fx:id="rotuloSemProdutos" text="Você ainda não cadastrou produtos."
+                           styleClass="subtitulo" visible="false" managed="false"/>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </VBox>
+
+    <!-- ===== Estado 2: vendedor sem loja (comeca escondido) ===== -->
+    <VBox fx:id="estadoSemLoja" alignment="CENTER" spacing="12"
+          visible="false" managed="false">
+        <Label text="Você ainda não tem uma loja" styleClass="titulo-formulario"/>
+        <Label text="Crie sua loja para começar a vender seus produtos." styleClass="subtitulo"/>
+        <Button text="Criar minha loja" onAction="#aoClicarCriarLoja"
+                styleClass="botao-novo"/>
+    </VBox>
+</StackPane>

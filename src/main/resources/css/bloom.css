@@ -344,3 +344,130 @@
     -fx-font-weight: bold;
     -fx-text-fill: #5B7B3A;
 }
+
+/* ----- Banner da loja ----- */
+.banner-loja {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 14;
+}
+
+.capa-loja {
+    -fx-background-color: #E3CF9F;
+    -fx-background-radius: 12 12 0 0;
+}
+
+/* Moldura branca em volta da logo redonda */
+.moldura-logo {
+    -fx-background-color: white;
+    -fx-background-radius: 50;
+    -fx-padding: 4;
+}
+
+.nome-loja {
+    -fx-font-size: 24px;
+}
+
+.titulo-secao {
+    -fx-font-size: 20px;
+}
+
+/* Etiqueta "Aberta" / "Fechada" do banner */
+.etiqueta-status {
+    -fx-background-color: #5B7B3A;
+    -fx-background-radius: 20;
+    -fx-text-fill: #F7F1E3;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 10 2 10;
+}
+
+/* ----- Botao Novo produto (destaque em terracota) ----- */
+.botao-novo {
+    -fx-background-color: #C4573A;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 18 10 18;
+    -fx-cursor: hand;
+}
+
+.botao-novo:hover {
+    -fx-background-color: #A94A31;
+}
+
+/* ----- Card de produto ----- */
+.card-produto {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 14;
+}
+
+/* Botao redondo do lapis */
+.botao-lapis {
+    -fx-background-color: #F7F1E3;
+    -fx-background-radius: 50;
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 50;
+    -fx-text-fill: #5B7B3A;
+    -fx-font-size: 15px;
+    -fx-min-width: 32;
+    -fx-min-height: 32;
+    -fx-max-width: 32;
+    -fx-max-height: 32;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.botao-lapis:hover {
+    -fx-background-color: #E3CF9F;
+}
+
+.produto-nome {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3B3024;
+}
+
+.produto-preco {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5B7B3A;
+}
+
+.produto-estoque {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B5E4C;
+}
+
+/* Etiquetas de situacao do produto */
+.etiqueta-ativo {
+    -fx-background-color: #F7F1E3;
+    -fx-background-radius: 20;
+    -fx-text-fill: #5B7B3A;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 9 2 9;
+}
+
+.etiqueta-sem-estoque {
+    -fx-background-color: #6B5E4C;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 9 2 9;
+}
