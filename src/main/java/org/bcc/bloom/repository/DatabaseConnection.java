@@ -11,6 +11,11 @@ public class DatabaseConnection {
     private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
     public static Connection getConnection() {
+        if (URL == null || USER == null || PASSWORD == null) {
+            throw new ErroBancoDadosException(
+                    "Variáveis de ambiente do banco não configuradas. Defina DB_BLOOM_URL, DB_USER e DB_PASSWORD "
+                    + "(ex.: DB_BLOOM_URL=jdbc:mysql://localhost:3306/bloom_db?useUnicode=true&characterEncoding=UTF-8).");
+        }
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(URL, USER, PASSWORD);
