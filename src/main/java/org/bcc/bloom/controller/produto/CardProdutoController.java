@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import org.bcc.bloom.model.Produto;
 
 public class CardProdutoController {
 
@@ -27,13 +28,8 @@ public class CardProdutoController {
     @FXML
     private Label rotuloStatus;
 
-    // ----- Dados -----
-
     // Produto que este card representa
     private Produto produto;
-
-    // Controller da tela Minha loja, usado para pedir a edicao do produto
-    private MinhaLojaController controladorLoja;
 
     // Chamado pelo MinhaLojaController logo depois de carregar este card
     public void definirDados(Produto produto) {
@@ -45,13 +41,6 @@ public class CardProdutoController {
         //       rotuloStatus.getStyleClass().add("etiqueta-sem-estoque");
         // TODO (opcional): recortar a imagem com cantos de cima arredondados
     }
-
-    // Guarda a referencia da tela Minha loja
-    public void definirControladorLoja(MinhaLojaController controladorLoja) {
-        this.controladorLoja = controladorLoja;
-    }
-
-    // ----- Acoes dos botoes -----
 
     @FXML
     private void aoClicarEditar() {

@@ -12,30 +12,30 @@ import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.model.Vendedor;
-import org.bcc.bloom.repository.CompradorRepository;
-import org.bcc.bloom.repository.LojaRepository;
-import org.bcc.bloom.repository.VendedorRepository;
+import org.bcc.bloom.dao.CompradorDAO;
+import org.bcc.bloom.dao.LojaDAO;
+import org.bcc.bloom.dao.VendedorDAO;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioService {
 
-    private final VendedorRepository vendedorRepository = new VendedorRepository();
-    private final CompradorRepository compradorRepository = new CompradorRepository();
-    private final LojaRepository lojaRepository = new LojaRepository();
+    private final VendedorDAO vendedorDAO = new VendedorDAO();
+    private final CompradorDAO compradorDAO = new CompradorDAO();
+    private final LojaDAO lojaDAO = new LojaDAO();
 
-    // ---------- cadastro ----------
+
 
     public Comprador cadastrarComprador(String nome, String email, String senha, String cpf) {
         String emailLimpo = email == null ? null : email.trim();
         String cpfLimpo = apenasDigitos(cpf);
 
-        // validacoes puras primeiro: nao dependem do banco
+
         validarDados(nome, emailLimpo, cpfLimpo, senha);
         garantirEmailLivre(emailLimpo);
 
         String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
         Comprador comprador = new Comprador(nome.trim(), emailLimpo, senhaCriptografada, cpfLimpo);
-        compradorRepository.salvar(comprador);
+        compradorDAO.salvar(comprador);
         return comprador;
     }
 
@@ -48,13 +48,13 @@ public class UsuarioService {
 
         String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
         Vendedor vendedor = new Vendedor(nome.trim(), emailLimpo, senhaCriptografada, cnpjLimpo);
-        vendedorRepository.salvarVendedor(vendedor); // preenche o id no proprio objeto
+        vendedorDAO.salvarVendedor(vendedor);
         return vendedor;
     }
 
-    // Mantido para compatibilidade com os controllers atuais (que ainda chamam cadastrar(...)).
-    // Apenas delega para cadastrarComprador/cadastrarVendedor, sem duplicar regra de negócio.
-    // "cadastro" = CPF (Comprador) ou CNPJ (Vendedor). Retorna o Vendedor criado, ou null para Comprador.
+
+
+
     public Vendedor cadastrar(String nome, String email, String senha, String cadastro, String tipo) {
         if ("Vendedor".equalsIgnoreCase(tipo)) {
             return cadastrarVendedor(nome, email, senha, cadastro);
@@ -66,20 +66,20 @@ public class UsuarioService {
         throw new ValorInvalidoException("Erro: Tipo de utilizador inválido: " + tipo);
     }
 
-    // ---------- login ----------
 
-    // Procura nos dois perfis (comprador e vendedor). O e-mail e unico entre os dois (ver cadastro).
+
+
     public Usuario login(String email, String senha) {
         if (email == null || senha == null) {
             throw new CredenciaisInvalidasException("Credenciais inválidas! Verifique o e-mail e a senha.");
         }
         String emailLimpo = email.trim();
 
-        Usuario usuario = compradorRepository.buscarPorEmail(emailLimpo);
+        Usuario usuario = compradorDAO.buscarPorEmail(emailLimpo);
         if (usuario == null) {
-            Vendedor vendedor = vendedorRepository.buscarPorEmail(emailLimpo);
+            Vendedor vendedor = vendedorDAO.buscarPorEmail(emailLimpo);
             if (vendedor != null) {
-                vendedor.setLoja(lojaRepository.buscarPorVendedor(vendedor.getId()));
+                vendedor.setLoja(lojaDAO.buscarPorVendedor(vendedor.getId()));
             }
             usuario = vendedor;
         }
@@ -94,14 +94,14 @@ public class UsuarioService {
         try {
             return BCrypt.checkpw(senha, hash);
         } catch (IllegalArgumentException e) {
-            // hash invalido/legado no banco (nao e bcrypt): trata como senha incorreta
+
             return false;
         }
     }
 
-    // ---------- saldo ----------
 
-    // valor em centavos
+
+
     public void depositar(Usuario usuario, Long valor) {
         if (usuario == null) {
             throw new RecursoNaoEncontradoException("Erro: Usuário não informado.");
@@ -112,18 +112,18 @@ public class UsuarioService {
 
         long novoSaldo = usuario.getSaldo() + valor;
 
-        // grava primeiro: se o banco falhar, o objeto em memoria nao fica diferente do banco
+
         if (usuario.getId() != null) {
             if (usuario instanceof Comprador) {
-                compradorRepository.atualizarSaldo(usuario.getId(), novoSaldo);
+                compradorDAO.atualizarSaldo(usuario.getId(), novoSaldo);
             } else if (usuario instanceof Vendedor) {
-                vendedorRepository.atualizarSaldo(usuario.getId(), novoSaldo);
+                vendedorDAO.atualizarSaldo(usuario.getId(), novoSaldo);
             }
         }
         usuario.setSaldo(novoSaldo);
     }
 
-    // ---------- validacao ----------
+
 
     public void validarDados(String nome, String email, String cpf, String senha) {
         exigirCampos(nome, email, cpf, senha, "CPF");
@@ -176,12 +176,12 @@ public class UsuarioService {
 
    
     private void garantirEmailLivre(String email) {
-        if (compradorRepository.buscarPorEmail(email) != null || vendedorRepository.buscarPorEmail(email) != null) {
+        if (compradorDAO.buscarPorEmail(email) != null || vendedorDAO.buscarPorEmail(email) != null) {
             throw new EmailJaCadastradoException("Erro: Já existe um utilizador registado com este e-mail.");
         }
     }
 
-    // "123.456.789-09" -> "12345678909"
+
     private String apenasDigitos(String valor) {
         return valor == null ? null : valor.replaceAll("\\D", "");
     }

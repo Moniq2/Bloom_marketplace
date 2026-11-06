@@ -8,11 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Item;
-
-import org.bcc.bloom.controller.ItemController;
-import org.bcc.bloom.model.Item;
-import org.bcc.bloom.model.Loja;
+import org.bcc.bloom.service.CarrinhoService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,9 +20,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CarrinhoController {
-
-    // ----- Elementos do FXML (nomes iguais aos fx:id) -----
-
     @FXML
     private VBox conteudoCarrinho;      // estado com itens
 
@@ -58,12 +53,11 @@ public class CarrinhoController {
     @FXML
     private Button botaoFinalizar;
 
-    // ----- Dados -----
-
     // Itens que estao no carrinho (voce precisa criar a classe Item)
     private List<Item> itensDoCarrinho = new ArrayList<>();
-
     private double desconto = 0.0;
+    private CarrinhoService carrinhoService = new CarrinhoService();
+    private Comprador comprador;
 
     // O JavaFX chama este metodo sozinho depois de carregar o FXML
     @FXML
@@ -72,9 +66,12 @@ public class CarrinhoController {
         atualizarTela();
     }
 
+    public void setComprador(Comprador comprador) {
+        this.comprador = comprador;
+    }
 
     private void carregarItensDoCarrinho() {
-
+        this.itensDoCarrinho = carrinhoService.buscarItens(comprador.getCarrinho_id());
     }
 
 
@@ -91,50 +88,20 @@ public class CarrinhoController {
 
         mostrarEstadoVazio(false);
 
-        listaLojas.getChildren().clear();
-
-
-
-        Map<String, List<Item>> itensPorLoja = new LinkedHashMap<>();
-
         for (Item item : itensDoCarrinho) {
-            String nomeLoja = item.getLoja().getName();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/carrinho/itemCarrinho.fxml"));
+                Parent card = loader.load();
+                ItemCarrinhoController controller = loader.getController();
 
-            itensPorLoja
-                    .computeIfAbsent(nomeLoja, chave -> new ArrayList<>())
-                    .add(item);
-        }
-
-        for (Map.Entry<String, List<Item>> entrada : itensPorLoja.entrySet()) {
-
-            VBox grupo = criarGrupoLoja(entrada.getKey());
-
-            for (Item item : entrada.getValue()) {
-                adicionarLinhaItem(grupo, item);
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
             }
 
-            listaLojas.getChildren().add(grupo);
+            String nomeLoja = item.getLoja(
+            ).getNome();
         }
-
-
-        int quantidadeTotal = 0;
-
-        for (Item item : itensDoCarrinho) {
-            quantidadeTotal += item.getQuantidade();
-        }
-
-        int quantidadeLojas = itensPorLoja.size();
-
-        String textoItens = quantidadeTotal == 1 ? "item" : "itens";
-        String textoLojas = quantidadeLojas == 1 ? "loja" : "lojas";
-
-        rotuloQuantidade.setText(
-                quantidadeTotal + " " + textoItens + " de " +
-                quantidadeLojas + " " + textoLojas
-        );
-
-        // TODO Passo 6: chamar atualizarResumo()
-        atualizarResumo();
     }
 
 
@@ -161,9 +128,8 @@ public class CarrinhoController {
 
             Parent linha = loader.load();
 
-            ItemController controller = loader.getController();
+            ItemCarrinhoController controller = loader.getController();
 
-            controller.definirDados(item);
             controller.definirControladorCarrinho(this);
 
             grupo.getChildren().add(linha);
@@ -240,13 +206,12 @@ public class CarrinhoController {
 
     @FXML
     private void aoClicarFinalizar() {
-
+    }
 
     @FXML
     private void aoClicarContinuarComprando() {
 
     }
-
 
     public void removerItem(Item item) {
         itensDoCarrinho.remove(item);

@@ -1,4 +1,4 @@
-package org.bcc.bloom.repository;
+package org.bcc.bloom.dao;
 
 import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
@@ -14,10 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompradorRepository {
-
-  
-
+public class CompradorDAO {
     public void salvar(Comprador comprador) {
         String sql = "INSERT INTO comprador (nome, email, senha, saldo, cpf, endereco) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -42,7 +39,7 @@ public class CompradorRepository {
         }
     }
 
-    // ---------- READ ----------
+
 
     public Comprador buscarPorId(long id) {
         return buscarUm("SELECT * FROM comprador WHERE id = ?", id, "Erro ao buscar comprador por id: ");
@@ -158,7 +155,7 @@ public class CompradorRepository {
         return null;
     }
 
-    // ---------- apoio ----------
+
 
     private Comprador buscarUm(String sql, Object parametro, String mensagemErro) {
         try (Connection conn = DatabaseConnection.getConnection();

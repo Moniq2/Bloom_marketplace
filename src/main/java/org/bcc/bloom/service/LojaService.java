@@ -6,12 +6,12 @@ import org.bcc.bloom.exception.VendedorNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.model.Vendedor;
-import org.bcc.bloom.repository.LojaRepository;
+import org.bcc.bloom.dao.LojaDAO;
 import java.util.List;
 
 public class LojaService {
 
-    private final LojaRepository lojaRepository = new LojaRepository();
+    private final LojaDAO lojaDAO = new LojaDAO();
 
     public Loja cadastrarLoja(Vendedor vendedor, String nome, String descricao, byte[] capa) {
         if (vendedor == null) {
@@ -25,17 +25,17 @@ public class LojaService {
         }
 
         Loja novaLoja = new Loja(nome.trim(), descricao, capa);
-        lojaRepository.salvar(novaLoja, vendedor.getId());
+        lojaDAO.salvar(novaLoja, vendedor.getId());
         vendedor.setLoja(novaLoja);
         return novaLoja;
     }
 
     public List<Loja> listarLojas(int pagina, int tamanho) {
-        return lojaRepository.listarPaginado(pagina, tamanho);
+        return lojaDAO.listarPaginado(pagina, tamanho);
     }
 
     public int contarLojas() {
-        return lojaRepository.contarTotalLojas();
+        return lojaDAO.contarTotalLojas();
     }
 
     public int totalDePaginas(int tamanho) {

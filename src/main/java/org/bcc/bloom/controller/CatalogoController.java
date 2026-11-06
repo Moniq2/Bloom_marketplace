@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import org.bcc.bloom.model.Produto;
 
 public class CatalogoController {
 

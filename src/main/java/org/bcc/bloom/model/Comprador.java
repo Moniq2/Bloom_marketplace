@@ -3,6 +3,8 @@ package org.bcc.bloom.model;
 public class Comprador extends Usuario {
     private String endereco;
     private String cpf;
+    private Long carrinho_id;
+
     public Comprador() {
         super();
     }
@@ -17,4 +19,7 @@ public class Comprador extends Usuario {
 
     public String getCpf() { return cpf; }
     public void setCpf(String cpf) { this.cpf = cpf; }
+
+    public Long getCarrinho_id() { return carrinho_id; }
+    public void SetCarrinho_id(Long id) { this.carrinho_id = id; }
 }

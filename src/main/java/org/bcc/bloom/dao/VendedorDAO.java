@@ -1,4 +1,4 @@
-package org.bcc.bloom.repository;
+package org.bcc.bloom.dao;
 
 import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
@@ -13,7 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VendedorRepository {
+public class VendedorDAO {
 
     
 
@@ -40,7 +40,7 @@ public class VendedorRepository {
         }
     }
 
-    // ---------- READ ----------
+
 
     public Vendedor buscarPorId(long id) {
         return buscarUm("SELECT * FROM vendedor WHERE id = ?", id, "Erro ao buscar vendedor por id: ");
@@ -162,7 +162,7 @@ public class VendedorRepository {
         }
     }
 
-    // ---------- apoio ----------
+
 
     private Vendedor buscarUm(String sql, Object parametro, String mensagemErro) {
         try (Connection conn = DatabaseConnection.getConnection();

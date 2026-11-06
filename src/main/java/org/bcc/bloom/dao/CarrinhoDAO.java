@@ -1,14 +1,17 @@
-package org.bcc.bloom.repository;
+package org.bcc.bloom.dao;
 
+import org.bcc.bloom.exception.RecursoNaoEncontradoException;
+import org.bcc.bloom.model.Item;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CarrinhoRepository {
+public class CarrinhoDAO {
 
-    // CREATE: cria um carrinho para um comprador
     public long criarCarrinho(long compradorId) throws SQLException {
         String sql = "INSERT INTO carrinho (comprador_id) VALUES (?)";
 
@@ -29,7 +32,7 @@ public class CarrinhoRepository {
         throw new SQLException("Não foi possível criar o carrinho.");
     }
 
-    // READ: busca o carrinho pelo ID
+
     public Long buscarPorId(long id) throws SQLException {
         String sql = "SELECT id FROM carrinho WHERE id = ?";
 
@@ -48,7 +51,7 @@ public class CarrinhoRepository {
         return null;
     }
 
-    // READ: busca o carrinho de um comprador
+
     public Long buscarPorComprador(long compradorId) throws SQLException {
         String sql = "SELECT id FROM carrinho WHERE comprador_id = ?";
 
@@ -67,7 +70,48 @@ public class CarrinhoRepository {
         return null;
     }
 
-    // DELETE: exclui um carrinho e seus itens
+    public List<Item> buscarItens(Long carrinhoId) {
+
+        String sql = "SELECT * FROM carrinho WHERE id = ?";
+        List<Item> itens = new ArrayList<>();
+
+        Connection conn = DatabaseConnection.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setLong(1, carrinhoId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    throw new RecursoNaoEncontradoException("Não existe carrinho de id " + carrinhoId);
+                }
+            }
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        sql = "SELECT * FROM item WHERE carrinho_id = ?";
+        try (
+            PreparedStatement ps = conn.prepareStatement(sql);
+        )
+        {
+            ps.setLong(1, carrinhoId);
+            try (ResultSet rs = ps.executeQuery(sql)) {
+                while (rs.next()) {
+                    Item item = new Item();
+                    item.setId(rs.getLong("id"));
+                    item.setValorUnitario(rs.getDouble("valor_unitario"));
+                    item.setQuantidade(rs.getInt("quantidade"));
+                    itens.add(item);
+                }
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return itens;
+    }
+
+
     public void excluirCarrinho(long carrinhoId) throws SQLException {
         String sqlItens = "DELETE FROM item WHERE container_id = ? AND tipo_container = 'CARRINHO'";
         String sqlCarrinho = "DELETE FROM carrinho WHERE id = ?";

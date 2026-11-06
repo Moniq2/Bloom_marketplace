@@ -1,4 +1,4 @@
-package org.bcc.bloom.repository;
+package org.bcc.bloom.dao;
 
 import org.bcc.bloom.exception.ErroBancoDadosException;
 import java.sql.Connection;

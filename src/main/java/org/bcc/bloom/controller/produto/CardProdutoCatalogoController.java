@@ -1,9 +1,11 @@
-package org.bcc.bloom;
+package org.bcc.bloom.controller.produto;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import org.bcc.bloom.CatalogoController;
+import org.bcc.bloom.model.Produto;
 
 public class CardProdutoCatalogoController {
 

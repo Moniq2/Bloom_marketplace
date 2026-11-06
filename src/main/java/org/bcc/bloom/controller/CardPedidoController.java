@@ -1,4 +1,4 @@
-package org.bcc.bloom;
+package org.bcc.bloom.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import org.bcc.bloom.controller.PedidosController;
+import org.bcc.bloom.model.Pedido;
 
 public class CardPedidoController {
 

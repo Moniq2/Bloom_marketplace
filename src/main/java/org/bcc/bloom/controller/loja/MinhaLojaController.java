@@ -1,4 +1,4 @@
-package org.bcc.bloom;
+package org.bcc.bloom.controller.loja;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.bcc.bloom.model.Loja;
+import org.bcc.bloom.model.Produto;
 
 import java.util.ArrayList;
 import java.util.List;

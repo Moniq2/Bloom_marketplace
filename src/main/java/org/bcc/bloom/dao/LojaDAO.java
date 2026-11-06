@@ -1,5 +1,5 @@
 
-package org.bcc.bloom.repository;
+package org.bcc.bloom.dao;
 
 import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
@@ -10,11 +10,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LojaRepository {
+public class LojaDAO {
 
-    public LojaRepository() {}
+    public LojaDAO() {}
 
-    // CREATE
+
     public void salvar(Loja loja, long vendedorId) {
         String sqlLoja = "INSERT INTO loja (nome, descricao, capa) VALUES (?, ?, ?)";
         String sqlVendedor = "UPDATE vendedor SET loja_id = ? WHERE id = ?";
@@ -69,7 +69,7 @@ public class LojaRepository {
         }
     }
 
-    // READ
+
     public Loja buscarPorId(long id) {
         String sql = "SELECT * FROM loja WHERE id = ?";
 
@@ -150,7 +150,7 @@ public class LojaRepository {
         }
     }
 
-    // UPDATE
+
     public void atualizar(Loja loja) {
         String sql = "UPDATE loja SET nome = ?, descricao = ?, capa = ? WHERE id = ?";
 
@@ -173,7 +173,7 @@ public class LojaRepository {
         }
     }
 
-    // DELETE
+
     public void remover(long id) {
         String sqlVendedor = "UPDATE vendedor SET loja_id = NULL WHERE loja_id = ?";
         String sqlProdutos = "DELETE FROM produto WHERE loja_id = ?";

@@ -1,4 +1,4 @@
-package org.bcc.bloom.repository;
+package org.bcc.bloom.dao;
 
 import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ProdutoRepository {
+public class ProdutoDAO {
 
     private static final String COLUNAS = "id, nome, descricao, estoque, preco, categoria, imagem";
 
-    // ---------- CREATE ----------
+
 
     public void salvar(Produto produto, long lojaId) {
         String sql = "INSERT INTO produto (nome, descricao, estoque, preco, categoria, imagem, loja_id) "
@@ -44,7 +44,7 @@ public class ProdutoRepository {
         }
     }
 
-    // ---------- READ ----------
+
 
     public Produto buscarPorId(long id) {
         String sql = "SELECT " + COLUNAS + " FROM produto WHERE id = ?";
@@ -157,7 +157,7 @@ public class ProdutoRepository {
         }
     }
 
-    // ---------- UPDATE ----------
+
 
     public void atualizar(Produto produto) {
         String sql = "UPDATE produto SET nome = ?, descricao = ?, estoque = ?, preco = ?, categoria = ?, imagem = ? WHERE id = ?";
@@ -225,7 +225,7 @@ public class ProdutoRepository {
         }
     }
 
-    // FRUTAS -> "frutas", GRAOS -> "grãos"
+
     private String categoriaParaBanco(Categoria categoria) {
         if (categoria == null) {
             return null;
@@ -233,7 +233,7 @@ public class ProdutoRepository {
         return categoria == Categoria.GRAOS ? "grãos" : categoria.name().toLowerCase(Locale.ROOT);
     }
 
-    // "frutas" -> FRUTAS, "grãos" -> GRAOS (tira o acento e poe em maiusculo)
+
     private Categoria categoriaDoBanco(String valor) {
         if (valor == null) {
             return null;

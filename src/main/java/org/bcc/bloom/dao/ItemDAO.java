@@ -1,4 +1,4 @@
-package org.bcc.bloom.repository;
+package org.bcc.bloom.dao;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -9,9 +9,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemRepository {
+public class ItemDAO {
 
-    // Representação dos dados de um item recuperado do banco
+
     public record ItemRegistro(
             long id,
             long produtoId,
@@ -19,7 +19,7 @@ public class ItemRepository {
             BigDecimal valorUnitario
     ) {}
 
-    // CREATE: adiciona um produto ao carrinho
+
     public long adicionarItem(
             long carrinhoId,
             long produtoId,
@@ -62,7 +62,7 @@ public class ItemRepository {
         throw new SQLException("Não foi possível adicionar o item.");
     }
 
-    // READ: lista os itens de um carrinho
+
     public List<ItemRegistro> listarPorCarrinho(
             long carrinhoId
     ) throws SQLException {
@@ -87,7 +87,7 @@ public class ItemRepository {
         return itens;
     }
 
-    // READ: busca um item pelo ID
+
     public ItemRegistro buscarPorId(long itemId) throws SQLException {
         String sql = "SELECT id, produto_id, quantidade, valor_unitario "
                 + "FROM item WHERE id = ?";
@@ -107,7 +107,7 @@ public class ItemRepository {
         return null;
     }
 
-    // UPDATE: altera a quantidade de um item
+
     public void atualizarQuantidade(
             long itemId,
             int novaQuantidade
@@ -132,7 +132,7 @@ public class ItemRepository {
         }
     }
 
-    // DELETE: remove um item
+
     public void removerItem(long itemId) throws SQLException {
         String sql = "DELETE FROM item WHERE id = ?";
 
@@ -147,7 +147,7 @@ public class ItemRepository {
         }
     }
 
-    // DELETE: remove todos os itens de um carrinho
+
     public void esvaziarCarrinho(long carrinhoId) throws SQLException {
         String sql = "DELETE FROM item WHERE container_id = ? AND tipo_container = 'CARRINHO'";
 
