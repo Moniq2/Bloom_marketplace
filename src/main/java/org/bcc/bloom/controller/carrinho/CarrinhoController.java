@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.bcc.bloom.dto.CarrinhoDTO;
 import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Item;
 import org.bcc.bloom.service.CarrinhoService;
@@ -54,7 +55,7 @@ public class CarrinhoController {
     private Button botaoFinalizar;
 
     // Itens que estao no carrinho (voce precisa criar a classe Item)
-    private List<Item> itensDoCarrinho = new ArrayList<>();
+    private CarrinhoDTO itensDoCarrinho;
     private double desconto = 0.0;
     private CarrinhoService carrinhoService = new CarrinhoService();
     private Comprador comprador;
@@ -213,10 +214,6 @@ public class CarrinhoController {
 
     }
 
-    public void removerItem(Item item) {
-        itensDoCarrinho.remove(item);
-        atualizarTela();
-    }
 
 
     private void mostrarEstadoVazio(boolean vazio) {

@@ -34,6 +34,12 @@ public class LojaService {
         return lojaDAO.listarPaginado(pagina, tamanho);
     }
 
+    public Loja buscarPorId(long id) { return null; }
+
+    public void atualizar(Loja loja) {}
+
+    public void remover(long id) {}
+
     public int contarLojas() {
         return lojaDAO.contarTotalLojas();
     }

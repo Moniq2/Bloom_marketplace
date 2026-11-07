@@ -48,6 +48,12 @@ public class ProdutoService {
         return produtoDAO.listarPaginado(pagina, tamanho);
     }
 
+    public Produto buscarPorId(long id) { return null; }
+
+    public void atualizar(Produto produto) {}
+
+    public void remover(long id) {}
+
     public List<Produto> listarProdutosDaLoja(Long lojaId, int pagina, int tamanho) {
         if (lojaId == null) {
             throw new CampoObrigatorioException("Erro: O id da loja é obrigatório.");

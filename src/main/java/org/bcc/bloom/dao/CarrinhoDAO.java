@@ -1,7 +1,10 @@
 package org.bcc.bloom.dao;
 
+import org.bcc.bloom.dto.CarrinhoDTO;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.model.Item;
+import org.bcc.bloom.model.Produto;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CarrinhoDAO {
+    private ProdutoDAO produtoDAO = new ProdutoDAO();
 
     public long criarCarrinho(long compradorId) throws SQLException {
         String sql = "INSERT INTO carrinho (comprador_id) VALUES (?)";
@@ -70,11 +74,13 @@ public class CarrinhoDAO {
         return null;
     }
 
-    public List<Item> buscarItens(Long carrinhoId) {
+    //Busca itens do carrinho e seus respectivos produtos
+    public CarrinhoDTO buscarItens(Long carrinhoId) {
 
         String sql = "SELECT * FROM carrinho WHERE id = ?";
         List<Item> itens = new ArrayList<>();
 
+        //Busca de itens
         Connection conn = DatabaseConnection.getConnection();
         try (PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setLong(1, carrinhoId);
@@ -90,6 +96,9 @@ public class CarrinhoDAO {
         }
 
         sql = "SELECT * FROM item WHERE carrinho_id = ?";
+        //Lista para armazenar os IDs dos itens
+        List<Long> itensIds = new ArrayList<>();
+
         try (
             PreparedStatement ps = conn.prepareStatement(sql);
         )
@@ -102,13 +111,19 @@ public class CarrinhoDAO {
                     item.setValorUnitario(rs.getDouble("valor_unitario"));
                     item.setQuantidade(rs.getInt("quantidade"));
                     itens.add(item);
+
+                    itensIds.add(item.getId());
                 }
             }
         }
         catch (SQLException e){
             e.printStackTrace();
         }
-        return itens;
+
+        //Buscar os produtos de cada item
+        List<Produto> produtos = produtoDAO.listarPorIds(itensIds);
+
+        return new CarrinhoDTO(produtos, itens);
     }
 
 

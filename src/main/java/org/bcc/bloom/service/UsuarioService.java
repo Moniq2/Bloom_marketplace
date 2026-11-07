@@ -23,8 +23,6 @@ public class UsuarioService {
     private final CompradorDAO compradorDAO = new CompradorDAO();
     private final LojaDAO lojaDAO = new LojaDAO();
 
-
-
     public Comprador cadastrarComprador(String nome, String email, String senha, String cpf) {
         String emailLimpo = email == null ? null : email.trim();
         String cpfLimpo = apenasDigitos(cpf);
@@ -51,6 +49,12 @@ public class UsuarioService {
         vendedorDAO.salvarVendedor(vendedor);
         return vendedor;
     }
+
+    public Usuario buscarPorId(long id) { return null; }
+
+    public void atualizar(Usuario usuario) {}
+
+    public void remover(long id) {}
 
 
 

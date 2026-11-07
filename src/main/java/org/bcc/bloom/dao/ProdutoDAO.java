@@ -9,14 +9,13 @@ import org.bcc.bloom.model.Produto;
 import java.sql.*;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 public class ProdutoDAO {
 
     private static final String COLUNAS = "id, nome, descricao, estoque, preco, categoria, imagem";
-
-
 
     public void salvar(Produto produto, long lojaId) {
         String sql = "INSERT INTO produto (nome, descricao, estoque, preco, categoria, imagem, loja_id) "
@@ -157,8 +156,6 @@ public class ProdutoDAO {
         }
     }
 
-
-
     public void atualizar(Produto produto) {
         String sql = "UPDATE produto SET nome = ?, descricao = ?, estoque = ?, preco = ?, categoria = ?, imagem = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -252,5 +249,35 @@ public class ProdutoDAO {
                 rs.getBytes("imagem"));
         produto.setId(rs.getLong("id"));
         return produto;
+    }
+
+    //Busca todos os produtos que contêm um dos IDs da lista
+    public List<Produto> listarPorIds(List<Long> ids){
+        String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String sql = "SELECT * FROM produto WHERE id in( " + placeholders + ")";
+
+        List<Produto> produtos = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (int i=0; i<ids.size(); i++) {
+                ps.setLong(i+1, ids.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()){
+                if (!rs.next()) {
+                    throw new RecursoNaoEncontradoException("Não foi possível encontrar produtos com os IDs enviados.");
+                }
+                while (rs.next()) {
+                    produtos.add(converter(rs));
+                }
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return produtos;
     }
 }
