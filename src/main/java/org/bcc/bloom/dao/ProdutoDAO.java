@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class ProdutoDAO {
+public class ProdutoDAO implements IProdutoDAO  {
 
     private static final String COLUNAS = "id, nome, descricao, estoque, preco, categoria, imagem";
 
