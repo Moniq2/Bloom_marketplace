@@ -251,33 +251,36 @@ public class ProdutoDAO implements IProdutoDAO  {
         return produto;
     }
 
-    //Busca todos os produtos que contêm um dos IDs da lista
-    public List<Produto> listarPorIds(List<Long> ids){
-        String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
-        String sql = "SELECT * FROM produto WHERE id in( " + placeholders + ")";
+    
+public List<Produto> listarPorIds(List<Long> ids) {
+    List<Produto> produtos = new ArrayList<>();
 
-        List<Produto> produtos = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql)) {
-            for (int i=0; i<ids.size(); i++) {
-                ps.setLong(i+1, ids.get(i));
-            }
-            try (ResultSet rs = ps.executeQuery()){
-                if (!rs.next()) {
-                    throw new RecursoNaoEncontradoException("Não foi possível encontrar produtos com os IDs enviados.");
-                }
-                while (rs.next()) {
-                    produtos.add(converter(rs));
-                }
-            }
-            catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+    if (ids == null || ids.isEmpty()) {
         return produtos;
     }
+
+    String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
+    String sql = "SELECT " + COLUNAS + " FROM produto WHERE id IN (" + placeholders + ")";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        for (int i = 0; i < ids.size(); i++) {
+            ps.setLong(i + 1, ids.get(i));
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                produtos.add(converter(rs));
+            }
+        }
+
+    } catch (SQLException e) {
+        throw new ErroBancoDadosException(
+                "Erro ao buscar produtos pelos IDs: " + e.getMessage());
+    }
+
+    return produtos;
+}
+
 }
