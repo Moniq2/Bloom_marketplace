@@ -1,4 +1,7 @@
+
 package org.bcc.bloom.dao;
+
+import org.bcc.bloom.model.ItemRegistro;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -9,17 +12,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemDAO {
+public class ItemDAO implements IItemDAO {
 
-
-    public record ItemRegistro(
-            long id,
-            long produtoId,
-            int quantidade,
-            BigDecimal valorUnitario
-    ) {}
-
-
+    @Override
     public long adicionarItem(
             long carrinhoId,
             long produtoId,
@@ -62,13 +57,14 @@ public class ItemDAO {
         throw new SQLException("Não foi possível adicionar o item.");
     }
 
-
+    @Override
     public List<ItemRegistro> listarPorCarrinho(
             long carrinhoId
     ) throws SQLException {
 
         String sql = "SELECT id, produto_id, quantidade, valor_unitario "
-                + "FROM item WHERE container_id = ? AND tipo_container = 'CARRINHO' ORDER BY id";
+                + "FROM item WHERE container_id = ? "
+                + "AND tipo_container = 'CARRINHO' ORDER BY id";
 
         List<ItemRegistro> itens = new ArrayList<>();
 
@@ -87,8 +83,9 @@ public class ItemDAO {
         return itens;
     }
 
-
+    @Override
     public ItemRegistro buscarPorId(long itemId) throws SQLException {
+
         String sql = "SELECT id, produto_id, quantidade, valor_unitario "
                 + "FROM item WHERE id = ?";
 
@@ -107,7 +104,7 @@ public class ItemDAO {
         return null;
     }
 
-
+    @Override
     public void atualizarQuantidade(
             long itemId,
             int novaQuantidade
@@ -132,8 +129,9 @@ public class ItemDAO {
         }
     }
 
-
+    @Override
     public void removerItem(long itemId) throws SQLException {
+
         String sql = "DELETE FROM item WHERE id = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
@@ -147,9 +145,11 @@ public class ItemDAO {
         }
     }
 
-
+    @Override
     public void esvaziarCarrinho(long carrinhoId) throws SQLException {
-        String sql = "DELETE FROM item WHERE container_id = ? AND tipo_container = 'CARRINHO'";
+
+        String sql = "DELETE FROM item "
+                + "WHERE container_id = ? AND tipo_container = 'CARRINHO'";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -159,7 +159,6 @@ public class ItemDAO {
         }
     }
 
-    
     private ItemRegistro converter(ResultSet rs) throws SQLException {
         return new ItemRegistro(
                 rs.getLong("id"),
