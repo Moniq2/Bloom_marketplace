@@ -1,13 +1,29 @@
+
 package org.bcc.bloom.service;
 
-import org.bcc.bloom.dao.CarrinhoDAO;
+import org.bcc.bloom.dao.DAOFactory;
+import org.bcc.bloom.dao.ICarrinhoDAO;
 import org.bcc.bloom.dto.CarrinhoDTO;
 
 import java.sql.SQLException;
 
 public class CarrinhoService {
 
-    private final CarrinhoDAO carrinhoDAO = new CarrinhoDAO();
+    private final ICarrinhoDAO carrinhoDAO;
+
+    public CarrinhoService() {
+        this(DAOFactory.getCarrinhoDAO());
+    }
+
+    public CarrinhoService(ICarrinhoDAO carrinhoDAO) {
+        if (carrinhoDAO == null) {
+            throw new IllegalArgumentException(
+                    "O DAO do carrinho não pode ser nulo."
+            );
+        }
+
+        this.carrinhoDAO = carrinhoDAO;
+    }
 
     public Long criar(long compradorId) {
         try {
@@ -29,7 +45,9 @@ public class CarrinhoService {
         try {
             return carrinhoDAO.buscarPorComprador(compradorId);
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar carrinho do comprador.", e);
+            throw new RuntimeException(
+                    "Erro ao buscar carrinho do comprador.", e
+            );
         }
     }
 
@@ -43,9 +61,17 @@ public class CarrinhoService {
 
     public CarrinhoDTO buscarItens(Long carrinhoId) {
         if (carrinhoId == null) {
-            throw new IllegalArgumentException("O ID do carrinho não pode ser nulo.");
+            throw new IllegalArgumentException(
+                    "O ID do carrinho não pode ser nulo."
+            );
         }
 
-        return carrinhoDAO.buscarItens(carrinhoId);
+        try {
+            return carrinhoDAO.buscarItens(carrinhoId);
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Erro ao buscar itens do carrinho.", e
+            );
+        }
     }
 }
