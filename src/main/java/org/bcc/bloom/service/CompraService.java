@@ -1,43 +1,102 @@
+
 package org.bcc.bloom.service;
 
-import org.bcc.bloom.exception.EstoqueInsuficienteException;
+import org.bcc.bloom.dao.DAOFactory;
+import org.bcc.bloom.dao.ICompraDAO;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
-import org.bcc.bloom.exception.SaldoInsuficienteException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Produto;
 import org.bcc.bloom.model.Vendedor;
 
+import java.math.BigDecimal;
+import java.sql.SQLException;
+
 public class CompraService {
-    public void realizarCompra(Comprador comprador, Produto produto, Vendedor vendedorDono, int quantidade) {
-        if (comprador == null) {
-            throw new RecursoNaoEncontradoException("Erro: Comprador inválido.");
+
+    private final ICompraDAO compraDAO;
+
+    public CompraService() {
+        this(DAOFactory.getCompraDAO());
+    }
+
+    public CompraService(ICompraDAO compraDAO) {
+        if (compraDAO == null) {
+            throw new IllegalArgumentException(
+                    "O DAO da compra não pode ser nulo."
+            );
         }
-        if (produto == null) {
-            throw new RecursoNaoEncontradoException("Erro: Produto inválido.");
+
+        this.compraDAO = compraDAO;
+    }
+
+    public void realizarCompra(
+            Comprador comprador,
+            Produto produto,
+            Vendedor vendedorDono,
+            int quantidade
+    ) {
+
+        if (comprador == null || produto == null || vendedorDono == null) {
+            throw new RecursoNaoEncontradoException(
+                    "Comprador, produto ou vendedor inválido."
+            );
         }
-        if (vendedorDono == null) {
-            throw new RecursoNaoEncontradoException("Erro: Vendedor inválido.");
+
+        if (comprador.getId() == null
+                || produto.getId() == null
+                || vendedorDono.getId() == null) {
+            throw new ValorInvalidoException(
+                    "Os IDs do comprador, produto e vendedor são obrigatórios."
+            );
         }
+
         if (quantidade <= 0) {
-            throw new ValorInvalidoException("Erro: A quantidade deve ser maior que zero.");
+            throw new ValorInvalidoException(
+                    "A quantidade deve ser maior que zero."
+            );
         }
 
-        if (produto.getEstoque() < quantidade) {
-            throw new EstoqueInsuficienteException("Erro: Stock insuficiente. Disponível: " + produto.getEstoque());
+        if (!Double.isFinite(produto.getPreco())
+                || produto.getPreco() < 0) {
+            throw new ValorInvalidoException(
+                    "O preço do produto é inválido."
+            );
         }
 
-        long custoTotalEmCentavos = Math.round((produto.getPreco() * quantidade) * 100);
+        BigDecimal valorTotal = BigDecimal.valueOf(produto.getPreco())
+                .multiply(BigDecimal.valueOf(quantidade))
+                .setScale(2, java.math.RoundingMode.HALF_UP);
 
-        if (comprador.getSaldo() < custoTotalEmCentavos) {
-            throw new SaldoInsuficienteException("Erro: Saldo insuficiente. Saldo atual: R$" + (comprador.getSaldo() / 100.0) +
-                " | Custo total: R$" + (custoTotalEmCentavos / 100.0));
+        long custoTotal;
+
+        try {
+            custoTotal = valorTotal.movePointRight(2).longValueExact();
+        } catch (ArithmeticException e) {
+            throw new ValorInvalidoException(
+                    "O valor total da compra é inválido."
+            );
         }
 
-        comprador.setSaldo(comprador.getSaldo() - custoTotalEmCentavos);
-        vendedorDono.setSaldo(vendedorDono.getSaldo() + custoTotalEmCentavos);
-        produto.setEstoque(produto.getEstoque() - quantidade);
+        try {
+            // A compra é validada e persistida em uma única transação.
+            compraDAO.realizarCompra(
+                    comprador.getId(),
+                    produto.getId(),
+                    vendedorDono.getId(),
+                    quantidade
+            );
 
-        System.out.println("Compra realizada com sucesso! " + quantidade + "x " + produto.getNome() + " comprado por R$" + (custoTotalEmCentavos / 100.0));
+            // Atualiza os objetos em memória após a confirmação do banco.
+            comprador.setSaldo(comprador.getSaldo() - custoTotal);
+            vendedorDono.setSaldo(vendedorDono.getSaldo() + custoTotal);
+            produto.setEstoque(produto.getEstoque() - quantidade);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Não foi possível realizar a compra: " + e.getMessage(),
+                    e
+            );
+        }
     }
 }

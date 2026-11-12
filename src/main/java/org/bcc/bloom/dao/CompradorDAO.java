@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompradorDAO {
+public class CompradorDAO implements ICompradorDAO {
     public void salvar(Comprador comprador) {
         String sql = "INSERT INTO comprador (nome, email, senha, saldo, cpf, endereco) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();

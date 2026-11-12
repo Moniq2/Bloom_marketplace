@@ -1,3 +1,4 @@
+
 package org.bcc.bloom.dao;
 
 import org.bcc.bloom.exception.ErroBancoDadosException;
@@ -13,10 +14,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VendedorDAO {
+public class VendedorDAO implements IVendedorDAO {
 
-    
-
+    @Override
     public void salvarVendedor(Vendedor vendedor) {
         String sql = "INSERT INTO vendedor (nome, email, senha, cnpj, perfil) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -40,16 +40,17 @@ public class VendedorDAO {
         }
     }
 
-
-
+    @Override
     public Vendedor buscarPorId(long id) {
         return buscarUm("SELECT * FROM vendedor WHERE id = ?", id, "Erro ao buscar vendedor por id: ");
     }
 
+    @Override
     public Vendedor buscarPorEmail(String email) {
         return buscarUm("SELECT * FROM vendedor WHERE email = ?", email, "Erro ao buscar vendedor por e-mail: ");
     }
 
+    @Override
     public List<Vendedor> listarPaginado(int pagina, int tamanho) {
         if (pagina < 0 || tamanho <= 0) {
             throw new ValorInvalidoException("Erro: A página deve ser 0 ou maior e o tamanho deve ser maior que zero.");
@@ -75,6 +76,7 @@ public class VendedorDAO {
         return vendedores;
     }
 
+    @Override
     public int contarTotal() {
         String sql = "SELECT COUNT(*) AS total FROM vendedor";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -87,7 +89,7 @@ public class VendedorDAO {
         }
     }
 
-    
+    @Override
     public void atualizar(Vendedor vendedor) {
         String sql = "UPDATE vendedor SET nome = ?, email = ?, cnpj = ?, perfil = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -105,6 +107,7 @@ public class VendedorDAO {
         }
     }
 
+    @Override
     public void atualizarSenha(long id, String senhaCriptografada) {
         String sql = "UPDATE vendedor SET senha = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -119,6 +122,7 @@ public class VendedorDAO {
         }
     }
 
+    @Override
     public void atualizarSaldo(long id, long novoSaldo) {
         String sql = "UPDATE vendedor SET saldo = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -133,6 +137,7 @@ public class VendedorDAO {
         }
     }
 
+    @Override
     public void vincularLoja(long vendedorId, long lojaId) {
         String sql = "UPDATE vendedor SET loja_id = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -147,8 +152,7 @@ public class VendedorDAO {
         }
     }
 
-  
-
+    @Override
     public void remover(long id) {
         String sql = "DELETE FROM vendedor WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -161,8 +165,6 @@ public class VendedorDAO {
             throw new ErroBancoDadosException("Erro ao remover vendedor: " + e.getMessage());
         }
     }
-
-
 
     private Vendedor buscarUm(String sql, Object parametro, String mensagemErro) {
         try (Connection conn = DatabaseConnection.getConnection();
