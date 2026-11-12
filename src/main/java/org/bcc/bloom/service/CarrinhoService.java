@@ -2,20 +2,20 @@
 package org.bcc.bloom.service;
 
 import org.bcc.bloom.dao.DAOFactory;
-import org.bcc.bloom.dao.ICarrinhoDAO;
+import org.bcc.bloom.dao.CarrinhoDAO;
 import org.bcc.bloom.dto.CarrinhoDTO;
 
 import java.sql.SQLException;
 
 public class CarrinhoService {
 
-    private final ICarrinhoDAO carrinhoDAO;
+    private final CarrinhoDAO carrinhoDAO;
 
     public CarrinhoService() {
         this(DAOFactory.getCarrinhoDAO());
     }
 
-    public CarrinhoService(ICarrinhoDAO carrinhoDAO) {
+    public CarrinhoService(CarrinhoDAO carrinhoDAO) {
         if (carrinhoDAO == null) {
             throw new IllegalArgumentException(
                     "O DAO do carrinho não pode ser nulo."

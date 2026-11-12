@@ -2,8 +2,8 @@
 package org.bcc.bloom.service;
 
 import org.bcc.bloom.dao.DAOFactory;
-import org.bcc.bloom.dao.IItemDAO;
-import org.bcc.bloom.dao.IProdutoDAO;
+import org.bcc.bloom.dao.ItemDAO;
+import org.bcc.bloom.dao.ProdutoDAO;
 import org.bcc.bloom.model.ItemRegistro;
 import org.bcc.bloom.model.Produto;
 
@@ -13,14 +13,14 @@ import java.util.List;
 
 public class ItemService {
 
-    private final IItemDAO itemDAO;
-    private final IProdutoDAO produtoDAO;
+    private final ItemDAO itemDAO;
+    private final ProdutoDAO produtoDAO;
 
     public ItemService() {
         this(DAOFactory.getItemDAO(), DAOFactory.getProdutoDAO());
     }
 
-    public ItemService(IItemDAO itemDAO, IProdutoDAO produtoDAO) {
+    public ItemService(ItemDAO itemDAO, ProdutoDAO produtoDAO) {
         if (itemDAO == null || produtoDAO == null) {
             throw new IllegalArgumentException(
                     "Os DAOs não podem ser nulos."

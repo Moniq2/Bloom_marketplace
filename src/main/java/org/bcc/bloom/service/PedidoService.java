@@ -2,7 +2,7 @@
 package org.bcc.bloom.service;
 
 import org.bcc.bloom.dao.DAOFactory;
-import org.bcc.bloom.dao.IPedidoDAO;
+import org.bcc.bloom.dao.PedidoDAO;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Comprador;
@@ -13,13 +13,13 @@ import java.util.List;
 
 public class PedidoService {
 
-    private final IPedidoDAO pedidoDAO;
+    private final PedidoDAO pedidoDAO;
 
     public PedidoService() {
         this(DAOFactory.getPedidoDAO());
     }
 
-    public PedidoService(IPedidoDAO pedidoDAO) {
+    public PedidoService(PedidoDAO pedidoDAO) {
         if (pedidoDAO == null) {
             throw new IllegalArgumentException(
                     "O DAO do pedido não pode ser nulo."

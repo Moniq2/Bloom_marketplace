@@ -19,9 +19,9 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioService {
 
-    private final VendedorDAO vendedorDAO = new VendedorDAO();
-    private final CompradorDAO compradorDAO = new CompradorDAO();
-    private final LojaDAO lojaDAO = new LojaDAO();
+    private final VendedorDAO vendedorDAO = new VendedorDAOImpl();
+    private final CompradorDAO compradorDAO = new CompradorDAOImpl();
+    private final LojaDAO lojaDAO = new LojaDAOImpl();
 
     public Comprador cadastrarComprador(String nome, String email, String senha, String cpf) {
         String emailLimpo = email == null ? null : email.trim();

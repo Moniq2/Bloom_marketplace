@@ -5,35 +5,35 @@ public class DAOFactory {
     private DAOFactory() {
     }
 
-    public static ICompradorDAO getCompradorDAO() {
-        return new CompradorDAO();
+    public static CompradorDAO getCompradorDAO() {
+        return new CompradorDAOImpl();
     }
 
-    public static IVendedorDAO getVendedorDAO() {
-        return new VendedorDAO();
+    public static VendedorDAO getVendedorDAO() {
+        return new VendedorDAOImpl();
     }
 
-    public static ILojaDAO getLojaDAO() {
-        return new LojaDAO();
+    public static LojaDAO getLojaDAO() {
+        return new LojaDAOImpl();
     }
 
-    public static IProdutoDAO getProdutoDAO() {
-        return new ProdutoDAO();
+    public static ProdutoDAO getProdutoDAO() {
+        return new ProdutoDAOImpl();
     }
 
-    public static IItemDAO getItemDAO() {
-        return new ItemDAO();
+    public static ItemDAO getItemDAO() {
+        return new ItemDAOImpl();
     }
 
-    public static ICarrinhoDAO getCarrinhoDAO() {
-        return new CarrinhoDAO();
+    public static CarrinhoDAO getCarrinhoDAO() {
+        return new CarrinhoDAOImpl();
     }
 
-    public static ICompraDAO getCompraDAO() {
-        return new CompraDAO();
+    public static CompraDAO getCompraDAO() {
+        return new CompraDAOImpl();
     }
 
-    public static IPedidoDAO getPedidoDAO() {
-        return new PedidoDAO();
+    public static PedidoDAO getPedidoDAO() {
+        return new PedidoDAOImpl();
     }
 }

@@ -2,7 +2,7 @@
 package org.bcc.bloom.service;
 
 import org.bcc.bloom.dao.DAOFactory;
-import org.bcc.bloom.dao.ILojaDAO;
+import org.bcc.bloom.dao.LojaDAO;
 import org.bcc.bloom.exception.CampoObrigatorioException;
 import org.bcc.bloom.exception.VendedorNaoCadastradoException;
 import org.bcc.bloom.exception.VendedorNaoEncontradoException;
@@ -14,13 +14,13 @@ import java.util.List;
 
 public class LojaService {
 
-    private final ILojaDAO lojaDAO;
+    private final LojaDAO lojaDAO;
 
     public LojaService() {
         this(DAOFactory.getLojaDAO());
     }
 
-    public LojaService(ILojaDAO lojaDAO) {
+    public LojaService(LojaDAO lojaDAO) {
         if (lojaDAO == null) {
             throw new IllegalArgumentException(
                     "O DAO da loja não pode ser nulo."

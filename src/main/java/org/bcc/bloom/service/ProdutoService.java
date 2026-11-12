@@ -2,7 +2,7 @@
 package org.bcc.bloom.service;
 
 import org.bcc.bloom.dao.DAOFactory;
-import org.bcc.bloom.dao.IProdutoDAO;
+import org.bcc.bloom.dao.ProdutoDAO;
 import org.bcc.bloom.exception.CampoObrigatorioException;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
@@ -14,13 +14,13 @@ import java.util.List;
 
 public class ProdutoService {
 
-    private final IProdutoDAO produtoDAO;
+    private final ProdutoDAO produtoDAO;
 
     public ProdutoService() {
         this(DAOFactory.getProdutoDAO());
     }
 
-    public ProdutoService(IProdutoDAO produtoDAO) {
+    public ProdutoService(ProdutoDAO produtoDAO) {
         if (produtoDAO == null) {
             throw new IllegalArgumentException(
                     "O DAO do produto não pode ser nulo."
