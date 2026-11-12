@@ -1,10 +1,8 @@
-
 package org.bcc.bloom.dao;
 
 public class DAOFactory {
 
     private DAOFactory() {
-        // Impede a criação de objetos da fábrica.
     }
 
     public static ICompradorDAO getCompradorDAO() {
@@ -29,5 +27,13 @@ public class DAOFactory {
 
     public static ICarrinhoDAO getCarrinhoDAO() {
         return new CarrinhoDAO();
+    }
+
+    public static ICompraDAO getCompraDAO() {
+        return new CompraDAO();
+    }
+
+    public static IPedidoDAO getPedidoDAO() {
+        return new PedidoDAO();
     }
 }

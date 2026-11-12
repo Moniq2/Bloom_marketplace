@@ -1,8 +1,9 @@
 
 package org.bcc.bloom.service;
 
-import org.bcc.bloom.dao.ItemDAO;
-import org.bcc.bloom.dao.ProdutoDAO;
+import org.bcc.bloom.dao.DAOFactory;
+import org.bcc.bloom.dao.IItemDAO;
+import org.bcc.bloom.dao.IProdutoDAO;
 import org.bcc.bloom.model.ItemRegistro;
 import org.bcc.bloom.model.Produto;
 
@@ -12,13 +13,34 @@ import java.util.List;
 
 public class ItemService {
 
-    private final ItemDAO itemDAO = new ItemDAO();
-    private final ProdutoDAO produtoDAO = new ProdutoDAO();
+    private final IItemDAO itemDAO;
+    private final IProdutoDAO produtoDAO;
+
+    public ItemService() {
+        this(DAOFactory.getItemDAO(), DAOFactory.getProdutoDAO());
+    }
+
+    public ItemService(IItemDAO itemDAO, IProdutoDAO produtoDAO) {
+        if (itemDAO == null || produtoDAO == null) {
+            throw new IllegalArgumentException(
+                    "Os DAOs não podem ser nulos."
+            );
+        }
+
+        this.itemDAO = itemDAO;
+        this.produtoDAO = produtoDAO;
+    }
 
     public long criar(long carrinhoId, long produtoId, int quantidade) {
 
+        if (carrinhoId <= 0 || produtoId <= 0) {
+            throw new IllegalArgumentException("IDs inválidos.");
+        }
+
         if (quantidade <= 0) {
-            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
+            throw new IllegalArgumentException(
+                    "A quantidade deve ser maior que zero."
+            );
         }
 
         Produto produto = produtoDAO.buscarPorId(produtoId);
@@ -31,7 +53,13 @@ public class ItemService {
             throw new IllegalArgumentException("Estoque insuficiente.");
         }
 
-        BigDecimal valor = BigDecimal.valueOf(produto.getPreco());
+        double preco = produto.getPreco();
+
+        if (!Double.isFinite(preco) || preco < 0) {
+            throw new IllegalArgumentException("Preço do produto inválido.");
+        }
+
+        BigDecimal valor = BigDecimal.valueOf(preco);
 
         try {
             return itemDAO.adicionarItem(
@@ -41,7 +69,9 @@ public class ItemService {
                     valor
             );
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao adicionar item ao carrinho.", e);
+            throw new RuntimeException(
+                    "Erro ao adicionar item ao carrinho.", e
+            );
         }
     }
 
@@ -63,8 +93,10 @@ public class ItemService {
 
     public void atualizar(long itemId, int quantidade) {
 
-        if (quantidade <= 0) {
-            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
+        if (itemId <= 0 || quantidade <= 0) {
+            throw new IllegalArgumentException(
+                    "ID e quantidade devem ser maiores que zero."
+            );
         }
 
         try {
@@ -75,6 +107,11 @@ public class ItemService {
     }
 
     public void remover(long itemId) {
+
+        if (itemId <= 0) {
+            throw new IllegalArgumentException("ID do item inválido.");
+        }
+
         try {
             itemDAO.removerItem(itemId);
         } catch (SQLException e) {
