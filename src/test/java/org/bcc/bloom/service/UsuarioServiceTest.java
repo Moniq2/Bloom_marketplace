@@ -17,6 +17,8 @@ public class UsuarioServiceTest {
 
     private UsuarioService usuarioService;
 
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     @BeforeEach
     public void setUp() {
         usuarioService = new UsuarioService();
@@ -85,7 +87,7 @@ public class UsuarioServiceTest {
                 usuarioService.validarDadosVendedor(
                         "Zaio Hortifruti",
                         "sainho@email.com",
-                        "11222333000181",
+                        "11.222.333/0001-81",
                         "Senha@123"
                 )
         );
@@ -93,12 +95,25 @@ public class UsuarioServiceTest {
 
     private String gerarCpfValido() {
 
-        SecureRandom random = new SecureRandom();
         int[] numeros = new int[11];
 
-        for (int i = 0; i < 9; i++) {
-            numeros[i] = random.nextInt(10);
-        }
+        boolean todosIguais;
+
+        do {
+            for (int i = 0; i < 9; i++) {
+                numeros[i] = RANDOM.nextInt(10);
+            }
+
+            todosIguais = true;
+
+            for (int i = 1; i < 9; i++) {
+                if (numeros[i] != numeros[0]) {
+                    todosIguais = false;
+                    break;
+                }
+            }
+
+        } while (todosIguais);
 
         int soma = 0;
 

@@ -1,3 +1,4 @@
+
 package org.bcc.bloom.service;
 
 import org.bcc.bloom.exception.CampoObrigatorioException;
@@ -27,7 +28,6 @@ public class UsuarioService {
         String emailLimpo = email == null ? null : email.trim();
         String cpfLimpo = apenasDigitos(cpf);
 
-
         validarDados(nome, emailLimpo, cpfLimpo, senha);
         garantirEmailLivre(emailLimpo);
 
@@ -50,14 +50,72 @@ public class UsuarioService {
         return vendedor;
     }
 
-    public Usuario buscarPorId(long id) { return null; }
+    public Usuario buscarPorId(long id) {
+        if (id <= 0) {
+            throw new ValorInvalidoException("ID inválido.");
+        }
 
-    public void atualizar(Usuario usuario) {}
+        Comprador comprador = compradorDAO.buscarPorId(id);
+        Vendedor vendedor = vendedorDAO.buscarPorId(id);
 
-    public void remover(long id) {}
+        if (comprador != null && vendedor != null) {
+            throw new ValorInvalidoException(
+                    "ID ambíguo: informe se deseja buscar um comprador ou vendedor."
+            );
+        }
 
+        if (comprador != null) {
+            return comprador;
+        }
 
+        if (vendedor != null) {
+            vendedor.setLoja(lojaDAO.buscarPorVendedor(vendedor.getId()));
+            return vendedor;
+        }
 
+        throw new RecursoNaoEncontradoException("Usuário não encontrado.");
+    }
+
+    public void atualizar(Usuario usuario) {
+        if (usuario == null || usuario.getId() == null || usuario.getId() <= 0) {
+            throw new ValorInvalidoException("Usuário ou ID inválido.");
+        }
+
+        if (usuario instanceof Comprador comprador) {
+            compradorDAO.atualizar(comprador);
+        } else if (usuario instanceof Vendedor vendedor) {
+            vendedorDAO.atualizar(vendedor);
+        } else {
+            throw new ValorInvalidoException("Tipo de usuário inválido.");
+        }
+    }
+
+    public void remover(long id) {
+        if (id <= 0) {
+            throw new ValorInvalidoException("ID inválido.");
+        }
+
+        Comprador comprador = compradorDAO.buscarPorId(id);
+        Vendedor vendedor = vendedorDAO.buscarPorId(id);
+
+        if (comprador != null && vendedor != null) {
+            throw new ValorInvalidoException(
+                    "ID ambíguo: informe se deseja remover um comprador ou vendedor."
+            );
+        }
+
+        if (comprador != null) {
+            compradorDAO.remover(id);
+            return;
+        }
+
+        if (vendedor != null) {
+            vendedorDAO.remover(id);
+            return;
+        }
+
+        throw new RecursoNaoEncontradoException("Usuário não encontrado.");
+    }
 
     public Vendedor cadastrar(String nome, String email, String senha, String cadastro, String tipo) {
         if ("Vendedor".equalsIgnoreCase(tipo)) {
@@ -70,27 +128,33 @@ public class UsuarioService {
         throw new ValorInvalidoException("Erro: Tipo de utilizador inválido: " + tipo);
     }
 
-
-
-
     public Usuario login(String email, String senha) {
         if (email == null || senha == null) {
-            throw new CredenciaisInvalidasException("Credenciais inválidas! Verifique o e-mail e a senha.");
+            throw new CredenciaisInvalidasException(
+                    "Credenciais inválidas! Verifique o e-mail e a senha."
+            );
         }
+
         String emailLimpo = email.trim();
 
         Usuario usuario = compradorDAO.buscarPorEmail(emailLimpo);
+
         if (usuario == null) {
             Vendedor vendedor = vendedorDAO.buscarPorEmail(emailLimpo);
+
             if (vendedor != null) {
                 vendedor.setLoja(lojaDAO.buscarPorVendedor(vendedor.getId()));
             }
+
             usuario = vendedor;
         }
 
         if (usuario == null || !senhaConfere(senha, usuario.getSenha())) {
-            throw new CredenciaisInvalidasException("Credenciais inválidas! Verifique o e-mail e a senha.");
+            throw new CredenciaisInvalidasException(
+                    "Credenciais inválidas! Verifique o e-mail e a senha."
+            );
         }
+
         return usuario;
     }
 
@@ -98,24 +162,22 @@ public class UsuarioService {
         try {
             return BCrypt.checkpw(senha, hash);
         } catch (IllegalArgumentException e) {
-
             return false;
         }
     }
-
-
-
 
     public void depositar(Usuario usuario, Long valor) {
         if (usuario == null) {
             throw new RecursoNaoEncontradoException("Erro: Usuário não informado.");
         }
+
         if (valor == null || valor <= 0) {
-            throw new ValorInvalidoException("Erro: O valor do depósito deve ser maior que zero.");
+            throw new ValorInvalidoException(
+                    "Erro: O valor do depósito deve ser maior que zero."
+            );
         }
 
         long novoSaldo = usuario.getSaldo() + valor;
-
 
         if (usuario.getId() != null) {
             if (usuario instanceof Comprador) {
@@ -124,39 +186,52 @@ public class UsuarioService {
                 vendedorDAO.atualizarSaldo(usuario.getId(), novoSaldo);
             }
         }
+
         usuario.setSaldo(novoSaldo);
     }
-
-
 
     public void validarDados(String nome, String email, String cpf, String senha) {
         exigirCampos(nome, email, cpf, senha, "CPF");
         validarEmail(email);
+
         if (!cpfValido(cpf)) {
             throw new CpfInvalidoException("Erro: CPF inválido.");
         }
+
         validarSenha(senha);
     }
 
-    public void validarDadosVendedor(String nome, String email, String cnpj, String senha) {
-        exigirCampos(nome, email, cnpj, senha, "CNPJ");
-        validarEmail(email);
-        if (!cnpjValido(cnpj)) {
-            throw new CnpjInvalidoException("Erro: CNPJ inválido.");
-        }
-        validarSenha(senha);
+ public void validarDadosVendedor(String nome, String email, String cnpj, String senha) {
+    exigirCampos(nome, email, cnpj, senha, "CNPJ");
+    validarEmail(email);
+
+    String cnpjLimpo = apenasDigitos(cnpj);
+
+    if (!cnpjValido(cnpjLimpo)) {
+        throw new CnpjInvalidoException("Erro: CNPJ inválido.");
     }
 
-    private void exigirCampos(String nome, String email, String documento, String senha, String rotuloDocumento) {
+    validarSenha(senha);
+}
+
+    private void exigirCampos(
+            String nome, String email, String documento,
+            String senha, String rotuloDocumento
+    ) {
         if (nome == null || nome.isBlank()) {
             throw new CampoObrigatorioException("Erro: O nome é obrigatório.");
         }
+
         if (email == null || email.isBlank()) {
             throw new CampoObrigatorioException("Erro: O e-mail é obrigatório.");
         }
+
         if (documento == null || documento.isBlank()) {
-            throw new CampoObrigatorioException("Erro: O " + rotuloDocumento + " é obrigatório.");
+            throw new CampoObrigatorioException(
+                    "Erro: O " + rotuloDocumento + " é obrigatório."
+            );
         }
+
         if (senha == null || senha.isBlank()) {
             throw new CampoObrigatorioException("Erro: A senha é obrigatória.");
         }
@@ -174,17 +249,19 @@ public class UsuarioService {
                 || !senha.matches(".*\\d.*")
                 || !senha.matches(".*[^A-Za-z0-9].*")) {
             throw new SenhaInvalidaException(
-                    "Erro: A senha deve ter 8 ou mais caracteres, com letra maiúscula, número e símbolo.");
+                    "Erro: A senha deve ter 8 ou mais caracteres, com letra maiúscula, número e símbolo."
+            );
         }
     }
 
-   
     private void garantirEmailLivre(String email) {
-        if (compradorDAO.buscarPorEmail(email) != null || vendedorDAO.buscarPorEmail(email) != null) {
-            throw new EmailJaCadastradoException("Erro: Já existe um utilizador registado com este e-mail.");
+        if (compradorDAO.buscarPorEmail(email) != null
+                || vendedorDAO.buscarPorEmail(email) != null) {
+            throw new EmailJaCadastradoException(
+                    "Erro: Já existe um utilizador registado com este e-mail."
+            );
         }
     }
-
 
     private String apenasDigitos(String valor) {
         return valor == null ? null : valor.replaceAll("\\D", "");
@@ -194,9 +271,11 @@ public class UsuarioService {
         if (cpf == null || !cpf.matches("\\d{11}")) {
             return false;
         }
+
         if (cpf.chars().distinct().count() == 1) {
             return false;
         }
+
         return cpf.charAt(9) - '0' == calcularDigito(cpf, 9)
                 && cpf.charAt(10) - '0' == calcularDigito(cpf, 10);
     }
@@ -204,10 +283,12 @@ public class UsuarioService {
     private int calcularDigito(String cpf, int quantidade) {
         int soma = 0;
         int peso = quantidade + 1;
+
         for (int i = 0; i < quantidade; i++) {
             soma += (cpf.charAt(i) - '0') * peso;
             peso--;
         }
+
         int resto = soma % 11;
         return resto < 2 ? 0 : 11 - resto;
     }
@@ -216,9 +297,11 @@ public class UsuarioService {
         if (cnpj == null || !cnpj.matches("\\d{14}")) {
             return false;
         }
+
         if (cnpj.chars().distinct().count() == 1) {
             return false;
         }
+
         return cnpj.charAt(12) - '0' == calcularDigitoCnpj(cnpj, 12)
                 && cnpj.charAt(13) - '0' == calcularDigitoCnpj(cnpj, 13);
     }
@@ -226,13 +309,16 @@ public class UsuarioService {
     private int calcularDigitoCnpj(String cnpj, int quantidade) {
         int soma = 0;
         int peso = quantidade - 7;
+
         for (int i = 0; i < quantidade; i++) {
             soma += (cnpj.charAt(i) - '0') * peso;
             peso--;
+
             if (peso < 2) {
                 peso = 9;
             }
         }
+
         int resto = soma % 11;
         return resto < 2 ? 0 : 11 - resto;
     }

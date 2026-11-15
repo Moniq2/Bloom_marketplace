@@ -1,15 +1,15 @@
-
+﻿
 package org.bcc.bloom.service;
 
 import org.bcc.bloom.dao.DAOFactory;
 import org.bcc.bloom.dao.ICompraDAO;
+import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Produto;
 import org.bcc.bloom.model.Vendedor;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public class CompraService {
@@ -23,7 +23,7 @@ public class CompraService {
     public CompraService(ICompraDAO compraDAO) {
         if (compraDAO == null) {
             throw new IllegalArgumentException(
-                    "O DAO da compra não pode ser nulo."
+                    "O DAO da compra nÃ£o pode ser nulo."
             );
         }
 
@@ -39,15 +39,15 @@ public class CompraService {
 
         if (comprador == null || produto == null || vendedorDono == null) {
             throw new RecursoNaoEncontradoException(
-                    "Comprador, produto ou vendedor inválido."
+                    "Comprador, produto ou vendedor nÃ£o encontrado."
             );
         }
 
-        if (comprador.getId() == null
-                || produto.getId() == null
-                || vendedorDono.getId() == null) {
+        if (comprador.getId() == null || comprador.getId() <= 0
+                || produto.getId() == null || produto.getId() <= 0
+                || vendedorDono.getId() == null || vendedorDono.getId() <= 0) {
             throw new ValorInvalidoException(
-                    "Os IDs do comprador, produto e vendedor são obrigatórios."
+                    "Os IDs do comprador, produto e vendedor sÃ£o obrigatÃ³rios."
             );
         }
 
@@ -57,29 +57,8 @@ public class CompraService {
             );
         }
 
-        if (!Double.isFinite(produto.getPreco())
-                || produto.getPreco() < 0) {
-            throw new ValorInvalidoException(
-                    "O preço do produto é inválido."
-            );
-        }
-
-        BigDecimal valorTotal = BigDecimal.valueOf(produto.getPreco())
-                .multiply(BigDecimal.valueOf(quantidade))
-                .setScale(2, java.math.RoundingMode.HALF_UP);
-
-        long custoTotal;
-
         try {
-            custoTotal = valorTotal.movePointRight(2).longValueExact();
-        } catch (ArithmeticException e) {
-            throw new ValorInvalidoException(
-                    "O valor total da compra é inválido."
-            );
-        }
 
-        try {
-            // A compra é validada e persistida em uma única transação.
             compraDAO.realizarCompra(
                     comprador.getId(),
                     produto.getId(),
@@ -87,15 +66,9 @@ public class CompraService {
                     quantidade
             );
 
-            // Atualiza os objetos em memória após a confirmação do banco.
-            comprador.setSaldo(comprador.getSaldo() - custoTotal);
-            vendedorDono.setSaldo(vendedorDono.getSaldo() + custoTotal);
-            produto.setEstoque(produto.getEstoque() - quantidade);
-
         } catch (SQLException e) {
-            throw new RuntimeException(
-                    "Não foi possível realizar a compra: " + e.getMessage(),
-                    e
+            throw new ErroBancoDadosException(
+                    "NÃ£o foi possÃ­vel realizar a compra: " + e.getMessage()
             );
         }
     }
