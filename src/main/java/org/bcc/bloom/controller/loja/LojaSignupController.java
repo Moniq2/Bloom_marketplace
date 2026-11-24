@@ -2,6 +2,7 @@ package org.bcc.bloom.controller.loja;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -41,6 +42,9 @@ public class LojaSignupController {
         seletor.setTitle("Selecionar capa");
         seletor.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images","*.png", "*.jpg","*.jpeg"));
 
+        if (capaPrevia.getScene() == null) {
+            return;
+        }
         File arquivo = seletor.showOpenDialog(capaPrevia.getScene().getWindow());
         if (arquivo!=null){
             Image imagem  = new Image(arquivo.toURI().toString());
@@ -49,32 +53,43 @@ public class LojaSignupController {
                 this.capa = Files.readAllBytes(arquivo.toPath());
             }
             catch (IOException e) {
-                e.printStackTrace();
+                mostrarErro("Não foi possível ler a imagem selecionada.");
             }
         }
     }
 
     @FXML
     private void cadastrarLoja(ActionEvent event) {
-        if (campoNome.getText().isEmpty() || campoDescricao.getText().isEmpty()) {
-            rotuloErro.setVisible(true);
-            rotuloErro.setText("Por favor, preencha todos os campos para prosseguir.");
+        esconderErro();
+        if (campoNome.getText().isBlank() || campoDescricao.getText().isBlank()) {
+            mostrarErro("Por favor, preencha todos os campos para prosseguir.");
             return;
         }
         if (capa == null) {
-            rotuloErro.setVisible(true);
-            rotuloErro.setText("Por favor, escolha uma capa.");
+            mostrarErro("Por favor, escolha uma capa.");
             return;
         }
-
-        if (campoNome != null && campoDescricao != null) {
+        if (vendedor == null) {
+            mostrarErro("Não foi possível identificar o vendedor conectado.");
+            return;
+        }
+        try {
             lojaService.cadastrarLoja(vendedor, campoNome.getText(), campoDescricao.getText(), capa);
             MainVendedorController controller = Navegador.abrirPagina(event, "/fxml/vendedor/MainVendedor.fxml");
             controller.setVendedor(vendedor);
+        } catch (RuntimeException e) {
+            mostrarErro(e.getMessage());
         }
-        else  {
-            rotuloErro.setVisible(true);
-            rotuloErro.setText("Por favor, preencha seus dados corretamente.");
-        }
+    }
+
+    private void mostrarErro(String mensagem) {
+        rotuloErro.setText(mensagem == null ? "Ocorreu um erro ao cadastrar a loja." : mensagem);
+        rotuloErro.setVisible(true);
+        rotuloErro.setManaged(true);
+    }
+
+    private void esconderErro() {
+        rotuloErro.setVisible(false);
+        rotuloErro.setManaged(false);
     }
 }

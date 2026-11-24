@@ -665,3 +665,35 @@
 .botao-adicionar:disabled {
     -fx-opacity: 0.45;
 }
+
+/* Texto de descricao da loja */
+.descricao-loja {
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
+    -fx-text-fill: #3B3024;
+}
+
+/* Bolinha de informacao (entrega) */
+.chip-info {
+    -fx-background-color: #F7F1E3;
+    -fx-background-radius: 20;
+    -fx-text-fill: #3B3024;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 12 5 12;
+}
+
+/* Etiquetas da loja (Organico, Sem agrotoxico...) */
+.etiqueta-loja {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-border-color: #E3CF9F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 20;
+    -fx-text-fill: #5B7B3A;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 10 2 10;
+}

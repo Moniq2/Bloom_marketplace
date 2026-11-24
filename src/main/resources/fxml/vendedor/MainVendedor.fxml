@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="640" prefWidth="1000" styleClass="raiz-principal" stylesheets="@../../css/barra-lateral.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.vendedor.MainVendedorController">
+<BorderPane minWidth="0" prefHeight="640" prefWidth="1000" styleClass="raiz-principal" stylesheets="@../../css/barra-lateral.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.vendedor.MainVendedorController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="14" styleClass="barra-superior" stylesheets="@../../css/barra-lateral.css">
@@ -32,7 +32,6 @@
             <Button maxWidth="Infinity" onAction="#aoClicarPedidos" styleClass="item-menu" text="Pedidos" />
             <Button maxWidth="Infinity" onAction="#aoClicarMinhaLoja" styleClass="item-menu" text="Minha Loja" />
          <Button maxWidth="Infinity" onAction="#aoClicarConta" styleClass="item-menu" text="Conta" />
-            <Button maxWidth="Infinity" onAction="#aoClicarSuporte" styleClass="item-menu" text="Suporte" />
 
             <Region VBox.vgrow="ALWAYS" />
 
@@ -41,7 +40,7 @@
     </left>
 
     <center>
-        <StackPane fx:id="areaConteudo" styleClass="area-conteudo">
+        <StackPane fx:id="areaConteudo" maxWidth="Infinity" minWidth="0" styleClass="area-conteudo">
             <Label styleClass="subtitulo" text="Conteúdo da tela aqui" />
         </StackPane>
     </center>

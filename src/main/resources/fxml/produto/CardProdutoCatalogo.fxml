@@ -8,7 +8,7 @@
 
 <!-- Card de produto do catalogo (versao do comprador). Sera adicionado ao FlowPane -->
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.bcc.bloom.CardProdutoCatalogoController"
+      fx:controller="org.bcc.bloom.controller.produto.CardProdutoCatalogoController"
       styleClass="card-catalogo" prefWidth="190" minWidth="190" maxWidth="190">
 
     <ImageView fx:id="imagemProduto" fitWidth="190" fitHeight="92" preserveRatio="false"/>

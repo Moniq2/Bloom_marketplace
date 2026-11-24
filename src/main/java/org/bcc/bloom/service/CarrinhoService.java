@@ -1,11 +1,13 @@
 
 package org.bcc.bloom.service;
 
-import org.bcc.bloom.dao.DAOFactory;
 import org.bcc.bloom.dao.CarrinhoDAO;
+import org.bcc.bloom.dao.DAOFactory;
 import org.bcc.bloom.dto.CarrinhoDTO;
+import org.bcc.bloom.model.Comprador;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class CarrinhoService {
 
@@ -51,6 +53,24 @@ public class CarrinhoService {
         }
     }
 
+    public Long buscarOuCriarParaComprador(Comprador comprador) {
+        if (comprador == null || comprador.getId() == null || comprador.getId() <= 0) {
+            throw new IllegalArgumentException("O comprador precisa estar conectado para usar o carrinho.");
+        }
+
+        Long carrinhoId = comprador.getCarrinho_id();
+        if (carrinhoId != null && buscarPorId(carrinhoId) != null) {
+            return carrinhoId;
+        }
+
+        carrinhoId = buscarPorComprador(comprador.getId());
+        if (carrinhoId == null) {
+            carrinhoId = criar(comprador.getId());
+        }
+        comprador.SetCarrinho_id(carrinhoId);
+        return carrinhoId;
+    }
+
     public void remover(long carrinhoId) {
         try {
             carrinhoDAO.excluirCarrinho(carrinhoId);
@@ -59,19 +79,20 @@ public class CarrinhoService {
         }
     }
 
-    public CarrinhoDTO buscarItens(Long carrinhoId) {
+    public Optional<CarrinhoDTO> buscarItens(Long carrinhoId) {
         if (carrinhoId == null) {
             throw new IllegalArgumentException(
                     "O ID do carrinho não pode ser nulo."
             );
         }
-
+        CarrinhoDTO carrinhoInfo;
         try {
-            return carrinhoDAO.buscarItens(carrinhoId);
+            carrinhoInfo = carrinhoDAO.buscarItens(carrinhoId);
         } catch (SQLException e) {
             throw new RuntimeException(
-                    "Erro ao buscar itens do carrinho.", e
+                    "Erro ao buscar itens do carrinho: " + e.getMessage(), e
             );
         }
+        return Optional.ofNullable(carrinhoInfo);
     }
 }

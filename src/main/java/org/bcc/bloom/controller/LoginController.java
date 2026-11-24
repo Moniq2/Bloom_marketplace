@@ -2,11 +2,15 @@ package org.bcc.bloom.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.bcc.bloom.controller.comprador.MainCompradorController;
+import org.bcc.bloom.controller.vendedor.MainVendedorController;
+import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Usuario;
+import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.service.UsuarioService;
 import org.bcc.bloom.util.Navegador;
 
@@ -28,6 +32,11 @@ public class LoginController {
     private Label rotuloErro;
 
     @FXML
+    private void initialize() {
+        campoEmail.setText("usuario@gmail.com");
+        campoSenha.setText("Abacaxi@123");
+    }
+    @FXML
     private void aoClicarEntrar(ActionEvent event) {
         String email = campoEmail.getText().trim();
         String senha = campoSenha.getText();
@@ -44,8 +53,13 @@ public class LoginController {
         esconderErro();
         try {
             Usuario usuario = usuarioService.login(email, senha);
-            MainCompradorController controller = Navegador.abrirPagina(event, "/fxml/comprador/MainComprador.fxml");
-            controller.setup(usuario);
+            if (usuario instanceof Comprador comprador) {
+                MainCompradorController controller = Navegador.abrirPagina(event, "/fxml/comprador/MainComprador.fxml");
+                controller.setup(comprador);
+            } else if (usuario instanceof Vendedor vendedor) {
+                MainVendedorController controller = Navegador.abrirPagina(event, "/fxml/vendedor/MainVendedor.fxml");
+                controller.setVendedor(vendedor);
+            }
         }
         catch (Exception e) {
             mostrarErro(e.getMessage());
@@ -54,7 +68,11 @@ public class LoginController {
 
     @FXML
     private void aoClicarEsqueciSenha(ActionEvent event) {
-        System.out.println("Esqueci minha senha");
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Recuperar senha");
+        alerta.setHeaderText(null);
+        alerta.setContentText("A recuperação de senha ainda não está disponível.");
+        alerta.showAndWait();
     }
 
     @FXML

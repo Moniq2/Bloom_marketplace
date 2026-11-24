@@ -29,10 +29,11 @@
             </padding>
 
             <Button maxWidth="Infinity" onAction="#aoClicarInicio" styleClass="item-menu" text="Início" />
+            <Button maxWidth="Infinity" onAction="#aoClicarLojas" styleClass="item-menu" text="Lojas" />
             <Button maxWidth="Infinity" onAction="#aoClicarCarrinho" styleClass="item-menu" text="Carrinho" />
-            <Button maxWidth="Infinity" onAction="#aoClicarPedidos" styleClass="item-menu" text="Meus pedidos" />
-         <Button maxWidth="Infinity" onAction="#aoClicarCatalogo" styleClass="item-menu" text="Meus dados" />
-            <Button maxWidth="Infinity" onAction="#aoClicarCatalogo" styleClass="item-menu" text="Quero ser um vendedor" />
+            <Button maxWidth="Infinity" onAction="#aoClicarMeusPedidos" styleClass="item-menu" text="Meus pedidos" />
+            <Button maxWidth="Infinity" onAction="#aoClicarMeusDados" styleClass="item-menu" text="Meus dados" />
+            <Button maxWidth="Infinity" onAction="#aoClicarQueroSerUmVendedor" styleClass="item-menu" text="Quero ser um vendedor" />
 
             <Region VBox.vgrow="ALWAYS" />
 

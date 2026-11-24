@@ -36,7 +36,7 @@
         <TextField fx:id="campoNome" promptText="fulano de tal" styleClass="campo" />
 
         <Label styleClass="rotulo" text="Email" />
-        <PasswordField fx:id="campoEmail" promptText="nome@email.com" styleClass="campo" />
+        <TextField fx:id="campoEmail" accessibleRole="TEXT_FIELD" promptText="nome@email.com" styleClass="campo" />
 
       <Label styleClass="rotulo" text="CPF" />
       <TextField fx:id="campoCPF" promptText="123.456.789.00" styleClass="campo" />

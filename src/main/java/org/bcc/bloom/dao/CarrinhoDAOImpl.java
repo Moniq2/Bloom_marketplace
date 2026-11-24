@@ -97,11 +97,11 @@ public class CarrinhoDAOImpl implements CarrinhoDAO {
         String sqlCarrinho =
                 "SELECT id FROM carrinho WHERE id = ?";
 
-        String sqlItens =
-                "SELECT id, produto_id, quantidade, valor_unitario " +
-                "FROM item " +
-                "WHERE container_id = ? AND tipo_container = 'CARRINHO' " +
-                "ORDER BY id";
+        String sqlItens = """
+                SELECT id, produto_id, quantidade, valor_unitario
+                FROM item
+                WHERE container_id = ?
+                ORDER BY id""";
 
         try (Connection con = DatabaseConnection.getConnection()) {
 

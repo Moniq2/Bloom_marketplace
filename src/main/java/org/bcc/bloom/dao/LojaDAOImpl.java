@@ -12,7 +12,7 @@ import java.util.List;
 
 public class LojaDAOImpl implements LojaDAO {
 
-    public LojaDAO() {}
+    public LojaDAOImpl() {}
 
 
     public void salvar(Loja loja, long vendedorId) {

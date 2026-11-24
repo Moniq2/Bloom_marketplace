@@ -1,5 +1,6 @@
 package org.bcc.bloom.service;
 
+import org.bcc.bloom.dao.*;
 import org.bcc.bloom.exception.CampoObrigatorioException;
 import org.bcc.bloom.exception.CnpjInvalidoException;
 import org.bcc.bloom.exception.CpfInvalidoException;
@@ -12,16 +13,12 @@ import org.bcc.bloom.exception.ValorInvalidoException;
 import org.bcc.bloom.model.Comprador;
 import org.bcc.bloom.model.Usuario;
 import org.bcc.bloom.model.Vendedor;
-import org.bcc.bloom.dao.CompradorDAO;
-import org.bcc.bloom.dao.LojaDAO;
-import org.bcc.bloom.dao.VendedorDAO;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioService {
 
     private final VendedorDAO vendedorDAO = new VendedorDAOImpl();
     private final CompradorDAO compradorDAO = new CompradorDAOImpl();
-    private final LojaDAO lojaDAO = new LojaDAOImpl();
 
     public Comprador cadastrarComprador(String nome, String email, String senha, String cpf) {
         String emailLimpo = email == null ? null : email.trim();
@@ -81,11 +78,7 @@ public class UsuarioService {
 
         Usuario usuario = compradorDAO.buscarPorEmail(emailLimpo);
         if (usuario == null) {
-            Vendedor vendedor = vendedorDAO.buscarPorEmail(emailLimpo);
-            if (vendedor != null) {
-                vendedor.setLoja(lojaDAO.buscarPorVendedor(vendedor.getId()));
-            }
-            usuario = vendedor;
+            usuario = vendedorDAO.buscarPorEmail(emailLimpo);
         }
 
         if (usuario == null || !senhaConfere(senha, usuario.getSenha())) {

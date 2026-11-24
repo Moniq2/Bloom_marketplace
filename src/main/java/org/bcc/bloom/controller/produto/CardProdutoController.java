@@ -1,14 +1,15 @@
-package org.bcc.bloom;
+package org.bcc.bloom.controller.produto;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import org.bcc.bloom.controller.loja.MinhaLojaController;
 import org.bcc.bloom.model.Produto;
 
-public class CardProdutoController {
+import java.util.Locale;
 
-    // ----- Elementos do FXML (nomes iguais aos fx:id) -----
+public class CardProdutoController {
 
     @FXML
     private ImageView imagemProduto;
@@ -28,22 +29,30 @@ public class CardProdutoController {
     @FXML
     private Label rotuloStatus;
 
-    // Produto que este card representa
     private Produto produto;
+    private MinhaLojaController controladorLoja;
 
-    // Chamado pelo MinhaLojaController logo depois de carregar este card
     public void definirDados(Produto produto) {
         this.produto = produto;
-        // TODO: preencher imagemProduto, rotuloNome, rotuloPreco e rotuloEstoque
-        // TODO: se o estoque for 0, trocar o texto de rotuloStatus para "Sem estoque"
-        //       e a classe de estilo de "etiqueta-ativo" para "etiqueta-sem-estoque":
-        //       rotuloStatus.getStyleClass().remove("etiqueta-ativo");
-        //       rotuloStatus.getStyleClass().add("etiqueta-sem-estoque");
-        // TODO (opcional): recortar a imagem com cantos de cima arredondados
+        imagemProduto.setImage(produto.getImagem());
+        rotuloNome.setText(produto.getNome());
+        rotuloPreco.setText(String.format(Locale.forLanguageTag("pt-BR"), "R$ %.2f / un", produto.getPreco()));
+        rotuloEstoque.setText("Estoque: " + produto.getEstoque());
+        boolean semEstoque = produto.getEstoque() == 0;
+        rotuloStatus.setText(semEstoque ? "Sem estoque" : "Ativo");
+        rotuloStatus.getStyleClass().removeAll("etiqueta-ativo", "etiqueta-sem-estoque");
+        rotuloStatus.getStyleClass().add(semEstoque ? "etiqueta-sem-estoque" : "etiqueta-ativo");
+        botaoEditar.setDisable(false);
+    }
+
+    public void definirControladorLoja(MinhaLojaController controladorLoja) {
+        this.controladorLoja = controladorLoja;
     }
 
     @FXML
     private void aoClicarEditar() {
-        // TODO: chamar controladorLoja.abrirEdicaoProduto(produto)
+        if (controladorLoja != null && produto != null) {
+            controladorLoja.abrirEdicaoProduto(produto);
+        }
     }
 }

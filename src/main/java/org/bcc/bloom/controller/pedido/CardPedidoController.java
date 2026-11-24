@@ -1,4 +1,4 @@
-package org.bcc.bloom.controller;
+package org.bcc.bloom.controller.pedido;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -6,12 +6,15 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import org.bcc.bloom.controller.PedidosController;
 import org.bcc.bloom.model.Pedido;
+import org.bcc.bloom.model.Produto;
+
+import javafx.scene.shape.Circle;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class CardPedidoController {
-
-    // ----- Elementos do FXML (nomes iguais aos fx:id) -----
 
     @FXML
     private ImageView imagemLoja;
@@ -34,7 +37,6 @@ public class CardPedidoController {
     @FXML
     private Label rotuloQuantidadeItens;
 
-    // Linha do tempo: 4 circulos e 3 conectores entre eles
     @FXML
     private HBox linhaTempo;
 
@@ -68,58 +70,82 @@ public class CardPedidoController {
     @FXML
     private Button botaoPedirNovamente;
 
-    // ----- Dados -----
-
-    // Pedido que este card representa (voce precisa criar a classe Pedido)
     private Pedido pedido;
 
-    // Controller da tela Meus pedidos, usado para abrir detalhes e pedir novamente
     private PedidosController controladorPedidos;
 
-    // Chamado pelo PedidosController logo depois de carregar este card
     public void definirDados(Pedido pedido) {
         this.pedido = pedido;
-        // TODO Passo 1: preencher imagemLoja, rotuloLoja, rotuloNumeroData,
-        //               rotuloResumoItens, rotuloQuantidadeItens e rotuloTotal
-        // TODO Passo 2: criar uma miniatura (ImageView redondo) para cada produto
-        //               e adicionar em miniaturas.getChildren()
-        // TODO Passo 3: ajustar o status (veja definirStatus)
-        // TODO Passo 4: logo da loja redonda: imagemLoja.setClip(new Circle(19, 19, 19))
+        rotuloLoja.setText("Pedido");
+        rotuloNumeroData.setText("Pedido #" + pedido.getId() + " · data indisponível");
+        List<Produto> produtos = pedido.getProdutos() == null ? new ArrayList<>() : pedido.getProdutos();
+        miniaturas.getChildren().clear();
+        for (Produto produto : produtos) {
+            ImageView miniatura = new ImageView(produto.getImagem());
+            miniatura.setFitWidth(34);
+            miniatura.setFitHeight(34);
+            miniatura.setPreserveRatio(false);
+            miniatura.setClip(new Circle(17, 17, 17));
+            miniaturas.getChildren().add(miniatura);
+        }
+        rotuloResumoItens.setText(produtos.isEmpty() ? "Sem itens" : produtos.get(0).getNome());
+        rotuloQuantidadeItens.setText(produtos.size() + (produtos.size() == 1 ? " item" : " itens"));
+        rotuloTotal.setText(String.format(Locale.forLanguageTag("pt-BR"), "R$ %.2f", pedido.getValorTotal()));
+        imagemLoja.setImage(null);
+        imagemLoja.setClip(new Circle(19, 19, 19));
+        definirStatus();
+        marcarEtapas(1);
     }
 
-    // TODO: trocar o texto e a cor da etiqueta conforme a situacao do pedido.
-    //       Para trocar a cor, remova a classe antiga e adicione a nova:
-    //         rotuloStatus.getStyleClass().remove("etiqueta-pedido-andamento");
-    //         rotuloStatus.getStyleClass().add("etiqueta-pedido-entregue");
-    //       Classes disponiveis: etiqueta-pedido-andamento, etiqueta-pedido-entregue,
-    //       etiqueta-pedido-cancelado
-    //       Regras: so mostre linhaTempo (setVisible e setManaged) se estiver em andamento;
-    //       so mostre botaoPedirNovamente se estiver entregue ou cancelado
     private void definirStatus() {
+        rotuloStatus.setText("Pedido recebido");
+        rotuloStatus.getStyleClass().removeAll("etiqueta-pedido-andamento", "etiqueta-pedido-entregue", "etiqueta-pedido-cancelado");
+        rotuloStatus.getStyleClass().add("etiqueta-pedido-andamento");
+        linhaTempo.setVisible(true);
+        linhaTempo.setManaged(true);
+        botaoPedirNovamente.setVisible(false);
+        botaoPedirNovamente.setManaged(false);
     }
 
-    // TODO: pintar a linha do tempo. Para cada etapa ate a atual:
-    //       - etapas ja concluidas: classe "etapa-concluida" e texto "✓"
-    //       - etapa atual: classe "etapa-atual"
-    //       - conectores entre etapas ja alcancadas: classe "conector-ativo"
-    //       etapaAtual vai de 1 (pedido feito) a 4 (entregue)
     private void marcarEtapas(int etapaAtual) {
+        List<Label> etapas = List.of(etapa1, etapa2, etapa3, etapa4);
+        List<Region> conectores = List.of(conector1, conector2, conector3);
+        for (int i = 0; i < etapas.size(); i++) {
+            Label etapa = etapas.get(i);
+            etapa.getStyleClass().removeAll("etapa-concluida", "etapa-atual");
+            if (i + 1 < etapaAtual) {
+                etapa.getStyleClass().add("etapa-concluida");
+                etapa.setText("✓");
+            } else if (i + 1 == etapaAtual) {
+                etapa.getStyleClass().add("etapa-atual");
+                etapa.setText(String.valueOf(i + 1));
+            } else {
+                etapa.setText("");
+            }
+        }
+        for (int i = 0; i < conectores.size(); i++) {
+            conectores.get(i).getStyleClass().remove("conector-ativo");
+            if (i + 1 < etapaAtual) {
+                conectores.get(i).getStyleClass().add("conector-ativo");
+            }
+        }
     }
 
-    // Guarda a referencia da tela Meus pedidos
     public void definirControladorPedidos(PedidosController controladorPedidos) {
         this.controladorPedidos = controladorPedidos;
     }
 
-    // ----- Acoes dos botoes -----
-
     @FXML
     private void aoClicarDetalhes() {
-        // TODO: chamar controladorPedidos.abrirDetalhesPedido(pedido)
+        if (controladorPedidos != null && pedido != null) {
+            controladorPedidos.abrirDetalhesPedido(pedido);
+        }
     }
 
     @FXML
     private void aoClicarPedirNovamente() {
-        // TODO: chamar controladorPedidos.pedirNovamente(pedido)
+        if (controladorPedidos != null && pedido != null) {
+            controladorPedidos.pedirNovamente(pedido);
+        }
     }
 }

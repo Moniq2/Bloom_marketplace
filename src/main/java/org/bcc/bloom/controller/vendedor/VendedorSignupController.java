@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import org.bcc.bloom.controller.loja.LojaSignupController;
-import org.bcc.bloom.exception.SenhaInvalidaException;
 import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.service.UsuarioService;
 import org.bcc.bloom.util.Navegador;
@@ -49,8 +48,8 @@ public class VendedorSignupController {
         String senha2 = campoSenha2.getText();
 
         if (!senha1.equals(senha2)) {
-            mostrarErro("A senhas precisam ser iguais");
-            throw new SenhaInvalidaException("Erro: As senhas não conferem.");
+            mostrarErro("As senhas precisam ser iguais.");
+            return;
         }
 
         try {

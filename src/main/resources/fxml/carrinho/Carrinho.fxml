@@ -37,7 +37,7 @@
             </ScrollPane>
 
             <!-- Lado direito: resumo do pedido (maxHeight evita esticar ate o rodape) -->
-            <VBox maxHeight="-Infinity" maxWidth="280" minWidth="280" prefWidth="280" spacing="10" styleClass="resumo">
+            <VBox fx:id="resumoDoPedidoBox" maxHeight="-Infinity" maxWidth="280" minWidth="280" prefWidth="280" spacing="10" styleClass="resumo">
 
                 <Label styleClass="titulo-formulario, titulo-resumo" text="Resumo do pedido" />
 

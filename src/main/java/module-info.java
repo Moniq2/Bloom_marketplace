@@ -23,4 +23,6 @@ module bloom {
     opens org.bcc.bloom.controller.comprador to javafx.fxml;
     opens org.bcc.bloom.controller.vendedor to javafx.fxml;
     opens org.bcc.bloom.controller.carrinho to javafx.fxml;
+    opens org.bcc.bloom.controller.produto to javafx.fxml;
+    opens org.bcc.bloom.controller.pedido to javafx.fxml;
 }

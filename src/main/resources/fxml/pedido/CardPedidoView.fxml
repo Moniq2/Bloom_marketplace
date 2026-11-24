@@ -10,7 +10,7 @@
 
 <!-- Card de um pedido. Será adicionado ao VBox listaPedidos da tela Meus pedidos -->
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.bcc.bloom.CardPedidoController"
+      fx:controller="org.bcc.bloom.controller.pedido.CardPedidoController"
       styleClass="card-pedido">
 
     <!-- Cabecalho: logo da loja, nome, numero e data, status -->

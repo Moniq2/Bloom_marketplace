@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="6" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.loja.LojaClienteViewController">
+
+    <padding>
+        <Insets bottom="8" left="8" right="8" top="8" />
+    </padding>
+
+    <!-- Link para voltar (fica fora da rolagem, sempre visivel) -->
+    <Hyperlink onAction="#aoClicarVoltar" styleClass="link-verde" text="‹ Voltar às lojas" />
+
+    <!-- Area rolavel: banner, produtos e paginacao -->
+    <ScrollPane fx:id="rolagem" fitToWidth="true" hbarPolicy="NEVER" styleClass="rolagem" VBox.vgrow="ALWAYS">
+        <content>
+            <VBox fx:id="conteudoRolagem" maxWidth="Infinity" minWidth="0" spacing="20">
+                <padding>
+                    <Insets bottom="0" left="0" right="0" top="6" />
+                </padding>
+
+                <!-- Banner da loja (reaproveita as classes do minha-loja.css) -->
+                <VBox fx:id="bannerLoja" maxWidth="Infinity" minWidth="0" styleClass="banner-loja">
+
+                    <!-- Capa -->
+                    <StackPane fx:id="containerCapa" maxHeight="90" minHeight="90" prefHeight="90" styleClass="capa-loja">
+                        <ImageView fx:id="imagemCapa" fitHeight="90" preserveRatio="false" />
+                    </StackPane>
+
+                    <HBox alignment="BOTTOM_LEFT" maxWidth="Infinity" minWidth="0" spacing="16">
+                        <padding>
+                            <Insets bottom="14" left="20" right="20" top="0" />
+                        </padding>
+
+                        <!-- Logo redonda, subindo sobre a capa (margem negativa) -->
+                        <StackPane styleClass="moldura-logo">
+                            <HBox.margin>
+                                <Insets top="-38" />
+                            </HBox.margin>
+                            <ImageView fx:id="imagemLogo" fitHeight="68" fitWidth="68" preserveRatio="false" />
+                        </StackPane>
+
+                        <!-- Nome, categoria e nota -->
+                        <VBox minWidth="0" spacing="4" HBox.hgrow="ALWAYS">
+                            <Label fx:id="nomeLoja" minWidth="0" styleClass="titulo-formulario, nome-loja" text="Nome da loja" wrapText="true" />
+                            <HBox alignment="CENTER_LEFT" spacing="14">
+                                <Label fx:id="rotuloCategoria" styleClass="subtitulo" text="Categoria" />
+                                <Label fx:id="rotuloNota" styleClass="subtitulo" text="★ 0,0 (0)" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Descricao, entrega e etiquetas -->
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets bottom="18" left="20" right="20" top="0" />
+                        </padding>
+
+                        <Label fx:id="rotuloDescricao" styleClass="descricao-loja" text="Descrição da loja" wrapText="true" />
+
+                        <HBox spacing="8">
+                            <Label fx:id="rotuloEntrega" styleClass="chip-info" text="Entrega" />
+                        </HBox>
+
+                        <!-- As etiquetas (Organico, etc.) sao adicionadas pelo codigo -->
+                        <FlowPane fx:id="painelEtiquetas" hgap="6" vgap="6" />
+                    </VBox>
+                </VBox>
+
+                <!-- Titulo da secao de produtos -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label styleClass="titulo-formulario, titulo-secao" text="Produtos da loja" />
+                    <Label fx:id="rotuloTotalProdutos" styleClass="subtitulo" text="0 produtos" />
+                </HBox>
+
+                <!-- Os cards de produto sao adicionados aqui pelo codigo -->
+                <FlowPane fx:id="painelProdutos" hgap="16" vgap="16" />
+
+                <!-- Mensagem para quando a loja nao tem produtos -->
+                <Label fx:id="rotuloSemProdutos" managed="false" styleClass="subtitulo" text="Esta loja ainda não tem produtos." visible="false" />
+
+                <!-- Paginacao no final da lista -->
+                <HBox fx:id="barraPaginacao" alignment="CENTER" spacing="16">
+                    <padding>
+                        <Insets bottom="12" left="0" right="0" top="2" />
+                    </padding>
+
+                    <Button fx:id="botaoAnterior" onAction="#aoClicarAnterior" styleClass="botao-paginacao" text="‹ Anterior" />
+                    <Label fx:id="rotuloPagina" styleClass="rotulo-pagina" text="Página 1 de 1" />
+                    <Button fx:id="botaoProxima" onAction="#aoClicarProxima" styleClass="botao-paginacao" text="Próxima ›" />
+                </HBox>
+            </VBox>
+        </content>
+    </ScrollPane>
+</VBox>

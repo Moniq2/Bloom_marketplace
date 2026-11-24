@@ -4,6 +4,7 @@ package org.bcc.bloom.dao;
 import org.bcc.bloom.exception.ErroBancoDadosException;
 import org.bcc.bloom.exception.RecursoNaoEncontradoException;
 import org.bcc.bloom.exception.ValorInvalidoException;
+import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.model.Vendedor;
 
 import java.sql.Connection;
@@ -194,6 +195,11 @@ public class VendedorDAOImpl implements VendedorDAO {
         vendedor.setId(rs.getLong("id"));
         vendedor.setPerfil(rs.getBytes("perfil"));
         vendedor.setSaldo(rs.getLong("saldo"));
+        long lojaId = rs.getLong("loja_id");
+        if (!rs.wasNull()) {
+            Loja loja = new LojaDAOImpl().buscarPorId(lojaId);
+            vendedor.setLoja(loja);
+        }
         return vendedor;
     }
 }

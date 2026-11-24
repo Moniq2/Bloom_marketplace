@@ -4,22 +4,26 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.bcc.bloom.controller.carrinho.CarrinhoController;
 import org.bcc.bloom.controller.loja.LojasController;
-import org.bcc.bloom.model.Usuario;
-import org.bcc.bloom.service.LojaService;
+import org.bcc.bloom.controller.pedido.PedidosController;
+import org.bcc.bloom.controller.produto.CatalogoController;
+import org.bcc.bloom.model.Comprador;
+import org.bcc.bloom.util.Navegador;
+
 import java.io.IOException;
 
 public class MainCompradorController {
-
-    private LojaService lojaService = new LojaService();
 
     @FXML
     private VBox barraLateral;
@@ -30,13 +34,15 @@ public class MainCompradorController {
     @FXML
     private StackPane areaConteudo;
 
-    private Usuario usuario;
+    private Comprador usuario;
     private static final double LARGURA_ABERTA = 220;
 
     private boolean barraAberta = true;
 
     @FXML
     public void initialize() {
+        Navegador.configurar(areaConteudo);
+
         Rectangle recorte = new Rectangle();
         recorte.widthProperty().bind(barraLateral.widthProperty());
         recorte.heightProperty().bind(barraLateral.heightProperty());
@@ -44,14 +50,14 @@ public class MainCompradorController {
         barraLateral.setClip(recorte);
     }
 
-    public void setup (Usuario usuario) {
+    public void setup (Comprador usuario) {
         this.usuario = usuario;
         mostrarLojas();
     }
 
     public void mostrarLojas(){
         LojasController controller = trocarTela("/fxml/loja/Lojas.fxml");
-        controller.setupCards();
+        controller.setComprador(usuario);
     }
 
     @FXML
@@ -74,27 +80,44 @@ public class MainCompradorController {
 
     @FXML
     private void aoClicarInicio() {
-        trocarTela("/fxml/loja/Lojas.fxml");
+        CatalogoController controller = trocarTela("/fxml/catalogo/Catalogo.fxml");
+        controller.setComprador(usuario);
     }
 
     @FXML
-    private void aoClicarCatalogo() {
-        trocarTela("/fxml/catalogo.fxml");
+    private void aoClicarLojas() {
+        mostrarLojas();
     }
 
     @FXML
     private void aoClicarCarrinho() {
-        trocarTela("/fxml/carrinho.fxml");
+        CarrinhoController controller = trocarTela("/fxml/carrinho/Carrinho.fxml");
+        controller.setup(usuario);
     }
 
     @FXML
-    private void aoClicarPedidos() {
-        trocarTela("/fxml/pedidos.fxml");
+    private void aoClicarMeusPedidos() {
+        PedidosController controller = trocarTela("/fxml/pedido/PedidosView.fxml");
+        controller.setup(usuario);
     }
 
     @FXML
-    private void aoClicarSair() {
-        System.out.println("Sair");
+    private void aoClicarMeusDados() {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Meus dados");
+        alerta.setHeaderText(usuario == null ? "Conta" : usuario.getNome());
+        alerta.setContentText(usuario == null ? "Nenhum usuário conectado." : usuario.getEmail());
+        alerta.showAndWait();
+    }
+
+    @FXML
+    private void aoClicarQueroSerUmVendedor(ActionEvent event) {
+        Navegador.abrirPagina(event, "/fxml/vendedor/VendedorSignup.fxml");
+    }
+
+    @FXML
+    private void aoClicarSair(ActionEvent event) {
+        Navegador.abrirPagina(event, "/fxml/login/LoginPage.fxml");
     }
 
     private <T> T trocarTela(String url){

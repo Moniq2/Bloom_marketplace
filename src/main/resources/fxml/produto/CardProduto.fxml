@@ -9,7 +9,7 @@
 
 <!-- Card de um produto. Sera adicionado ao FlowPane da tela Minha loja -->
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.bcc.bloom.CardProdutoController"
+      fx:controller="org.bcc.bloom.controller.produto.CardProdutoController"
       styleClass="card-produto" prefWidth="190" minWidth="190" maxWidth="190">
 
     <!-- Foto do produto com o botao de lapis no canto superior direito -->

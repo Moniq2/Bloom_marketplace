@@ -8,44 +8,38 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.bcc.bloom.CatalogoController"
-      spacing="6">
+<VBox spacing="6" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.produto.CatalogoController">
 
     <padding>
-        <Insets top="8" right="8" bottom="8" left="8"/>
+        <Insets bottom="8" left="8" right="8" top="8" />
     </padding>
 
-    <Label text="Catálogo" styleClass="titulo-formulario"/>
-    <Label text="Todos os produtos de todas as lojas" styleClass="subtitulo"/>
+    <Label styleClass="titulo-formulario" text="Catálogo" />
+    <Label styleClass="subtitulo" text="Todos os produtos de todas as lojas" />
 
     <!-- Area rolavel: os cards de produto e a paginacao ficam dentro dela -->
-    <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem"
-                VBox.vgrow="ALWAYS">
+    <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem" VBox.vgrow="ALWAYS">
         <content>
             <VBox spacing="22">
                 <padding>
-                    <Insets top="10" right="0" bottom="0" left="0"/>
+                    <Insets bottom="0" left="0" right="0" top="10" />
                 </padding>
 
                 <!-- Os cards de produto sao adicionados aqui pelo codigo -->
-                <FlowPane fx:id="painelProdutos" hgap="16" vgap="16"/>
+                <FlowPane fx:id="painelProdutos" hgap="16" vgap="16" />
 
                 <!-- Mensagem para quando nao ha produtos -->
-                <Label fx:id="rotuloSemProdutos" text="Nenhum produto disponível."
-                       styleClass="subtitulo" visible="false" managed="false"/>
+                <Label fx:id="rotuloSemProdutos" managed="false" styleClass="subtitulo" text="Nenhum produto disponível." visible="false" />
 
                 <!-- Paginacao no final da lista -->
                 <HBox fx:id="barraPaginacao" alignment="CENTER" spacing="16">
                     <padding>
-                        <Insets top="0" right="0" bottom="12" left="0"/>
+                        <Insets bottom="12" left="0" right="0" top="0" />
                     </padding>
 
-                    <Button fx:id="botaoAnterior" text="‹ Anterior"
-                            onAction="#aoClicarAnterior" styleClass="botao-paginacao"/>
-                    <Label fx:id="rotuloPagina" text="Página 1 de 1" styleClass="rotulo-pagina"/>
-                    <Button fx:id="botaoProxima" text="Próxima ›"
-                            onAction="#aoClicarProxima" styleClass="botao-paginacao"/>
+                    <Button fx:id="botaoAnterior" onAction="#aoClicarAnterior" styleClass="botao-paginacao" text="‹ Anterior" />
+                    <Label fx:id="rotuloPagina" styleClass="rotulo-pagina" text="Página 1 de 1" />
+                    <Button fx:id="botaoProxima" onAction="#aoClicarProxima" styleClass="botao-paginacao" text="Próxima ›" />
                 </HBox>
             </VBox>
         </content>

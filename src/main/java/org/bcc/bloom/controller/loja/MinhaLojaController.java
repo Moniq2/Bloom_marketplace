@@ -1,31 +1,44 @@
 package org.bcc.bloom.controller.loja;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.model.Produto;
+import org.bcc.bloom.model.Vendedor;
+import org.bcc.bloom.service.LojaService;
+import org.bcc.bloom.service.ProdutoService;
+import org.bcc.bloom.util.Navegador;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MinhaLojaController {
 
-    // ----- Elementos do FXML (nomes iguais aos fx:id) -----
+    @FXML
+    private VBox conteudoLoja;
 
     @FXML
-    private VBox conteudoLoja;          // estado: vendedor com loja
-
-    @FXML
-    private VBox estadoSemLoja;         // estado: vendedor sem loja
+    private VBox estadoSemLoja;
 
     @FXML
     private VBox bannerLoja;
+
+    @FXML
+    private StackPane containerCapa;
 
     @FXML
     private ImageView imagemCapa;
@@ -58,89 +71,130 @@ public class MinhaLojaController {
     private ScrollPane rolagem;
 
     @FXML
-    private FlowPane painelProdutos;    // aqui entram os cards de produto
+    private FlowPane painelProdutos;
 
     @FXML
     private Label rotuloSemProdutos;
 
-    // ----- Dados -----
-
-    // Loja do vendedor logado (null se ele ainda nao criou a loja)
     private Loja lojaDoVendedor;
+    private Vendedor vendedor;
+    private final LojaService lojaService = new LojaService();
+    private final ProdutoService produtoService = new ProdutoService();
 
-    // Produtos da loja (voce precisa criar a classe Produto)
     private List<Produto> produtos = new ArrayList<>();
 
-    // O JavaFX chama este metodo sozinho depois de carregar o FXML
     @FXML
     public void initialize() {
+        imagemCapa.fitWidthProperty().bind(containerCapa.widthProperty());
         carregarLojaDoVendedor();
         atualizarTela();
     }
 
-    // TODO: buscar a loja pelo id do vendedor logado e guardar em lojaDoVendedor
-    //       (cada vendedor so tem uma loja; se nao existir, deixe null)
-    //       depois buscar os produtos dessa loja e guardar em produtos
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+        carregarLojaDoVendedor();
+        atualizarTela();
+    }
+
     private void carregarLojaDoVendedor() {
+        lojaDoVendedor = vendedor == null ? null : vendedor.getLoja();
+        produtos.clear();
+        if (lojaDoVendedor == null && vendedor != null && vendedor.getId() != null) {
+            lojaDoVendedor = lojaService.buscarPorVendedor(vendedor.getId());
+            vendedor.setLoja(lojaDoVendedor);
+        }
+        if (lojaDoVendedor == null || lojaDoVendedor.getId() == null) {
+            return;
+        }
+        int totalProdutos = produtoService.contarProdutosDaLoja(lojaDoVendedor.getId());
+        if (totalProdutos > 0) {
+            produtos.addAll(produtoService.listarProdutosDaLoja(lojaDoVendedor.getId(), 0, totalProdutos));
+        }
     }
 
-    // Redesenha a tela. Public para o card de produto poder pedir atualizacao
     public void atualizarTela() {
-        // TODO Passo 1: se lojaDoVendedor for null, chamar mostrarEstadoSemLoja(true) e parar
-        // TODO Passo 2: chamar mostrarEstadoSemLoja(false)
-        // TODO Passo 3: chamar preencherCabecalho()
-        // TODO Passo 4: chamar mostrarProdutos()
+        boolean semLoja = lojaDoVendedor == null;
+        mostrarEstadoSemLoja(semLoja);
+        if (semLoja) {
+            return;
+        }
+        preencherCabecalho();
+        mostrarProdutos();
     }
 
-    // TODO: preencher rotuloNomeLoja, rotuloCategoria, rotuloNota, rotuloStatus,
-    //       imagemCapa e imagemLogo com os dados da loja
-    //       Dicas: imagemCapa.fitWidthProperty().bind(bannerLoja.widthProperty())
-    //              e para a logo redonda: imagemLogo.setClip(new Circle(34, 34, 34))
     private void preencherCabecalho() {
+        rotuloNomeLoja.setText(lojaDoVendedor.getNome());
+        rotuloCategoria.setText("Categoria não informada");
+        rotuloNota.setText("Sem avaliações");
+        rotuloStatus.setText("Status não informado");
+        byte[] capa = lojaDoVendedor.getCapa();
+        if (capa != null && capa.length > 0) {
+            Image imagem = new Image(new ByteArrayInputStream(capa));
+            imagemCapa.setImage(imagem);
+            imagemLogo.setImage(imagem);
+        } else {
+            imagemCapa.setImage(null);
+            imagemLogo.setImage(null);
+        }
+        imagemLogo.setClip(new Circle(34, 34, 34));
     }
 
-    // TODO Passo 1: painelProdutos.getChildren().clear()
-    // TODO Passo 2: se produtos estiver vazio, mostrar rotuloSemProdutos
-    // TODO Passo 3: para cada produto, chamar adicionarCardProduto(produto)
-    // TODO Passo 4: atualizar rotuloTotalProdutos (ex.: "4 produtos")
     private void mostrarProdutos() {
+        painelProdutos.getChildren().clear();
+        rotuloTotalProdutos.setText(produtos.size() + (produtos.size() == 1 ? " produto" : " produtos"));
+        boolean vazio = produtos.isEmpty();
+        rotuloSemProdutos.setVisible(vazio);
+        rotuloSemProdutos.setManaged(vazio);
+        for (Produto produto : produtos) {
+            adicionarCardProduto(produto);
+        }
     }
 
-    // TODO: carregar /fxml/CardProdutoView.fxml com FXMLLoader, pegar o
-    //       CardProdutoController, chamar definirDados(produto) e
-    //       definirControladorLoja(this), e adicionar o card no painelProdutos
     private void adicionarCardProduto(Produto produto) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/produto/CardProduto.fxml"));
+            Parent root = loader.load();
+            org.bcc.bloom.controller.produto.CardProdutoController controller = loader.getController();
+            controller.definirDados(produto);
+            controller.definirControladorLoja(this);
+            painelProdutos.getChildren().add(root);
+        } catch (IOException e) {
+            mostrarAlerta("Produtos", "Não foi possível carregar um produto.");
+        }
     }
 
-    // Chamado pelo lapis do card de produto
-    // TODO: abrir a tela ou janela de edicao do produto recebido
     public void abrirEdicaoProduto(Produto produto) {
+        mostrarAlerta("Editar produto", "A tela de edição de produtos ainda não está disponível.");
     }
-
-    // ----- Acoes dos botoes -----
 
     @FXML
     private void aoClicarEditarLoja() {
-        // TODO: abrir a tela de edicao da loja
+        mostrarAlerta("Editar loja", "A tela de edição de lojas ainda não está disponível.");
     }
 
     @FXML
     private void aoClicarNovoProduto() {
-        // TODO: abrir a tela de cadastro de produto
+        mostrarAlerta("Novo produto", "A tela de cadastro de produtos ainda não está disponível.");
     }
 
     @FXML
-    private void aoClicarCriarLoja() {
-        // TODO: abrir a tela de criacao da loja
+    private void aoClicarCriarLoja(ActionEvent event) {
+        LojaSignupController controller = Navegador.abrirPagina(event, "/fxml/loja/LojaSignup.fxml");
+        controller.setVendedor(vendedor);
     }
 
-    // ----- Auxiliares -----
-
-    // Alterna entre vendedor com loja e vendedor sem loja
     private void mostrarEstadoSemLoja(boolean semLoja) {
         estadoSemLoja.setVisible(semLoja);
         estadoSemLoja.setManaged(semLoja);
         conteudoLoja.setVisible(!semLoja);
         conteudoLoja.setManaged(!semLoja);
+    }
+
+    private void mostrarAlerta(String titulo, String mensagem) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensagem);
+        alerta.showAndWait();
     }
 }

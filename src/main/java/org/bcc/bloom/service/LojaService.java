@@ -69,6 +69,15 @@ public class LojaService {
         return lojaDAO.buscarPorId(id);
     }
 
+    public Loja buscarPorVendedor(long vendedorId) {
+        if (vendedorId <= 0) {
+            throw new ValorInvalidoException(
+                    "Erro: O ID do vendedor deve ser maior que zero."
+            );
+        }
+        return lojaDAO.buscarPorVendedor(vendedorId);
+    }
+
     public void atualizar(Loja loja) {
         if (loja == null) {
             throw new IllegalArgumentException(
