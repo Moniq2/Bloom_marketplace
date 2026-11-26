@@ -2,6 +2,7 @@ package org.bcc.bloom.controller.loja;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -12,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
 import org.bcc.bloom.controller.produto.CardProdutoCatalogoController;
 import org.bcc.bloom.dto.CarrinhoDTO;
 import org.bcc.bloom.model.Comprador;
@@ -38,8 +38,6 @@ public class LojaClienteViewController {
     private StackPane containerCapa;
     @FXML
     private ImageView imagemCapa;
-    @FXML
-    private ImageView imagemLogo;
     @FXML
     private Label nomeLoja;
     @FXML
@@ -78,8 +76,11 @@ public class LojaClienteViewController {
 
     @FXML
     private void initialize() {
+        imagemCapa.setManaged(false);
         imagemCapa.fitWidthProperty().bind(containerCapa.widthProperty());
-        imagemLogo.setClip(new Circle(34, 34, 34));
+        imagemCapa.fitHeightProperty().bind(containerCapa.heightProperty());
+        containerCapa.widthProperty().addListener((observable, anterior, atual) -> atualizarRecorteCapa());
+        containerCapa.heightProperty().addListener((observable, anterior, atual) -> atualizarRecorteCapa());
         painelEtiquetas.getChildren().clear();
         rotuloSemProdutos.setVisible(false);
         rotuloSemProdutos.setManaged(false);
@@ -110,7 +111,7 @@ public class LojaClienteViewController {
             rotuloDescricao.setText("");
             rotuloEntrega.setText("Entrega a combinar");
             imagemCapa.setImage(null);
-            imagemLogo.setImage(null);
+            atualizarRecorteCapa();
             return;
         }
 
@@ -125,7 +126,35 @@ public class LojaClienteViewController {
                 ? null
                 : new Image(new ByteArrayInputStream(capa));
         imagemCapa.setImage(imagem);
-        imagemLogo.setImage(imagem);
+        atualizarRecorteCapa();
+    }
+
+    private void atualizarRecorteCapa() {
+        Image imagem = imagemCapa.getImage();
+        double larguraAlvo = containerCapa.getWidth();
+        double alturaAlvo = containerCapa.getHeight();
+        if (imagem == null || imagem.getWidth() <= 0 || imagem.getHeight() <= 0
+                || larguraAlvo <= 0 || alturaAlvo <= 0) {
+            imagemCapa.setViewport(null);
+            return;
+        }
+
+        double proporcaoAlvo = larguraAlvo / alturaAlvo;
+        double proporcaoImagem = imagem.getWidth() / imagem.getHeight();
+        double larguraRecorte = imagem.getWidth();
+        double alturaRecorte = imagem.getHeight();
+        double x = 0;
+        double y = 0;
+
+        if (proporcaoImagem > proporcaoAlvo) {
+            larguraRecorte = imagem.getHeight() * proporcaoAlvo;
+            x = (imagem.getWidth() - larguraRecorte) / 2;
+        } else {
+            alturaRecorte = imagem.getWidth() / proporcaoAlvo;
+            y = (imagem.getHeight() - alturaRecorte) / 2;
+        }
+
+        imagemCapa.setViewport(new Rectangle2D(x, y, larguraRecorte, alturaRecorte));
     }
 
     private void carregarPagina() {

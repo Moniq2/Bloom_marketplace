@@ -1,5 +1,6 @@
 package org.bcc.bloom.controller.produto;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -50,9 +51,9 @@ public class CardProdutoController {
     }
 
     @FXML
-    private void aoClicarEditar() {
+    private void aoClicarEditar(ActionEvent event) {
         if (controladorLoja != null && produto != null) {
-            controladorLoja.abrirEdicaoProduto(produto);
+            controladorLoja.abrirEdicaoProduto(produto, event);
         }
     }
 }

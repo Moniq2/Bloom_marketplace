@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Tela para cadastrar um produto (e tambem editar: troque o texto do rotuloTitulo) -->
+
+<ScrollPane fitToWidth="true" styleClass="rolagem" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.produto.CadastroProdutoController">
+    <content>
+        <VBox alignment="TOP_CENTER">
+            <padding>
+                <Insets bottom="8" left="8" right="8" top="8" />
+            </padding>
+
+            <VBox maxWidth="640" spacing="6" styleClass="cartao-formulario">
+
+                <Label fx:id="rotuloTitulo" styleClass="titulo-formulario" text="Novo produto" />
+                <Label styleClass="subtitulo" text="Preencha os dados do produto que será vendido na sua loja." />
+
+                <!-- Imagem do produto (coluna imagem) -->
+                <Label styleClass="rotulo" text="Imagem do produto" />
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <StackPane maxHeight="120" maxWidth="120" minHeight="120" minWidth="120" prefHeight="120" prefWidth="120" styleClass="moldura-imagem">
+                        <ImageView fx:id="imagemProduto" fitHeight="120" fitWidth="120" preserveRatio="false" />
+                        <Label fx:id="rotuloSemImagem" styleClass="texto-apoio" text="Sem imagem" />
+                    </StackPane>
+
+                    <VBox spacing="6">
+                        <Button fx:id="botaoEscolherImagem" onAction="#aoClicarEscolherImagem" styleClass="botao-paginacao" text="Escolher imagem" />
+                        <Label styleClass="texto-apoio" text="PNG ou JPG" />
+                    </VBox>
+                </HBox>
+
+                <!-- Nome (coluna nome, ate 50 caracteres) -->
+                <Label styleClass="rotulo" text="Nome do produto" />
+                <TextField fx:id="campoNome" promptText="Ex.: Cenoura orgânica" styleClass="campo" />
+
+                <!-- Categoria (coluna categoria, enum). Os itens sao os valores exatos do enum -->
+                <Label styleClass="rotulo" text="Categoria" />
+                <ComboBox fx:id="campoCategoria" maxWidth="Infinity" promptText="Selecione a categoria" styleClass="combo-campo" />
+
+                <!-- Preco (decimal) e estoque (inteiro) lado a lado -->
+                <HBox spacing="16">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label styleClass="rotulo" text="Preço (R$)" />
+                        <TextField fx:id="campoPreco" promptText="0,00" styleClass="campo" />
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label styleClass="rotulo" text="Estoque" />
+                        <TextField fx:id="campoEstoque" promptText="0" styleClass="campo" />
+                    </VBox>
+                </HBox>
+
+                <!-- Descricao (coluna descricao, ate 500 caracteres) -->
+                <Label styleClass="rotulo" text="Descrição" />
+                <TextArea fx:id="campoDescricao" prefRowCount="4" promptText="Conte um pouco sobre o produto" styleClass="campo-area" wrapText="true" />
+                <Label fx:id="rotuloContador" maxWidth="Infinity" styleClass="contador-texto" text="0 / 500" />
+
+                <!-- Mensagem de erro: comeca escondida e sem ocupar espaco -->
+                <Label fx:id="rotuloErro" managed="false" styleClass="mensagem-erro" visible="false" />
+
+                <!-- Botoes -->
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <padding>
+                        <Insets bottom="0" left="0" right="0" top="10" />
+                    </padding>
+                    <Button fx:id="botaoCancelar" onAction="#aoClicarCancelar" styleClass="botao-paginacao" text="Cancelar" />
+                    <Button fx:id="botaoSalvar" onAction="#aoClicarSalvar" styleClass="botao-salvar" text="Salvar produto" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

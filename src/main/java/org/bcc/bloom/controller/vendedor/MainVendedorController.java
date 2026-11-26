@@ -8,13 +8,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.bcc.bloom.controller.loja.MinhaLojaController;
+import org.bcc.bloom.controller.pedido.PedidosVendedorController;
 import org.bcc.bloom.model.Vendedor;
 import org.bcc.bloom.util.Navegador;
 
@@ -76,12 +76,14 @@ public class MainVendedorController {
 
     @FXML
     private void aoClicarConta() {
-        mostrarAviso("Conta", "A tela de dados do vendedor ainda não está disponível.");
+        DadosVendedorController controller = trocarTela("/fxml/vendedor/DadosVendedor.fxml");
+        controller.setVendedor(vendedor);
     }
 
     @FXML
     private void aoClicarPedidos() {
-        mostrarAviso("Pedidos", "A tela de pedidos do vendedor ainda não está disponível.");
+        PedidosVendedorController controller = trocarTela("/fxml/pedido/PedidosVendedor.fxml");
+        controller.setVendedor(vendedor);
     }
 
     @FXML
@@ -98,20 +100,13 @@ public class MainVendedorController {
         controller.setVendedor(vendedor);
     }
 
-    private void mostrarAviso(String titulo, String mensagem) {
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensagem);
-        alerta.showAndWait();
-    }
-
     private <T> T trocarTela(String url){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
             Parent root = loader.load();
             areaConteudo.getChildren().clear();
             areaConteudo.getChildren().setAll(root);
+            Navegador.maximizarJanela(areaConteudo.getScene());
             return loader.getController();
         }
         catch (IOException e) {

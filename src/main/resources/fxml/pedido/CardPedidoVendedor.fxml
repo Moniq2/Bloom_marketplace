@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Card de um pedido recebido. Sera adicionado ao VBox listaPedidos -->
+
+<VBox styleClass="card-pedido" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.pedido.CardPedidoVendedorController">
+
+    <!-- Cabecalho: cliente, numero e data, status atual -->
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="cabecalho-pedido">
+        <padding>
+            <Insets bottom="12" left="16" right="16" top="12" />
+        </padding>
+
+        <VBox spacing="2" HBox.hgrow="ALWAYS">
+            <Label fx:id="rotuloCliente" styleClass="pedido-loja" text="Nome do cliente" />
+            <Label fx:id="rotuloNumeroData" styleClass="pedido-detalhe" text="Pedido #0000 · data" />
+        </VBox>
+
+        <Label fx:id="rotuloStatus" styleClass="etiqueta-pedido, etiqueta-pedido-andamento" text="Pedido feito" />
+    </HBox>
+
+    <!-- Corpo: itens e endereco de entrega -->
+    <VBox spacing="4">
+        <padding>
+            <Insets bottom="12" left="16" right="16" top="12" />
+        </padding>
+
+        <Label fx:id="rotuloResumoItens" styleClass="pedido-resumo" text="1x Produto" wrapText="true" />
+        <Label fx:id="rotuloQuantidadeItens" styleClass="pedido-detalhe" text="1 item" />
+        <Label fx:id="rotuloEndereco" styleClass="pedido-detalhe" text="Entrega: endereço do cliente" wrapText="true" />
+    </VBox>
+
+    <!-- Rodape: total e atualizacao do status -->
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="rodape-pedido">
+        <padding>
+            <Insets bottom="12" left="16" right="16" top="12" />
+        </padding>
+
+        <Label styleClass="pedido-detalhe" text="Total" />
+        <Label fx:id="rotuloTotal" styleClass="pedido-total" text="R$ 0,00" />
+        <Region HBox.hgrow="ALWAYS" />
+
+        <Label styleClass="pedido-detalhe" text="Status" />
+        <ComboBox fx:id="campoStatus" styleClass="combo-campo" />
+        <Button fx:id="botaoAtualizar" onAction="#aoClicarAtualizar" styleClass="botao-atualizar" text="Atualizar status" />
+    </HBox>
+</VBox>

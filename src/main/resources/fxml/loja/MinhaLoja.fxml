@@ -68,7 +68,7 @@
         <ScrollPane fx:id="rolagem" fitToWidth="true" hbarPolicy="NEVER" minWidth="0" styleClass="rolagem" VBox.vgrow="ALWAYS">
             <content>
                 <VBox maxWidth="Infinity" minWidth="0" spacing="12">
-                    <FlowPane fx:id="painelProdutos" maxWidth="Infinity" minWidth="0" hgap="16" vgap="16" />
+                    <FlowPane fx:id="painelProdutos" hgap="16" maxWidth="Infinity" minWidth="0" vgap="16" />
 
                     <!-- Mensagem para quando a loja nao tem produtos -->
                     <Label fx:id="rotuloSemProdutos" managed="false" styleClass="subtitulo" text="Você ainda não cadastrou produtos." visible="false" />

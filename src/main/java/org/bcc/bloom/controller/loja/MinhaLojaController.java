@@ -14,6 +14,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import org.bcc.bloom.controller.produto.CadastroProdutoController;
 import org.bcc.bloom.model.Loja;
 import org.bcc.bloom.model.Produto;
 import org.bcc.bloom.model.Vendedor;
@@ -163,18 +164,22 @@ public class MinhaLojaController {
         }
     }
 
-    public void abrirEdicaoProduto(Produto produto) {
-        mostrarAlerta("Editar produto", "A tela de edição de produtos ainda não está disponível.");
+    public void abrirEdicaoProduto(Produto produto, ActionEvent event) {
+        CadastroProdutoController controller = Navegador.abrirPagina(event, "/fxml/produto/CadastroProduto.fxml");
+        controller.setVendedor(vendedor);
+        controller.setProduto(produto);
     }
 
     @FXML
-    private void aoClicarEditarLoja() {
-        mostrarAlerta("Editar loja", "A tela de edição de lojas ainda não está disponível.");
+    private void aoClicarEditarLoja(ActionEvent event) {
+        EditarLojaController controller = Navegador.abrirPagina(event, "/fxml/loja/EditarLoja.fxml");
+        controller.setVendedor(vendedor);
     }
 
     @FXML
-    private void aoClicarNovoProduto() {
-        mostrarAlerta("Novo produto", "A tela de cadastro de produtos ainda não está disponível.");
+    private void aoClicarNovoProduto(ActionEvent event) {
+        CadastroProdutoController controller = Navegador.abrirPagina(event, "/fxml/produto/CadastroProduto.fxml");
+        controller.setVendedor(vendedor);
     }
 
     @FXML

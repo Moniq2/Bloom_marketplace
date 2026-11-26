@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -103,11 +102,8 @@ public class MainCompradorController {
 
     @FXML
     private void aoClicarMeusDados() {
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle("Meus dados");
-        alerta.setHeaderText(usuario == null ? "Conta" : usuario.getNome());
-        alerta.setContentText(usuario == null ? "Nenhum usuário conectado." : usuario.getEmail());
-        alerta.showAndWait();
+        DadosUsuarioController controller = trocarTela("/fxml/comprador/DadosUsuario.fxml");
+        controller.setComprador(usuario);
     }
 
     @FXML
@@ -126,6 +122,7 @@ public class MainCompradorController {
             Parent root = loader.load();
             areaConteudo.getChildren().clear();
             areaConteudo.getChildren().setAll(root);
+            Navegador.maximizarJanela(areaConteudo.getScene());
             return loader.getController();
         }
         catch (IOException e) {

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Tela para o vendedor editar os dados da propria loja -->
+
+<ScrollPane fitToWidth="true" styleClass="rolagem" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.loja.EditarLojaController">
+    <content>
+        <VBox alignment="TOP_CENTER">
+            <padding>
+                <Insets bottom="8" left="8" right="8" top="8" />
+            </padding>
+
+            <VBox maxWidth="640" spacing="6" styleClass="cartao-formulario">
+
+                <Label styleClass="titulo-formulario" text="Editar loja" />
+                <Label styleClass="subtitulo" text="Atualize as informações que os clientes veem na sua loja." />
+
+                <!-- Capa da loja (coluna capa) -->
+                <Label styleClass="rotulo" text="Foto de capa" />
+                <StackPane fx:id="molduraCapa" maxHeight="130" minHeight="130" prefHeight="130" styleClass="moldura-imagem">
+                    <ImageView fx:id="imagemCapa" fitHeight="130" preserveRatio="false" />
+                    <Label fx:id="rotuloSemImagem" styleClass="texto-apoio" text="Sem foto de capa" />
+                </StackPane>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Button fx:id="botaoTrocarCapa" onAction="#aoClicarTrocarCapa" styleClass="botao-paginacao" text="Trocar foto" />
+                    <Label styleClass="texto-apoio" text="PNG ou JPG" />
+                </HBox>
+
+                <!-- Nome (coluna nome, ate 50 caracteres) -->
+                <Label styleClass="rotulo" text="Nome da loja" />
+                <TextField fx:id="campoNome" promptText="Nome da sua loja" styleClass="campo" />
+
+                <!-- Descricao (coluna descricao, ate 500 caracteres) -->
+                <Label styleClass="rotulo" text="Descrição" />
+                <TextArea fx:id="campoDescricao" prefRowCount="5" promptText="Conte aos clientes sobre a sua loja" styleClass="campo-area" wrapText="true" />
+                <Label fx:id="rotuloContador" maxWidth="Infinity" styleClass="contador-texto" text="0 / 500" />
+
+                <Label fx:id="rotuloErro" managed="false" styleClass="mensagem-erro" visible="false" />
+
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <padding>
+                        <Insets bottom="0" left="0" right="0" top="10" />
+                    </padding>
+                    <Button fx:id="botaoCancelar" onAction="#aoClicarCancelar" styleClass="botao-paginacao" text="Cancelar" />
+                    <Button fx:id="botaoSalvar" onAction="#aoClicarSalvar" styleClass="botao-salvar" text="Salvar alterações" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

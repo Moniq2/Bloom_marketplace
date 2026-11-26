@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Lista de pedidos recebidos pela loja do vendedor -->
+
+<VBox spacing="6" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.pedido.PedidosVendedorController">
+
+    <padding>
+        <Insets bottom="8" left="8" right="8" top="8" />
+    </padding>
+
+    <Label styleClass="titulo-formulario" text="Pedidos da loja" />
+    <Label styleClass="subtitulo" text="Acompanhe os pedidos e atualize o status de cada um" />
+
+    <!-- Filtros por situacao. O userData identifica cada filtro no controller -->
+    <FlowPane hgap="8" vgap="8">
+        <padding>
+            <Insets bottom="8" left="0" right="0" top="10" />
+        </padding>
+
+        <ToggleButton onAction="#aoClicarFiltro" selected="true" styleClass="filtro-pedido" text="Todos" userData="TODOS">
+         <toggleGroup>
+            <ToggleGroup fx:id="grupoFiltro" />
+         </toggleGroup></ToggleButton>
+        <ToggleButton onAction="#aoClicarFiltro" styleClass="filtro-pedido" text="Novos" toggleGroup="$grupoFiltro" userData="PEDIDO_FEITO" />
+        <ToggleButton onAction="#aoClicarFiltro" styleClass="filtro-pedido" text="Em preparo" toggleGroup="$grupoFiltro" userData="EM_PREPARO" />
+        <ToggleButton onAction="#aoClicarFiltro" styleClass="filtro-pedido" text="A caminho" toggleGroup="$grupoFiltro" userData="A_CAMINHO" />
+        <ToggleButton onAction="#aoClicarFiltro" styleClass="filtro-pedido" text="Entregues" toggleGroup="$grupoFiltro" userData="ENTREGUE" />
+        <ToggleButton onAction="#aoClicarFiltro" styleClass="filtro-pedido" text="Cancelados" toggleGroup="$grupoFiltro" userData="CANCELADO" />
+    </FlowPane>
+
+    <!-- Area rolavel onde os cards de pedido serao adicionados pelo codigo -->
+    <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem" VBox.vgrow="ALWAYS">
+        <content>
+            <VBox spacing="14">
+                <VBox fx:id="listaPedidos" spacing="14" />
+
+                <Label fx:id="rotuloSemResultado" managed="false" styleClass="subtitulo" text="Nenhum pedido nesta categoria." visible="false" />
+
+                <!-- Rodape da lista: botao Ver mais e contagem -->
+                <VBox fx:id="rodapeLista" alignment="CENTER" spacing="6">
+                    <Button fx:id="botaoVerMais" onAction="#aoClicarVerMais" styleClass="botao-paginacao" text="Ver mais ▾" />
+                    <Label fx:id="rotuloContagem" styleClass="subtitulo" text="Mostrando 0 de 0 pedidos" />
+                </VBox>
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <!-- Grupo que garante que so um filtro fica selecionado por vez -->
+    <fx:define>
+        <ToggleGroup fx:id="grupoFiltro" />
+    </fx:define>
+</VBox>

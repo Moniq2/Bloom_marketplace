@@ -27,6 +27,7 @@ public class BloomApplication extends Application {
 
         stage.setTitle("Bloom");
         stage.setScene(cena);
+        stage.setMaximized(true);
         stage.show();
     }
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Dados do vendedor. Os campos comecam so para leitura; o botao Editar libera a edicao -->
+
+<ScrollPane fitToWidth="true" styleClass="rolagem" stylesheets="@../../css/bloom.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bcc.bloom.controller.vendedor.DadosVendedorController">
+    <content>
+        <VBox alignment="TOP_CENTER">
+            <padding>
+                <Insets bottom="8" left="8" right="8" top="8" />
+            </padding>
+
+            <VBox maxWidth="640" spacing="6" styleClass="cartao-formulario">
+
+                <!-- Cabecalho: foto de perfil (coluna perfil), nome e botao Editar -->
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <StackPane styleClass="avatar">
+                        <Label fx:id="rotuloInicial" styleClass="avatar-inicial" text="V" />
+                        <ImageView fx:id="imagemPerfil" fitHeight="72" fitWidth="72" preserveRatio="false" />
+                    </StackPane>
+
+                    <VBox spacing="2" HBox.hgrow="ALWAYS">
+                        <Label fx:id="rotuloNomeTitulo" styleClass="titulo-formulario, titulo-secao" text="Nome do vendedor" />
+                        <Label styleClass="subtitulo" text="Vendedor" />
+                    </VBox>
+
+                    <Button fx:id="botaoEditar" onAction="#aoClicarEditar" styleClass="botao-paginacao" text="✎ Editar dados" />
+                </HBox>
+
+                <!-- Trocar foto: aparece so no modo de edicao -->
+                <Button fx:id="botaoTrocarFoto" managed="false" onAction="#aoClicarTrocarFoto" styleClass="botao-paginacao" text="Trocar foto" visible="false" />
+
+                <!-- Saldo (coluna saldo): apenas leitura -->
+                <VBox spacing="2" styleClass="cartao-saldo">
+                    <Label styleClass="texto-apoio" text="Saldo disponível" />
+                    <Label fx:id="rotuloSaldo" styleClass="valor-saldo" text="R$ 0,00" />
+                </VBox>
+
+                <!-- Campos: editable=false ate o vendedor clicar em Editar -->
+                <Label styleClass="rotulo" text="Nome" />
+                <TextField fx:id="campoNome" editable="false" styleClass="campo" />
+
+                <Label styleClass="rotulo" text="E-mail" />
+                <TextField fx:id="campoEmail" editable="false" styleClass="campo" />
+
+                <!-- CNPJ fica sempre so para leitura -->
+                <Label styleClass="rotulo" text="CNPJ" />
+                <TextField fx:id="campoCnpj" editable="false" styleClass="campo" />
+
+                <Hyperlink onAction="#aoClicarAlterarSenha" styleClass="link-verde" text="Alterar senha" />
+
+                <Label fx:id="rotuloErro" managed="false" styleClass="mensagem-erro" visible="false" />
+
+                <!-- Botoes de edicao: aparecem so depois de clicar em Editar -->
+                <HBox fx:id="botoesEdicao" alignment="CENTER_RIGHT" managed="false" spacing="10" visible="false">
+                    <padding>
+                        <Insets bottom="0" left="0" right="0" top="10" />
+                    </padding>
+                    <Button fx:id="botaoCancelar" onAction="#aoClicarCancelar" styleClass="botao-paginacao" text="Cancelar" />
+                    <Button fx:id="botaoSalvar" onAction="#aoClicarSalvar" styleClass="botao-salvar" text="Salvar alterações" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

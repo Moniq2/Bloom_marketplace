@@ -21,37 +21,29 @@
     <Hyperlink onAction="#aoClicarVoltar" styleClass="link-verde" text="‹ Voltar às lojas" />
 
     <!-- Area rolavel: banner, produtos e paginacao -->
-    <ScrollPane fx:id="rolagem" fitToWidth="true" hbarPolicy="NEVER" styleClass="rolagem" VBox.vgrow="ALWAYS">
+    <ScrollPane fx:id="rolagem" fitToWidth="true" styleClass="rolagem" VBox.vgrow="ALWAYS">
         <content>
-            <VBox fx:id="conteudoRolagem" maxWidth="Infinity" minWidth="0" spacing="20">
+            <VBox spacing="20">
                 <padding>
                     <Insets bottom="0" left="0" right="0" top="6" />
                 </padding>
 
                 <!-- Banner da loja (reaproveita as classes do minha-loja.css) -->
-                <VBox fx:id="bannerLoja" maxWidth="Infinity" minWidth="0" styleClass="banner-loja">
+                <VBox fx:id="bannerLoja" styleClass="banner-loja">
 
                     <!-- Capa -->
                     <StackPane fx:id="containerCapa" maxHeight="90" minHeight="90" prefHeight="90" styleClass="capa-loja">
-                        <ImageView fx:id="imagemCapa" fitHeight="90" preserveRatio="false" />
+                        <ImageView fx:id="imagemCapa" fitHeight="90" preserveRatio="true" />
                     </StackPane>
 
-                    <HBox alignment="BOTTOM_LEFT" maxWidth="Infinity" minWidth="0" spacing="16">
+                    <HBox alignment="BOTTOM_LEFT" spacing="16">
                         <padding>
-                            <Insets bottom="14" left="20" right="20" top="0" />
+                            <Insets bottom="14.0" left="20.0" right="20.0" top="10.0" />
                         </padding>
 
-                        <!-- Logo redonda, subindo sobre a capa (margem negativa) -->
-                        <StackPane styleClass="moldura-logo">
-                            <HBox.margin>
-                                <Insets top="-38" />
-                            </HBox.margin>
-                            <ImageView fx:id="imagemLogo" fitHeight="68" fitWidth="68" preserveRatio="false" />
-                        </StackPane>
-
                         <!-- Nome, categoria e nota -->
-                        <VBox minWidth="0" spacing="4" HBox.hgrow="ALWAYS">
-                            <Label fx:id="nomeLoja" minWidth="0" styleClass="titulo-formulario, nome-loja" text="Nome da loja" wrapText="true" />
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label fx:id="nomeLoja" styleClass="titulo-formulario, nome-loja" text="Nome da loja" />
                             <HBox alignment="CENTER_LEFT" spacing="14">
                                 <Label fx:id="rotuloCategoria" styleClass="subtitulo" text="Categoria" />
                                 <Label fx:id="rotuloNota" styleClass="subtitulo" text="★ 0,0 (0)" />
@@ -79,7 +71,6 @@
                 <!-- Titulo da secao de produtos -->
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <Label styleClass="titulo-formulario, titulo-secao" text="Produtos da loja" />
-                    <Label fx:id="rotuloTotalProdutos" styleClass="subtitulo" text="0 produtos" />
                 </HBox>
 
                 <!-- Os cards de produto sao adicionados aqui pelo codigo -->
